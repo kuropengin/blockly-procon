@@ -47,7 +47,13 @@ io.on('connection',function(socket){
       
       if(people_num.length == 1){
         
-        socket.broadcast.to(msg.room_id).emit("you_turn");
+        socket.broadcast.to(msg.room_id).emit("you_turn",
+          {"x":server_store[msg.room_id].cool_x,
+           "y":server_store[msg.room_id].cool_y,
+           "x_size":server_store[msg.room_id].map_size_x,
+           "y_size":server_store[msg.room_id].map_size_y,
+           "map_data":server_store[msg.room_id].map_data
+          });
       }
     }
     else{
@@ -88,7 +94,13 @@ io.on('connection',function(socket){
       }
       
       io.in(store[socket.id].room).emit("updata_board", server_store[store[socket.id].room]);
-      socket.broadcast.to(store[socket.id].room).emit("you_turn");
+      socket.broadcast.to(store[socket.id].room).emit("you_turn",
+          {"x":server_store[store[socket.id].room].hot_x,
+           "y":server_store[store[socket.id].room].hot_y,
+           "x_size":server_store[store[socket.id].room].map_size_x,
+           "y_size":server_store[store[socket.id].room].map_size_y,
+           "map_data":server_store[store[socket.id].room].map_data
+          });
     }
     else if(store[socket.id].chara == 1){
       var h_x = server_store[store[socket.id].room].hot_x;
@@ -120,7 +132,13 @@ io.on('connection',function(socket){
       }
       
       io.in(store[socket.id].room).emit("updata_board", server_store[store[socket.id].room]);
-      socket.broadcast.to(store[socket.id].room).emit("you_turn");
+      socket.broadcast.to(store[socket.id].room).emit("you_turn",
+          {"x":server_store[store[socket.id].room].cool_x,
+           "y":server_store[store[socket.id].room].cool_y,
+           "x_size":server_store[store[socket.id].room].map_size_x,
+           "y_size":server_store[store[socket.id].room].map_size_y,
+           "map_data":server_store[store[socket.id].room].map_data  
+          });
     }
     
   });

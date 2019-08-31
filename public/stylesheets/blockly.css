@@ -111,7 +111,7 @@ table {
 }
 td {
   padding: 0;
-  border: solid 1px;
+  border: solid 1px #6c6c6c;
   vertical-align: top;
 }
 td img{

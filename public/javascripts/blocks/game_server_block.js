@@ -80,7 +80,7 @@ Blockly.Blocks['get_value'] = {
         .appendField(new Blockly.FieldDropdown([["1","1"], ["2","2"], ["3","3"], ["4","4"], ["5","5"], ["6","6"], ["7","7"], ["8","8"], ["9","9"]]), "get_value")
         .appendField("マス目");
     this.setInputsInline(true);
-    this.setOutput(true, "String");
+    this.setOutput(true, "Number");
     this.setColour(195);
  this.setTooltip("");
  this.setHelpUrl("");

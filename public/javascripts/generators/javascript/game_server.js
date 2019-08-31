@@ -35,7 +35,7 @@ Blockly.JavaScript['move_player'] = function(block) {
 Blockly.JavaScript['look'] = function(block) {
   var dropdown_look = block.getFieldValue('look');
   // TODO: Assemble JavaScript into code variable.
-  var code = '...;\n';
+  var code = 'look("' + dropdown_look + '");\n';
   return code;
 };
 
@@ -49,7 +49,8 @@ Blockly.JavaScript['search'] = function(block) {
 Blockly.JavaScript['get_value'] = function(block) {
   var dropdown_get_value = block.getFieldValue('get_value');
   // TODO: Assemble JavaScript into code variable.
-  var code = '...';
+  var code = my_map_data[parseInt(dropdown_get_value, 10)-1];
+
   // TODO: Change ORDER_NONE to the correct strength.
   return [code, Blockly.JavaScript.ORDER_NONE];
 };

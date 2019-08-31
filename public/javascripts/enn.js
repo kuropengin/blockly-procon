@@ -71,7 +71,9 @@ function initApi(interpreter, scope) {
   // Add an API function for the alert() block, generated for "text_print" blocks.
   
   var wrapper = function(text) {
-    text = text ? text.toString() : '';
+    console.log(text.toString());
+    text.toString();
+    console.log(text);
     outputArea.value = outputArea.value + '\n' + text;
   };
   interpreter.setProperty(scope, 'alert',
@@ -115,10 +117,9 @@ function initApi(interpreter, scope) {
       interpreter.createNativeFunction(wrapper));    
    
   var wrapper = function() {
-    console.log(turn_ready());
-    return false;//interpreter.createPrimitive(turn_ready());
+    
   };
-  interpreter.setProperty(scope, 'turn_ready',
+  interpreter.setProperty(scope, 'look',
       interpreter.createNativeFunction(wrapper)); 
   
   
@@ -170,6 +171,7 @@ function resetVarStor(){
   var_stor = {};
   my_turn = false;
   servar_connect_status = false;
+  my_map_data = [];
 }
 
 
@@ -250,6 +252,7 @@ Code.runJS = function(){
 
 Code.stopJS = function(){
   if (myInterpreter) {
+    clearTimeout();
     resetVarStor();
     runButton.disabled = 'disabled';
     outputArea.value += '\n\n<< Stop Program >>';
@@ -257,6 +260,7 @@ Code.stopJS = function(){
     resetStepUi(false);
   }
   else if(servar_status()){
+    clearTimeout();
     resetVarStor();
     runButton.disabled = 'disabled';
     outputArea.value += '\n\n<< Stop Program >>';

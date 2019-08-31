@@ -62,12 +62,31 @@ socket.on("connected", function() {});
 socket.on("disconnect", function () {});
 
 socket.on("updata_board", function (msg) {
-    tmp_map_data = msg.map_data;
-    makeTable(tmp_map_data,msg.map_size_y,"game_board");
+    //console.log(msg);
+    makeTable(msg.map_data,msg.map_size_y,"game_board");
 });
 
-socket.on("you_turn", function () {
-    my_map_data = tmp_map_data;
+socket.on("you_turn", function (msg) {
+    console.log(msg);
+    my_map_data = [];
+    for(var y of [-1,0,1]){
+        if(0 > (msg.y + y) || (msg.y_size - 1) < (msg.y + y)){
+            for(var x of [-1,0,1]){
+                my_map_data.push(1);
+            }
+        }
+        else{
+            for(var x of [-1,0,1]){
+                if(0 > (msg.x + x) || (msg.x_size - 1) < (msg.x + x)){
+                    my_map_data.push(1);
+                }
+                else{
+                   my_map_data.push(msg.map_data[msg.y + y][msg.x + x]); 
+                }
+            }
+        }
+    }
+    console.log(my_map_data);
     my_turn = true;
 });
 
@@ -88,6 +107,10 @@ function move_player(direction){
         socket.emit("move_player", direction);
         my_turn = false;
     }
+}
+
+function look(direction){
+    //my_map_data
 }
 
 function turn_ready(){
