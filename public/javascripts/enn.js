@@ -71,9 +71,7 @@ function initApi(interpreter, scope) {
   // Add an API function for the alert() block, generated for "text_print" blocks.
   
   var wrapper = function(text) {
-    console.log(text.toString());
     text.toString();
-    console.log(text);
     outputArea.value = outputArea.value + '\n' + text;
   };
   interpreter.setProperty(scope, 'alert',
@@ -116,12 +114,20 @@ function initApi(interpreter, scope) {
   interpreter.setProperty(scope, 'move_player',
       interpreter.createNativeFunction(wrapper));    
    
-  var wrapper = function() {
-    
+  var wrapper = function(direction) {
+    direction = direction ? direction.toString() : '';
+    look(direction);
   };
   interpreter.setProperty(scope, 'look',
       interpreter.createNativeFunction(wrapper)); 
-  
+      
+  var wrapper = function(direction) {
+    direction = direction ? direction.toString() : '';
+    search(direction);
+  };
+  interpreter.setProperty(scope, 'search',
+      interpreter.createNativeFunction(wrapper)); 
+
   
   Blockly.JavaScript.addReservedWords('wait');
   
@@ -209,6 +215,23 @@ Code.runJS = function(){
       servar_connect_status = true;
       alert('サーバー接続ブロックを検出しました。\n誤動作防止のためサーバー接続ブロックに接続されたブロック以外は無視して実行されます。');
     }
+    
+
+    if(!var_stor["map_data_hiyasinsu_kuropengin"]){
+      latestCode = 'var action_turn_hiyasinsu_kuropengin = false;\n' +  latestCode;
+      latestCode = 'var map_data_hiyasinsu_kuropengin = [];\n' +  latestCode;
+    }
+    else{
+      latestCode = 'var action_turn_hiyasinsu_kuropengin = [' + var_stor["action_turn_hiyasinsu_kuropengin"] + '];\n' +  latestCode;
+      latestCode = 'var map_data_hiyasinsu_kuropengin = [' + var_stor["map_data_hiyasinsu_kuropengin"] + '];\n' +  latestCode;
+    }
+    if(my_map_data.length){
+      latestCode = latestCode + 'var_stor.map_data_hiyasinsu_kuropengin = map_data_hiyasinsu_kuropengin;\n';
+    }
+    latestCode = latestCode + 'var_stor.action_turn_hiyasinsu_kuropengin = action_turn_hiyasinsu_kuropengin;\n';
+    
+    
+    console.log(latestCode);
     
     myInterpreter = new ObjInterpreter(latestCode, initApi);
     

@@ -43,15 +43,20 @@ io.on('connection',function(socket){
       store[socket.id] = usrobj;
       socket.join(msg.room_id);
       
-      io.to(socket.id).emit("updata_board", server_store[msg.room_id]);
+      io.to(socket.id).emit("join_room", {
+        "x_size":server_store[msg.room_id].map_size_x,
+        "y_size":server_store[msg.room_id].map_size_y
+      });
+      
+      io.to(socket.id).emit("updata_board",{
+        "map_data":server_store[msg.room_id].map_data
+      });
       
       if(people_num.length == 1){
         
         socket.broadcast.to(msg.room_id).emit("you_turn",
           {"x":server_store[msg.room_id].cool_x,
            "y":server_store[msg.room_id].cool_y,
-           "x_size":server_store[msg.room_id].map_size_x,
-           "y_size":server_store[msg.room_id].map_size_y,
            "map_data":server_store[msg.room_id].map_data
           });
       }
@@ -93,12 +98,12 @@ io.on('connection',function(socket){
         }
       }
       
-      io.in(store[socket.id].room).emit("updata_board", server_store[store[socket.id].room]);
+      io.in(store[socket.id].room).emit("updata_board",{
+        "map_data":server_store[store[socket.id].room].map_data
+      });
       socket.broadcast.to(store[socket.id].room).emit("you_turn",
           {"x":server_store[store[socket.id].room].hot_x,
            "y":server_store[store[socket.id].room].hot_y,
-           "x_size":server_store[store[socket.id].room].map_size_x,
-           "y_size":server_store[store[socket.id].room].map_size_y,
            "map_data":server_store[store[socket.id].room].map_data
           });
     }
@@ -131,18 +136,63 @@ io.on('connection',function(socket){
         }
       }
       
-      io.in(store[socket.id].room).emit("updata_board", server_store[store[socket.id].room]);
+      io.in(store[socket.id].room).emit("updata_board",{
+        "map_data":server_store[store[socket.id].room].map_data
+      });
       socket.broadcast.to(store[socket.id].room).emit("you_turn",
           {"x":server_store[store[socket.id].room].cool_x,
            "y":server_store[store[socket.id].room].cool_y,
-           "x_size":server_store[store[socket.id].room].map_size_x,
-           "y_size":server_store[store[socket.id].room].map_size_y,
            "map_data":server_store[store[socket.id].room].map_data  
           });
     }
     
   });
   
+  
+  socket.on('look', function(msg) {
+    io.in(store[socket.id].room).emit("updata_board",{
+      "map_data":server_store[store[socket.id].room].map_data,
+      "effect":msg.effect
+    });
+    if(store[socket.id].chara == 0){
+      socket.broadcast.to(store[socket.id].room).emit("you_turn",{
+        "x":server_store[store[socket.id].room].hot_x,
+        "y":server_store[store[socket.id].room].hot_y,
+        "map_data":server_store[store[socket.id].room].map_data
+      });
+    }
+    else if(store[socket.id].chara == 1){
+      socket.broadcast.to(store[socket.id].room).emit("you_turn",{
+        "x":server_store[store[socket.id].room].cool_x,
+        "y":server_store[store[socket.id].room].cool_y,
+        "map_data":server_store[store[socket.id].room].map_data  
+      });
+    }
+  });
+  
+
+  socket.on('search', function(msg) {
+    io.in(store[socket.id].room).emit("updata_board",{
+      "map_data":server_store[store[socket.id].room].map_data,
+      "effect":msg.effect
+    });
+    if(store[socket.id].chara == 0){
+      socket.broadcast.to(store[socket.id].room).emit("you_turn",{
+        "x":server_store[store[socket.id].room].hot_x,
+        "y":server_store[store[socket.id].room].hot_y,
+        "map_data":server_store[store[socket.id].room].map_data
+      });
+    }
+    else if(store[socket.id].chara == 1){
+      socket.broadcast.to(store[socket.id].room).emit("you_turn",{
+        "x":server_store[store[socket.id].room].cool_x,
+        "y":server_store[store[socket.id].room].cool_y,
+        "map_data":server_store[store[socket.id].room].map_data  
+      });
+    }
+  });
+
+
   socket.on('disconnect', function() {
     if (store[socket.id]) {
       var _roomid = store[socket.id].room;

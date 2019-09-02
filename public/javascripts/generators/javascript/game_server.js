@@ -14,11 +14,24 @@ Blockly.JavaScript['server_connect'] = function(block) {
     }
     code += 'join("' + dropdown_room_id + '","' + text_name + '");\n';
   }
-  code += 'if('+ turn_ready() +'){\n'
-        + statements_my_turn 
-        + '}\nelse{\n' 
-        + statements_other_turn 
-        + '}\n';
+  if(my_map_data.length){
+    code += 'if('+ turn_ready() +'){\n'
+          + '  action_turn_hiyasinsu_kuropengin = true;\n'
+          + '  map_data_hiyasinsu_kuropengin = [' + my_map_data + '];\n'
+          + statements_my_turn 
+          + '}\nelse{\n' 
+          + statements_other_turn 
+          + '}\n';    
+  }
+  else{
+    code += 'if('+ turn_ready() +'){\n'
+          + '  action_turn_hiyasinsu_kuropengin = true;\n'
+          + statements_my_turn 
+          + '}\nelse{\n' 
+          + statements_other_turn 
+          + '}\n';  
+  }
+
 
   return code;
 };
@@ -28,28 +41,112 @@ Blockly.JavaScript['server_connect'] = function(block) {
 Blockly.JavaScript['move_player'] = function(block) {
   var dropdown_move = block.getFieldValue('move');
   // TODO: Assemble JavaScript into code variable.
-  var code = 'move_player("' + dropdown_move + '");\n';
+  var code = 'if(action_turn_hiyasinsu_kuropengin){\n'
+            +'  move_player("' + dropdown_move + '");\n'
+            +'  action_turn_hiyasinsu_kuropengin = false;\n'
+            +'}\n';
   return code;
 };
 
 Blockly.JavaScript['look'] = function(block) {
-  var dropdown_look = block.getFieldValue('look');
-  // TODO: Assemble JavaScript into code variable.
-  var code = 'look("' + dropdown_look + '");\n';
+  var dropdown_look = block.getFieldValue('look').toString();
+  var code = '';
+
+  if(my_turn){
+    var x_range = [];
+    var y_range = [];
+    
+    if(dropdown_look == "top"){
+      x_range = [-1,0,1];
+      y_range = [-3,-2,-1];
+      console.log("top");
+    }else if(dropdown_look == "bottom"){
+      x_range = [1,0,-1];
+      y_range = [3,2,1];
+      console.log("bottom");
+    }else if(dropdown_look == "left"){
+      x_range = [-3,-2,-1];
+      y_range = [1,0,-1];
+      console.log("left");
+    }else{
+      x_range = [3,2,1];
+      y_range = [-1,0,1];
+      console.log("right");
+    }
+    var look_map_data = [];
+    
+    for(var y of y_range){
+      for(var x of x_range){
+        if(0 > (now_x + x) || (load_map_size_x - 1) < (now_x + x) || 0 > (now_y + y) || (load_map_size_y - 1) < (now_y + y)){
+          look_map_data.push(1);
+        }
+        else{
+          look_map_data.push(tmp_map_data[now_y + y][now_x + x]); 
+        }
+      }
+    }
+    code = 'if(action_turn_hiyasinsu_kuropengin){\n'
+            +'  look("'+ dropdown_look +'");\n'
+            +'  map_data_hiyasinsu_kuropengin = [' + look_map_data + '];\n'
+            +'  action_turn_hiyasinsu_kuropengin = false;\n'
+            +'}\n';
+  }
   return code;
 };
 
 Blockly.JavaScript['search'] = function(block) {
-  var dropdown_search = block.getFieldValue('search');
+  var dropdown_search = block.getFieldValue('search').toString();
   // TODO: Assemble JavaScript into code variable.
-  var code = '...;\n';
+  var code = '';
+
+  if(my_turn){
+    var x_range = [];
+    var y_range = [];
+
+    if(dropdown_search == "top"){
+      x_range = [0];
+      y_range = [-1,-2,-3,-4,-5,-6,-7,-8,-9];
+    }else if(dropdown_search == "bottom"){
+      x_range = [0];
+      y_range = [1,2,3,4,5,6,7,8,9];
+    }else if(dropdown_search == "left"){
+      x_range = [-1,-2,-3,-4,-5,-6,-7,-8,-9];
+      y_range = [0];
+    }else{
+      x_range = [1,2,3,4,5,6,7,8,9];
+      y_range = [0];
+    }
+    var search_map_data = [];
+    
+    for(var y of y_range){
+      for(var x of x_range){
+        if(0 > (now_x + x) || (load_map_size_x - 1) < (now_x + x) || 0 > (now_y + y) || (load_map_size_y - 1) < (now_y + y)){
+          search_map_data.push(1);
+        }
+        else{
+          search_map_data.push(tmp_map_data[now_y + y][now_x + x]); 
+        }
+      }
+    }
+    code = 'if(action_turn_hiyasinsu_kuropengin){\n'
+            +'  search("'+ dropdown_search +'");\n'
+            +'  map_data_hiyasinsu_kuropengin = [' + search_map_data + '];\n'
+            +'  action_turn_hiyasinsu_kuropengin = false;\n'
+            +'}\n';
+  }
   return code;
 };
 
 Blockly.JavaScript['get_value'] = function(block) {
-  var dropdown_get_value = block.getFieldValue('get_value');
+  var dropdown_get_value = block.getFieldValue('get_value') - 1;
   // TODO: Assemble JavaScript into code variable.
-  var code = my_map_data[parseInt(dropdown_get_value, 10)-1];
+  var code = '';
+  if(my_map_data.length){
+    code = 'map_data_hiyasinsu_kuropengin['+ dropdown_get_value +']';
+  }
+  else{
+    code = 99;
+  }
 
   // TODO: Change ORDER_NONE to the correct strength.
   return [code, Blockly.JavaScript.ORDER_NONE];

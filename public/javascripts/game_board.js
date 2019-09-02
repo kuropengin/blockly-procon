@@ -1,4 +1,4 @@
-function makeTable(data, y, tableId){
+function makeTable(data, y, effect, tableId){
     var rows=[];
     var table = document.createElement("table");
     table.setAttribute("id","game_board_table");
@@ -41,6 +41,8 @@ function makeTable(data, y, tableId){
 
             cell.style.height = _y + "px";
             cell.style.width = _y + "px";
+            
+
 
 
         }
@@ -58,35 +60,52 @@ var my_map_data = [];
 var variable_record = {};
 
 
+var load_map_size_x = null;
+var load_map_size_y = null;
+var now_x = null;
+var now_y = null;
+
+
 socket.on("connected", function() {});
 socket.on("disconnect", function () {});
 
+socket.on("join_room", function (msg) {
+    load_map_size_x = msg.x_size;
+    load_map_size_y = msg.y_size;
+});
+
 socket.on("updata_board", function (msg) {
     //console.log(msg);
-    makeTable(msg.map_data,msg.map_size_y,"game_board");
+    if(msg.effect){
+        makeTable(msg.map_data,load_map_size_y, msg.effect,"game_board");
+    }
+    else{
+        makeTable(msg.map_data,load_map_size_y, 0,"game_board");
+    }
 });
 
 socket.on("you_turn", function (msg) {
-    console.log(msg);
     my_map_data = [];
+    tmp_map_data = Array.from(msg.map_data);
+    now_x = msg.x;
+    now_y = msg.y;
     for(var y of [-1,0,1]){
-        if(0 > (msg.y + y) || (msg.y_size - 1) < (msg.y + y)){
+        if(0 > (now_y + y) || (load_map_size_y - 1) < (now_y + y)){
             for(var x of [-1,0,1]){
                 my_map_data.push(1);
             }
         }
         else{
             for(var x of [-1,0,1]){
-                if(0 > (msg.x + x) || (msg.x_size - 1) < (msg.x + x)){
+                if(0 > (now_x + x) || (load_map_size_x - 1) < (now_x + x)){
                     my_map_data.push(1);
                 }
                 else{
-                   my_map_data.push(msg.map_data[msg.y + y][msg.x + x]); 
+                   my_map_data.push(msg.map_data[now_y + y][now_x + x]); 
                 }
             }
         }
     }
-    console.log(my_map_data);
     my_turn = true;
 });
 
@@ -109,9 +128,20 @@ function move_player(direction){
     }
 }
 
-function look(direction){
-    //my_map_data
+function look(dropdown_look){
+    if(my_turn){
+        socket.emit("look",{"effect":dropdown_look});
+        my_turn = false;
+    }
 }
+
+function search(dropdown_search){
+    if(my_turn){
+        socket.emit("search",{"effect":dropdown_search});
+        my_turn = false;
+    }
+}
+
 
 function turn_ready(){
     return my_turn;
