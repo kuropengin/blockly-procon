@@ -274,12 +274,26 @@ io.on('connection',function(socket){
       if(people_num.length == 0){
         server_store[_roomid] = JSON.parse(JSON.stringify(game_server[_roomid]));
       }
-      
     }
   });
   
   
-  
+  socket.on('leave_room', function() {
+    if (store[socket.id]) {
+      var _roomid = store[socket.id].room;
+      socket.leave(_roomid);
+      delete store[socket.id];
+      
+      var people_num = Object.values(store).filter( function( value ) {
+        return value.room === _roomid;
+      });
+      
+      if(people_num.length == 0){
+        server_store[_roomid] = JSON.parse(JSON.stringify(game_server[_roomid]));
+      }
+    }
+  });
+
 });
 
 

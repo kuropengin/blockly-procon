@@ -181,6 +181,9 @@ function resetInterpreter() {
 }
 
 function resetVarStor(){
+  if(servar_connect_status){
+    socket.emit("leave_room");
+  }
   var_stor = {};
   my_turn = false;
   servar_connect_status = false;
