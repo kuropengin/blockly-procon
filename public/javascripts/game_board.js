@@ -142,6 +142,13 @@ function search(dropdown_search){
     }
 }
 
+function put_wall(direction){
+    if(my_turn){
+        socket.emit("put_wall", direction);
+        my_turn = false;
+    }
+}
+
 
 function turn_ready(){
     return my_turn;

@@ -105,7 +105,7 @@ io.on('connection',function(socket){
           {"x":server_store[store[socket.id].room].hot_x,
            "y":server_store[store[socket.id].room].hot_y,
            "map_data":server_store[store[socket.id].room].map_data
-          });
+      });
     }
     else if(store[socket.id].chara == 1){
       var h_x = server_store[store[socket.id].room].hot_x;
@@ -143,9 +143,8 @@ io.on('connection',function(socket){
           {"x":server_store[store[socket.id].room].cool_x,
            "y":server_store[store[socket.id].room].cool_y,
            "map_data":server_store[store[socket.id].room].map_data  
-          });
+      });
     }
-    
   });
   
   
@@ -188,6 +187,75 @@ io.on('connection',function(socket){
         "x":server_store[store[socket.id].room].cool_x,
         "y":server_store[store[socket.id].room].cool_y,
         "map_data":server_store[store[socket.id].room].map_data  
+      });
+    }
+  });
+  
+  socket.on('put_wall', function(msg) {
+    if(store[socket.id].chara == 0){
+      var c_x = server_store[store[socket.id].room].cool_x;
+      var c_y = server_store[store[socket.id].room].cool_y;
+      if(msg === "top"){
+        if(0 <= c_y - 1){
+          server_store[store[socket.id].room].map_data[c_y - 1][c_x] = 1;
+        }
+      }
+      else if(msg === "bottom"){
+        if(server_store[store[socket.id].room].map_size_y > c_y + 1){
+          server_store[store[socket.id].room].map_data[c_y + 1][c_x] = 1;
+        }
+      }
+      else if(msg === "left"){
+        if(0 <= c_x - 1){
+          server_store[store[socket.id].room].map_data[c_y][c_x - 1] = 1;
+        }
+      }
+      else{
+        if(server_store[store[socket.id].room].map_size_x > c_x + 1){
+          server_store[store[socket.id].room].map_data[c_y][c_x + 1] = 1;
+        }
+      }
+      
+      io.in(store[socket.id].room).emit("updata_board",{
+        "map_data":server_store[store[socket.id].room].map_data
+      });
+      socket.broadcast.to(store[socket.id].room).emit("you_turn",
+          {"x":server_store[store[socket.id].room].hot_x,
+           "y":server_store[store[socket.id].room].hot_y,
+           "map_data":server_store[store[socket.id].room].map_data
+      });
+    }
+    else if(store[socket.id].chara == 1){
+      var h_x = server_store[store[socket.id].room].hot_x;
+      var h_y = server_store[store[socket.id].room].hot_y;
+      if(msg === "top"){
+        if(0 <= h_y - 1){
+          server_store[store[socket.id].room].map_data[h_y - 1][h_x] = 1;
+        }
+      }
+      else if(msg === "bottom"){
+        if(server_store[store[socket.id].room].map_size_y > h_y + 1){
+          server_store[store[socket.id].room].map_data[h_y + 1][h_x] = 1;
+        }
+      }
+      else if(msg === "left"){
+        if(0 <= h_x - 1){
+          server_store[store[socket.id].room].map_data[h_y][h_x - 1] = 1;
+        }
+      }
+      else{
+        if(server_store[store[socket.id].room].map_size_x > h_x + 1){
+          server_store[store[socket.id].room].map_data[h_y][h_x + 1] = 1;
+        }
+      }
+      
+      io.in(store[socket.id].room).emit("updata_board",{
+        "map_data":server_store[store[socket.id].room].map_data
+      });
+      socket.broadcast.to(store[socket.id].room).emit("you_turn",
+          {"x":server_store[store[socket.id].room].cool_x,
+           "y":server_store[store[socket.id].room].cool_y,
+           "map_data":server_store[store[socket.id].room].map_data  
       });
     }
   });

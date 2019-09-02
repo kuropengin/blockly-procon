@@ -153,9 +153,12 @@ Blockly.JavaScript['get_value'] = function(block) {
 };
 
 Blockly.JavaScript['put_wall'] = function(block) {
-  var dropdown_put_wall = block.getFieldValue('put_wall');
+  var dropdown_put_wall = block.getFieldValue('put_wall').toString();
   // TODO: Assemble JavaScript into code variable.
-  var code = '...;\n';
+  var code = 'if(action_turn_hiyasinsu_kuropengin){\n'
+            +'  put_wall("' + dropdown_put_wall + '");\n'
+            +'  action_turn_hiyasinsu_kuropengin = false;\n'
+            +'}\n';
   return code;
 };
 

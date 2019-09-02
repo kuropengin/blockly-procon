@@ -127,8 +127,15 @@ function initApi(interpreter, scope) {
   };
   interpreter.setProperty(scope, 'search',
       interpreter.createNativeFunction(wrapper)); 
-
   
+  var wrapper = function(direction) {
+    direction = direction ? direction.toString() : '';
+    put_wall(direction);
+  };
+  interpreter.setProperty(scope, 'put_wall',
+      interpreter.createNativeFunction(wrapper));    
+
+
   Blockly.JavaScript.addReservedWords('wait');
   
   var wrapper = interpreter.createAsyncFunction(
