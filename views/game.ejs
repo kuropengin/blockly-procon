@@ -29,20 +29,30 @@
 </head>
 <body>
   <div class="header">
-    
+    <div class = "back_page">
+      <div class = "back_button"><a href="../"></a></div>
+    </div>
     <div class="control_area">
-      <button id="runButton" class="notext primary" title="...">
-        <img src='/media/1x1.gif' class="run icon21">
-      </button>
-      <button id="stopButton" class="notext" title="">
-        <img src='/media/1x1.gif' class="stop">
-      </button>
-      <button id="trashButton" class="notext" title="...">
-        <img src='/media/1x1.gif' class="trash icon21">
-      </button>
-      <button id="linkButton" class="notext" title="...">
-        <img src='/media/1x1.gif' class="link icon21">
-      </button>
+      <div class = "page_title">
+        <h1><span class = "page_title_span">プログラミング</span><%- title %></h1>
+      </div>
+      <div class = "control_button">
+        <button id="runButton" class="notext primary" title="...">
+          <img src='/media/1x1.gif' class="run icon21">
+        </button>
+        <button id="stopButton" class="notext" title="">
+          <img src='/media/1x1.gif' class="stop">
+        </button>
+        <button id="trashButton" class="notext" title="...">
+          <img src='/media/1x1.gif' class="trash icon21">
+        </button>
+        <button id="trashButton" class="notext" title="...">
+          <img src='/media/1x1.gif' class="stop">
+        </button>
+        <button id="trashButton" class="notext" title="...">
+          <img src='/media/1x1.gif' class="stop">
+        </button>
+      </div>
     </div>  
     
     <div class="farSide">
@@ -71,6 +81,7 @@
 
     <div class="game_area">
       <div id="game_board"></div>
+      <div id="game_info"></div>
     </div>
     <textarea class="console_area" id="output" disabled="disabled"></textarea>
     

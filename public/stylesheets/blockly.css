@@ -12,6 +12,7 @@ body {
 
 .farSide {
   text-align: right;
+  display:none;
 }
 
 html[dir="RTL"] .farSide {
@@ -104,7 +105,7 @@ html[dir=rtl] td.tabmax {
 table {
   border-collapse: separate;
   border-spacing: 1px;
-  margin: 0;
+  margin: 0 auto;
   padding: 0;
   border: none;
   font-size: 0px;
@@ -113,6 +114,7 @@ td {
   padding: 0;
   border: solid 1px #6c6c6c;
   vertical-align: top;
+  background-size: contain;
 }
 td img{
   width:100%;

@@ -1,6 +1,6 @@
 
 Blockly.JavaScript['server_connect'] = function(block) {
-  var text_name = block.getFieldValue('name');
+  var text_name = block.getFieldValue('name').replace(/\s+/g, "_");
   var dropdown_room_id = block.getFieldValue('room_id');
   var statements_my_turn = Blockly.JavaScript.statementToCode(block, 'my_turn');
   var statements_other_turn = Blockly.JavaScript.statementToCode(block, 'other_turn');
@@ -59,19 +59,15 @@ Blockly.JavaScript['look'] = function(block) {
     if(dropdown_look == "top"){
       x_range = [-1,0,1];
       y_range = [-3,-2,-1];
-      console.log("top");
     }else if(dropdown_look == "bottom"){
       x_range = [1,0,-1];
       y_range = [3,2,1];
-      console.log("bottom");
     }else if(dropdown_look == "left"){
       x_range = [-3,-2,-1];
       y_range = [1,0,-1];
-      console.log("left");
     }else{
       x_range = [3,2,1];
       y_range = [-1,0,1];
-      console.log("right");
     }
     var look_map_data = [];
     

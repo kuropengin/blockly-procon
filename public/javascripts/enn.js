@@ -241,7 +241,7 @@ Code.runJS = function(){
     latestCode = latestCode + 'var_stor.action_turn_hiyasinsu_kuropengin = action_turn_hiyasinsu_kuropengin;\n';
     
     
-    console.log(latestCode);
+    //console.log(latestCode);
     
     myInterpreter = new ObjInterpreter(latestCode, initApi);
     
@@ -259,12 +259,12 @@ Code.runJS = function(){
             // Execution is currently blocked by some async call.
             // Try again later.
             
-            setTimeout(runner, 10);
+            setTimeout(runner, 1);
           } else {
             // Program is complete.
             if(servar_connect_status){
               resetInterpreter();
-              setTimeout(Code.runJS, 50);
+              setTimeout(Code.runJS, 10);
             }
             else{
               outputArea.value += '\n\n<< Program complete >>';
@@ -299,5 +299,9 @@ Code.stopJS = function(){
     outputArea.value += '\n\n<< Stop Program >>';
     resetInterpreter();
     resetStepUi(false);
+  }
+  var c = document.getElementById("ready_player");
+  if(c){
+      c.parentNode.removeChild(c);
   }
 };
