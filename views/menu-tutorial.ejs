@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Procon</title>
+  <link rel='stylesheet' href='/stylesheets/style.css' />
+  <link rel='stylesheet' href='/stylesheets/menu.css' />
+  <link rel='stylesheet' href='/stylesheets/menu-programming.css' />
+  
+  <script src="/javascripts/jquery-3.4.1.min.js"></script>
+  
+  <script>
+    var satage_data = <%- JSON.stringify(stagedata) %>;
+  </script>
+  
+</head>
+<body>
+
+  <div class="header">
+    
+    <div class = "back_page">
+      <div class = "back_button"><a href="../"></a></div>
+    </div>
+    <div class="control_area">
+      <div class = "page_title">
+        <h1><span class = "page_title_span">チュートリアル</span><%- title %></h1>
+      </div>
+      <div class = "control_button">
+        <button>
+          <div class = "menu_config">設定</div>
+        </button>
+      </div>
+    </div>  
+    
+  </div>
+  
+  <div class="content">
+    <div class="left_area">
+      <div id="stage_list_area">
+      
+      </div>
+    </div>
+    <div class="right_area">
+      
+    </div>
+  </div>
+
+  <script>
+    for(var item in satage_data){
+      var div = document.createElement("div");
+      div.setAttribute("id",satage_data[item].stage_id);
+      div.classList.add("stage_one");
+      
+      var a = document.createElement("a");
+      a.href = "#" + satage_data[item].stage_id;
+      div.appendChild(a);
+      
+      var ndiv = document.createElement("div"); 
+      ndiv.classList.add("stage_name");
+      var newContent = document.createTextNode(satage_data[item].name); 
+      ndiv.appendChild(newContent);
+      
+      div.appendChild(ndiv);
+      
+      
+      
+      document.getElementById("stage_list_area").appendChild(div);
+    }
+    var satage_data = <%- JSON.stringify(stagedata) %>;
+  </script>
+ 
+</body>
+</html>

@@ -8,19 +8,17 @@ Blockly.Blocks['server_connect'] = {
         .appendField("プレイヤー名")
         .appendField(new Blockly.FieldTextInput(""), "name");
     this.appendDummyInput()
-        .appendField(new Blockly.FieldImage("https://www.gstatic.com/codesite/ph/images/star_on.gif", 15, 15, "*"));
+        .appendField("値の初期化");
+    this.appendStatementInput("init_value")
+        .setCheck(null);
+    this.appendDummyInput();
     this.appendDummyInput()
-        .appendField("もし自分のターンなら");
+        .appendField(new Blockly.FieldImage("https://www.gstatic.com/codesite/ph/images/star_on.gif", 15, 15, "*"))
+        .appendField("　ゲームが終了するまで繰り返す");
+    this.appendDummyInput()
+        .appendField("もし自分のターンなら実行");
     this.appendStatementInput("my_turn")
-        .setCheck(null)
-        .appendField("実行");
-    this.appendDummyInput()
-        .setAlign(Blockly.ALIGN_RIGHT);
-    this.appendDummyInput()
-        .appendField("もし相手のターンなら");
-    this.appendStatementInput("other_turn")
-        .setCheck(null)
-        .appendField("実行");
+        .setCheck(null);
     this.appendDummyInput()
         .setAlign(Blockly.ALIGN_RIGHT)
         .appendField(new Blockly.FieldImage("https://www.gstatic.com/codesite/ph/images/star_on.gif", 15, 15, "*"))
@@ -77,10 +75,25 @@ Blockly.Blocks['search'] = {
 Blockly.Blocks['get_value'] = {
   init: function() {
     this.appendDummyInput()
-        .appendField(new Blockly.FieldDropdown([["1","1"], ["2","2"], ["3","3"], ["4","4"], ["5","5"], ["6","6"], ["7","7"], ["8","8"], ["9","9"]]), "get_value")
+        .appendField(new Blockly.FieldDropdown([["1","0"], ["2","1"], ["3","2"], ["4","3"], ["5","4"], ["6","5"], ["7","6"], ["8","7"], ["9","8"]]), "get_value")
         .appendField("マス目");
     this.setInputsInline(true);
     this.setOutput(true, "Number");
+    this.setColour(195);
+ this.setTooltip("");
+ this.setHelpUrl("");
+  }
+};
+
+Blockly.Blocks['if_value'] = {
+  init: function() {
+    this.appendDummyInput()
+        .appendField(new Blockly.FieldDropdown([["1","0"], ["2","1"], ["3","2"], ["4","3"], ["5","4"], ["6","5"], ["7","6"], ["8","7"], ["9","8"]]), "map_value")
+        .appendField("マス目が")
+        .appendField(new Blockly.FieldDropdown([["なにもない","0"], ["ブロックがある","1"], ["ハートがある","2"], ["プレイヤーがいる","3"]]), "map_item")
+        .appendField("なら");
+    this.setInputsInline(true);
+    this.setOutput(true, "Boolean");
     this.setColour(195);
  this.setTooltip("");
  this.setHelpUrl("");

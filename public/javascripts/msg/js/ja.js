@@ -435,4 +435,6 @@ Blockly.Msg["PROCEDURES_HUE"] = "290";
 Blockly.Msg["COLOUR_HUE"] = "20";
 Blockly.Msg["VARIABLES_DYNAMIC_HUE"] = "310";
 
+Blockly.Msg["GAME_SERVAR"] = "ゲーム";
+
 

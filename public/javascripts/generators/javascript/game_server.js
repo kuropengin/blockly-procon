@@ -2,8 +2,8 @@
 Blockly.JavaScript['server_connect'] = function(block) {
   var text_name = block.getFieldValue('name').replace(/\s+/g, "_");
   var dropdown_room_id = block.getFieldValue('room_id');
+  var statements_init_value = Blockly.JavaScript.statementToCode(block, 'init_value');
   var statements_my_turn = Blockly.JavaScript.statementToCode(block, 'my_turn');
-  var statements_other_turn = Blockly.JavaScript.statementToCode(block, 'other_turn');
   // TODO: Assemble JavaScript into code variable.
   
   var code = '';
@@ -12,23 +12,20 @@ Blockly.JavaScript['server_connect'] = function(block) {
     if(!text_name){
       text_name = "NoName"
     }
-    code += 'join("' + dropdown_room_id + '","' + text_name + '");\n';
+    code += 'join("' + dropdown_room_id + '","' + text_name + '");\n'
+          + statements_init_value;
   }
   if(my_map_data.length){
     code += 'if('+ turn_ready() +'){\n'
           + '  action_turn_hiyasinsu_kuropengin = true;\n'
           + '  map_data_hiyasinsu_kuropengin = [' + my_map_data + '];\n'
           + statements_my_turn 
-          + '}\nelse{\n' 
-          + statements_other_turn 
           + '}\n';    
   }
   else{
     code += 'if('+ turn_ready() +'){\n'
           + '  action_turn_hiyasinsu_kuropengin = true;\n'
           + statements_my_turn 
-          + '}\nelse{\n' 
-          + statements_other_turn 
           + '}\n';  
   }
 
@@ -77,7 +74,12 @@ Blockly.JavaScript['look'] = function(block) {
           look_map_data.push(1);
         }
         else{
-          look_map_data.push(tmp_map_data[now_y + y][now_x + x]); 
+          if(tmp_map_data[now_y + y][now_x + x] == 3 || tmp_map_data[now_y + y][now_x + x] == 4){
+            look_map_data.push(3);
+          }
+          else{
+            look_map_data.push(tmp_map_data[now_y + y][now_x + x]);
+          } 
         }
       }
     }
@@ -120,7 +122,12 @@ Blockly.JavaScript['search'] = function(block) {
           search_map_data.push(1);
         }
         else{
-          search_map_data.push(tmp_map_data[now_y + y][now_x + x]); 
+          if(tmp_map_data[now_y + y][now_x + x] == 3 || tmp_map_data[now_y + y][now_x + x] == 4){
+            search_map_data.push(3);
+          }
+          else{
+            search_map_data.push(tmp_map_data[now_y + y][now_x + x]);
+          }
         }
       }
     }
@@ -145,6 +152,20 @@ Blockly.JavaScript['get_value'] = function(block) {
   }
 
   // TODO: Change ORDER_NONE to the correct strength.
+  return [code, Blockly.JavaScript.ORDER_NONE];
+};
+
+Blockly.JavaScript['if_value'] = function(block) {
+  var dropdown_map_value = block.getFieldValue('map_value');
+  var dropdown_map_item = block.getFieldValue('map_item');
+  // TODO: Assemble JavaScript into code variable.
+  var code = '...';
+  if(my_map_data.length){
+    code = 'map_data_hiyasinsu_kuropengin['+ dropdown_map_value +'] == ' + dropdown_map_item + '';
+  }
+  else{
+    code = false;
+  }
   return [code, Blockly.JavaScript.ORDER_NONE];
 };
 

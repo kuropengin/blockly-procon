@@ -16,7 +16,7 @@ Object.keys(game_server).forEach(function(key) {
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-  res.render('game', { title: 'フリープレイ',server_list:server_list });
+  res.render('game', { title: 'プログラミング',server_list:server_list });
 });
 
 
@@ -24,6 +24,21 @@ var store = {};
 var server_store = JSON.parse(JSON.stringify(game_server));
 
 function cpu_turn(data){
+  server_store[store[data.socket.id].room].turn -= 1;
+  
+  io.in(store[data.socket.id].room).emit("updata_board",{
+    "map_data":server_store[store[data.socket.id].room].map_data,
+    "cool_score":server_store[store[data.socket.id].room].cool_score,
+    "hot_score":server_store[store[data.socket.id].room].hot_score,
+    "turn":server_store[store[data.socket.id].room].turn,
+    "effect":{"t":"s","d":"top","p":"hot"}
+  });
+  
+  io.to(store[data.socket.id].room).emit("you_turn",{
+    "x":server_store[store[data.socket.id].room].cool_x,
+    "y":server_store[store[data.socket.id].room].cool_y,
+    "map_data":server_store[store[data.socket.id].room].map_data  
+  });
   
 }
 
@@ -44,6 +59,7 @@ function game_result_check(socket,winer){
     io.in(store[socket.id].room).emit("game_result",{
       "winer": winer
     });
+    return;
   }
   
   var rcx = server_store[store[socket.id].room].cool_x;
@@ -109,6 +125,7 @@ function game_result_check(socket,winer){
   
   if(c_t == 1 && c_b == 1  && c_r == 1 && c_l == 1){
     winer = "hot";
+    
   }
   
   if(h_t == 1 && h_b == 1  && h_r == 1 && h_l == 1){
@@ -125,6 +142,7 @@ function game_result_check(socket,winer){
     io.in(store[socket.id].room).emit("game_result",{
       "winer": winer
     });
+    return;
   }
   else{
     if(store[socket.id].chara == 0){
@@ -132,7 +150,8 @@ function game_result_check(socket,winer){
         cpu_turn({
           "x":server_store[store[socket.id].room].hot_x,
           "y":server_store[store[socket.id].room].hot_y,
-          "map_data":server_store[store[socket.id].room].map_data
+          "map_data":server_store[store[socket.id].room].map_data,
+          "socket":socket
         });
       }
       else{
@@ -399,6 +418,7 @@ io.on('connection',function(socket){
           });
           
           io.in(store[socket.id].room).emit("start_game");
+          server_store[msg.room_id].play = true;
           
           io.in(store[socket.id].room).emit("updata_board",{
             "map_data":server_store[msg.room_id].map_data,
@@ -408,7 +428,7 @@ io.on('connection',function(socket){
             "effect":{"t":"r","p":"hot"}
           });
           
-          socket.broadcast.to(store[socket.id].room).emit("you_turn",
+          io.to(store[socket.id].room).emit("you_turn",
             {"x":server_store[msg.room_id].cool_x,
              "y":server_store[msg.room_id].cool_y,
              "map_data":server_store[msg.room_id].map_data
@@ -579,48 +599,48 @@ io.on('connection',function(socket){
         }
       }
       
-      
-      if(server_store[store[socket.id].room].map_data[h_y][h_x] == 1){
-        winer = "cool";
-      }
-      else if(server_store[store[socket.id].room].map_data[h_y][h_x] == 2){
-        server_store[store[socket.id].room].map_data[h_y][h_x] = 4;
-        server_store[store[socket.id].room].hot_score += 1;
-        
-        
-        if(msg === "top"){
-          if(server_store[store[socket.id].room].map_data[h_y + 1][h_x] == 4){
-            winer = "hot";
-          }
-          server_store[store[socket.id].room].map_data[h_y + 1][h_x] = 1;
+      if(!winer){
+        if(server_store[store[socket.id].room].map_data[h_y][h_x] == 1){
+          winer = "cool";
         }
-        else if(msg === "bottom"){
-          if(server_store[store[socket.id].room].map_data[h_y - 1][h_x] == 4){
-            winer = "hot";
+        else if(server_store[store[socket.id].room].map_data[h_y][h_x] == 2){
+          server_store[store[socket.id].room].map_data[h_y][h_x] = 4;
+          server_store[store[socket.id].room].hot_score += 1;
+          
+          
+          if(msg === "top"){
+            if(server_store[store[socket.id].room].map_data[h_y + 1][h_x] == 4){
+              winer = "hot";
+            }
+            server_store[store[socket.id].room].map_data[h_y + 1][h_x] = 1;
           }
-          server_store[store[socket.id].room].map_data[h_y - 1][h_x] = 1;
+          else if(msg === "bottom"){
+            if(server_store[store[socket.id].room].map_data[h_y - 1][h_x] == 4){
+              winer = "hot";
+            }
+            server_store[store[socket.id].room].map_data[h_y - 1][h_x] = 1;
+          }
+          else if(msg === "left"){
+            if(server_store[store[socket.id].room].map_data[h_y][h_x + 1] == 4){
+              winer = "hot";
+            }
+            server_store[store[socket.id].room].map_data[h_y][h_x + 1] = 1;
+          }
+          else{
+            if(server_store[store[socket.id].room].map_data[h_y][h_x - 1] == 4){
+              winer = "hot";
+            }
+            server_store[store[socket.id].room].map_data[h_y][h_x - 1] = 1;
+          }
+          
         }
-        else if(msg === "left"){
-          if(server_store[store[socket.id].room].map_data[h_y][h_x + 1] == 4){
-            winer = "hot";
-          }
-          server_store[store[socket.id].room].map_data[h_y][h_x + 1] = 1;
+        else if(server_store[store[socket.id].room].map_data[h_y][h_x] == 3){
+          server_store[store[socket.id].room].map_data[h_y][h_x] = 43;
         }
         else{
-          if(server_store[store[socket.id].room].map_data[h_y][h_x - 1] == 4){
-            winer = "hot";
-          }
-          server_store[store[socket.id].room].map_data[h_y][h_x - 1] = 1;
+          server_store[store[socket.id].room].map_data[h_y][h_x] = 4;
         }
-        
       }
-      else if(server_store[store[socket.id].room].map_data[h_y][h_x] == 3){
-        server_store[store[socket.id].room].map_data[h_y][h_x] = 43;
-      }
-      else{
-        server_store[store[socket.id].room].map_data[h_y][h_x] = 4;
-      }
-      
       
       server_store[store[socket.id].room].turn -= 1;
       

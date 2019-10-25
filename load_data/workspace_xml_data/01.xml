@@ -1,0 +1,3 @@
+<xml xmlns="https://developers.google.com/blockly/xml" id="toolbox" style="display: none">
+    <block type="tutorial_move_player"></block>
+</xml>

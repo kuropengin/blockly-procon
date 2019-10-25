@@ -140,7 +140,6 @@ function initApi(interpreter, scope) {
   
   var wrapper = interpreter.createAsyncFunction(
       function(timeInSeconds,callback) {
-          // Delay the call to the callback.
           setTimeout(callback, timeInSeconds * 1000);
       }
   );
@@ -190,12 +189,27 @@ function resetVarStor(){
   my_map_data = [];
 }
 
+var runspeed = 0;
+var programming_mode = "";
+try{
+  if(satage_data){
+    runspeed = 100;
+    programming_mode = "t";
+  }
+  else{
+    runspeed = 0;
+    programming_mode = "p";
+  }
+}
+catch(e){
+  runspeed = 0;
+  programming_mode = "p";
+}
 
 Code.runJS = function(){
   if (!myInterpreter) {
-    // First statement of this code.
-    // Clear the program output.
     if(!servar_status()){
+      resetInterpreter();
       resetStepUi(true);
     }
     runButton.disabled = 'disabled';
@@ -204,17 +218,32 @@ Code.runJS = function(){
     Blockly.JavaScript.addReservedWords('highlightBlock');
     latestCode = Blockly.JavaScript.workspaceToCode(Code.workspace);
     
+    var xmlDom = Blockly.Xml.workspaceToDom(Code.workspace);
+    var xmlText = Blockly.Xml.domToPrettyText(xmlDom);
+    
+    if(programming_mode == "p"){
+      localStorage.setItem("LastRun", xmlText);
+    }
+    else if(programming_mode == "t"){
+      makeTable("game_board");
+    }
+    
     var c1 = latestCode.split(/\r\n|\r|\n/)[0];
     if(c1.substr(0,3) === "var"){
       var c2 = '';
     	for(let i of c1.substring(4,c1.length-1).split(', ')) {
-    	  if(!var_stor[i]){
+    	  if(!(i in var_stor)){
     		  var_stor[i] = null;
     	  }
     	  else{
-    	    c2 += ''+ i + '=' + var_stor[i] + ';'; 
+    	    if(typeof(var_stor[i]) == "number"){
+    	      c2 += ''+ i + ' = ' + var_stor[i] + ';'; 
+    	    }
+    	    else{
+    	      c2 += ''+ i + ' = "' + var_stor[i] + '";'; 
+    	    }
     	  }
-    		latestCode += 'var_stor.'+ i + '=' + i + ';'; 
+    		latestCode += 'var_stor.'+ i + ' = ' + i + ';'; 
       }
       var c3 = latestCode.split(/\r\n|\r|\n/);//.splice(1,0,c2).join('\n');
       c3[1] = c2;
@@ -245,8 +274,52 @@ Code.runJS = function(){
     
     myInterpreter = new ObjInterpreter(latestCode, initApi);
     
-    //alert('Ready to execute the following code\n' + '===================================\n' + latestCode);
+    runner = function() {
+      if (myInterpreter) {
+        var hasMore
+        try {
+          hasMore = myInterpreter.step();
+        }
+        catch (e) {
+          outputArea.value += '\n\n<< Program error >>\n' + e +'\n';
+          Code.stopJS();
+        }
+        
+        if (hasMore) {
+          if(programming_mode == "p"){
+            runner();
+          }
+          else{
+            setTimeout(runner, 10);
+          }
+        }
+        else {
+          if(servar_connect_status){
+            resetInterpreter();
+            if(var_stor["action_turn_hiyasinsu_kuropengin"]){
+              roop_run = setTimeout(Code.runJS,100);
+            }
+            if(next_my_trun){
+              next_my_trun = false;
+              roop_run = setTimeout(Code.runJS,100);
+            }
+            //Code.runJS();
+          }
+          else{
+            outputArea.value += '\n\n<< Program complete >>';
+            resetInterpreter();
+            resetStepUi(false);
+            if(programming_mode == "t"){
+              endCode();
+            }
+          }
+        }
+      }
+    };
+    runner();
     
+    
+    /*
     setTimeout(function() {
       highlightPause = true;
 
@@ -256,15 +329,12 @@ Code.runJS = function(){
           var hasMore = myInterpreter.step();
           
           if (hasMore) {
-            // Execution is currently blocked by some async call.
-            // Try again later.
-            
             setTimeout(runner, 1);
           } else {
             // Program is complete.
             if(servar_connect_status){
               resetInterpreter();
-              setTimeout(Code.runJS, 10);
+              setTimeout(Code.runJS, 1);
             }
             else{
               outputArea.value += '\n\n<< Program complete >>';
@@ -276,11 +346,10 @@ Code.runJS = function(){
       };
       runner();
     }, 1);
+    */
     return;
   }
 };
-
-
 
 
 Code.stopJS = function(){
@@ -293,8 +362,8 @@ Code.stopJS = function(){
     resetStepUi(false);
   }
   else if(servar_status()){
-    clearTimeout();
     resetVarStor();
+    clearTimeout(roop_run);
     runButton.disabled = 'disabled';
     outputArea.value += '\n\n<< Stop Program >>';
     resetInterpreter();
@@ -304,4 +373,126 @@ Code.stopJS = function(){
   if(c){
       c.parentNode.removeChild(c);
   }
+  if(programming_mode == "t"){
+    endCode();
+  }
 };
+
+Code.download = function(){
+  var xmlTextarea = document.getElementById('content_xml');
+  var xmlDom = Blockly.Xml.workspaceToDom(Code.workspace);
+  var xmlText = Blockly.Xml.domToPrettyText(xmlDom);
+  
+  var userAgent = window.navigator.userAgent.toLowerCase();
+  var webbrowser_check = 0;
+  
+  if(userAgent.indexOf('msie') != -1 || userAgent.indexOf('trident') != -1){
+    webbrowser_check = 1;
+  }
+  else if(userAgent.indexOf('edge') != -1) {
+    webbrowser_check = 1;
+  }
+  else if(userAgent.indexOf('chrome') != -1) {
+    webbrowser_check = 1;
+  }
+  else if(userAgent.indexOf('safari') != -1) {
+    webbrowser_check = 0;
+  }
+  else if(userAgent.indexOf('firefox') != -1) {
+    webbrowser_check = 1;
+  }
+  else if(userAgent.indexOf('opera') != -1) {
+    webbrowser_check = 1;
+  }
+  else {
+    webbrowser_check = 0;
+  }
+  
+  if(webbrowser_check == 0){
+    window.alert("ご利用のブラウザは本機能を使用できません");
+  }
+  else{
+    var blob = new Blob([xmlText], {type: "application/octet-stream"}); 
+    
+    var file_name = window.prompt("ファイル名を入力してください", "");
+    
+    if(file_name){
+      if(window.navigator.msSaveBlob)
+      {
+          // IE
+          window.navigator.msSaveBlob(blob, file_name + ".xml");
+      } else {
+          // another
+          var a = document.createElement("a");
+          a.href = URL.createObjectURL(blob);
+          a.target = '_blank';
+          a.download = file_name + ".xml";
+          a.click();
+      }
+    }
+  }
+}
+
+
+function readSingleFile(e) {
+  var file = e.target.files[0];
+  if (!file) {
+    return;
+  }
+  console.log(e);
+  var reader = new FileReader();
+  reader.onload = function(e) {
+    var contents = e.target.result;
+    var xmlTextarea = document.getElementById('content_xml');
+    var xmlDom;
+    var xmlText = contents.toString();
+    
+    try {
+      xmlDom = Blockly.Xml.textToDom(xmlText);
+    } catch (e) {
+      window.alert("ファイルの読み込みに失敗しました");
+    }
+    if (xmlDom) {
+      Code.workspace.clear();
+      Blockly.Xml.domToWorkspace(xmlDom, Code.workspace);
+    }
+    
+  };
+  reader.readAsText(file);
+}
+
+
+document.getElementById('file_load').addEventListener('change', readSingleFile, false);
+
+
+function initDataLoad(){
+
+  var queryStr = window.location.search.slice(1);
+      queries = {};
+
+  if (!queryStr) {
+    return queries;
+  }
+
+  queryStr.split('&').forEach(function(queryStr) {
+    var queryArr = queryStr.split('=');
+    queries[queryArr[0]] = queryArr[1];
+  });
+
+  if(queries.loaddata){
+    var xmlTextarea = document.getElementById('content_xml');
+    var xmlDom;
+    var xmlText;
+    try {
+      xmlText = localStorage.getItem(queries.loaddata).toString();
+      xmlDom = Blockly.Xml.textToDom(xmlText);
+    }
+    catch (e) {
+      window.alert("ファイルの読み込みに失敗しました");
+    }
+    if (xmlDom) {
+      Code.workspace.clear();
+      Blockly.Xml.domToWorkspace(xmlDom, Code.workspace);
+    }
+  }
+}

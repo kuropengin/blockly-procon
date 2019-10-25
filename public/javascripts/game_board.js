@@ -76,7 +76,7 @@ function makeTable(msg, y, effect, tableId){
     var _y = (450 - (4*y) )/ y;
     _y =  _y.toString();
     
-    var cx,cy,hx,hy;
+    var cx = false,cy = false,hx = false,hy = false;
 
     for(i = 0; i < data.length; i++){
         rows.push(table.insertRow(-1));
@@ -159,14 +159,14 @@ function makeTable(msg, y, effect, tableId){
         
         for(var y of y_range){
             for(var x of x_range){
-                if(msg.effect.p == "cool"){
+                if(msg.effect.p == "cool" && cx){
                     if(!(0 > (cx + x) || data[0].length-1 < (cx + x) || 0 > (cy + y) || data.length-1 < (cy + y))){
-                        table.rows[cy+y].cells[cx+x].style.backgroundColor = "#03a9f44d";
+                        table.rows[cy+y].cells[cx+x].style.backgroundColor = "rgba(3, 169, 244, 0.3)";
                     }
                 }
-                else{
+                else if(msg.effect.p == "hot" && hx){
                     if(!(0 > (hx + x) || data[0].length-1 < (hx + x) || 0 > (hy + y) || data.length-1 < (hy + y))){
-                        table.rows[hy+y].cells[hx+x].style.backgroundColor = "#03a9f44d";
+                        table.rows[hy+y].cells[hx+x].style.backgroundColor = "rgba(3, 169, 244, 0.3)";
                     }
                 }
             }
@@ -177,14 +177,14 @@ function makeTable(msg, y, effect, tableId){
         
         for(var y of y_range){
             for(var x of x_range){
-                if(msg.effect.p == "cool"){
+                if(msg.effect.p == "cool" && cx){
                     if(!(0 > (hx + x) || data[0].length-1 < (hx + x) || 0 > (hy + y) || data.length-1 < (hy + y))){
-                        table.rows[hy+y].cells[hx+x].style.backgroundColor = "#8bc34a4d";
+                        table.rows[hy+y].cells[hx+x].style.backgroundColor = "rgba(139, 195, 74, 0.3)";
                     }
                 }
-                else{
+                else if(msg.effect.p == "hot" && hx){
                     if(!(0 > (cx + x) || data[0].length-1 < (cx + x) || 0 > (cy + y) || data.length-1 < (cy + y))){
-                        table.rows[cy+y].cells[cx+x].style.backgroundColor = "#8bc34a4d";
+                        table.rows[cy+y].cells[cx+x].style.backgroundColor = "rgba(139, 195, 74, 0.3)";
                     }
                 }
             }
@@ -277,6 +277,9 @@ var now_y = null;
 var c_name = "";
 var h_name = "";
 
+var roop_run;
+var next_my_trun = false;
+
 socket.on("connected", function() {});
 socket.on("disconnect", function () {});
 
@@ -288,6 +291,9 @@ socket.on("join_room", function (msg) {
     }
     if(msg.hot_name){
         h_name = msg.hot_name; 
+    }
+    if(msg.cpu_name){
+        h_name = msg.cpu_name;     
     }
     ready_game("game_board");
 });
@@ -319,16 +325,57 @@ socket.on("you_turn", function (msg) {
                     my_map_data.push(1);
                 }
                 else{
-                   my_map_data.push(msg.map_data[now_y + y][now_x + x]); 
+                    if(msg.map_data[now_y][now_x] == 3){
+                        if(msg.map_data[now_y + y][now_x + x] == 3){
+                            my_map_data.push(0); 
+                        }
+                        else if(msg.map_data[now_y + y][now_x + x] == 4){
+                            my_map_data.push(3); 
+                        }
+                        else{
+                            my_map_data.push(msg.map_data[now_y + y][now_x + x]); 
+                        }
+                    }
+                    else if(msg.map_data[now_y][now_x] == 4){
+                        if(msg.map_data[now_y + y][now_x + x] == 3){
+                            my_map_data.push(3); 
+                        }
+                        else if(msg.map_data[now_y + y][now_x + x] == 4){
+                            my_map_data.push(0); 
+                        }
+                        else{
+                            my_map_data.push(msg.map_data[now_y + y][now_x + x]); 
+                        }
+                    }
+                    else{
+                        if(msg.map_data[now_y + y][now_x + x] == 43 || msg.map_data[now_y + y][now_x + x] == 34){
+                            my_map_data.push(3); 
+                        }
+                        else{
+                            my_map_data.push(msg.map_data[now_y + y][now_x + x]); 
+                        } 
+                    }
                 }
             }
         }
     }
     my_turn = true;
+    if(servar_connect_status){
+        if(!myInterpreter){
+            roop_run = setTimeout(Code.runJS,100);
+        }
+        else{
+            next_my_trun = true;
+        }
+    }
+    else{
+        return;
+    }
 });
 
 
 socket.on("game_result", function (msg) {
+    //console.log(msg);
     Code.stopJS();
     var result = document.createElement("div"); 
     result.setAttribute("id","game_result");

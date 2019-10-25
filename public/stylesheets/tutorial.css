@@ -1,0 +1,23 @@
+#block_limit_area{
+    display: block;
+    position: relative;
+    width: 50%;
+    margin: 15px 35px;
+    border: solid 2px #5d5d5d;
+    background: #5d5d5d;
+    font-weight: bold;
+    color: #fff;
+    border-radius: 10px;
+}
+
+#capacity{
+    display: inline-block;
+}
+
+#game_result img {
+    width: 90%;
+    margin: 0 auto;
+    position: absolute;
+    top: 20%;
+    left: 5%;
+}

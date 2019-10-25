@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Procon</title>
+  <link rel='stylesheet' href='/stylesheets/style.css' />
+  <link rel='stylesheet' href='/stylesheets/menu.css' />
+  <link rel='stylesheet' href='/stylesheets/menu-programming.css' />
+  
+  <script src="/javascripts/jquery-3.4.1.min.js"></script>
+  <script src="/javascripts/scroll-x.js"></script>
+  
+</head>
+<body>
+  <div class="header">
+    
+    <div class = "back_page">
+      <div class = "back_button"><a href="../"></a></div>
+    </div>
+    <div class="control_area">
+      <div class = "page_title">
+        <h1><span class = "page_title_span">プログラミング</span><%- title %></h1>
+      </div>
+      <div class = "control_button">
+        <button>
+          <div class = "menu_config">設定</div>
+        </button>
+      </div>
+    </div>  
+    
+  </div>
+  
+  <div class="content">
+    <div class="select_data">
+      <div class="slider-x">
+        <div></div>
+        <div></div>
+        <div>
+          <div class="onebox"  id="d1">
+            <div class="inbox">
+              <a href="#d1"></a>
+              <div class="boxtitle">新 規</div>
+              <div class="boxnewimage"></div>
+              <div class="boxinfo">
+新しく
+データを作る
+              </div>
+            </div>
+          </div>
+        </div>
+        <div>
+          <div class="onebox" id="d2">
+            <div class="inbox">
+              <a href="#d2"></a>
+              <div class="boxtitle">開 く</div>
+              <div class="boxopenimage"></div>
+              <div class="boxinfo">
+保存した
+データを開く
+              </div>
+            </div>
+          </div>
+        </div>
+        <div>
+          <div class="onebox"  id="d3">
+            <div class="inbox">
+              <a href="#d3"></a>
+              <div class="boxtitle">再 開</div>
+              <div class="boxdbimage"></div>
+              <div class="boxinfo">
+前回実行した
+データを開く
+              </div>
+            </div>
+          </div>
+        </div>
+        <div></div>
+        <div></div>
+      </div>
+    </div>
+    
+    <div class="button_area">
+      <div class="select_button">はじめる</div>
+      <label id="loadstart" for="file_load">
+        はじめる
+        <input type="file" id="file_load" style="display:none;">
+      </label>
+    </div>
+  </div>
+  
+</body>
+</html>

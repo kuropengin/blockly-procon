@@ -4,19 +4,80 @@
   <meta charset="utf-8">
   <title>Procon</title>
   <link rel='stylesheet' href='/stylesheets/style.css' />
-  
+  <link rel='stylesheet' href='/stylesheets/menu.css' />
 </head>
 <body>
   <div class="header">
     
+    <div class = "back_page">
+      
+    </div>
+    <div class="control_area">
+      <div class = "page_title">
+        <h1><span class = "page_title_span">メニュー</span><%- title %></h1>
+      </div>
+      <div class = "control_button">
+        <button>
+          <div class = "menu_config">設定</div>
+        </button>
+      </div>
+    </div>  
+    
   </div>
-  
-  
-  
-  <a href="./game">チュートリアル</a>
-  <a href="./game">プログラミング</a>
-  <a href="./game">観戦 </a>
-  <a href="./game">設定</a>
+  <div class="content">
+    
+    <div class="main">
+      <div class = "left">
+        <div class = "wrapper_l">
+          <div class = "menu_tutorial">
+            <a href="/menu-tutorial"></a>
+            <div class = "menu_tutorial_info">
+              まずは練習♪ 基本を学ぼう！
+            </div>
+            <div class = "menu_tutorial_title">
+              チュートリアル
+            </div>
+            <div class = "menu_tutorial_title_en">
+              Tutorial
+            </div>
+          </div>
+        </div>
+        <div class = "wrapper_l">
+          <div class = "menu_programming">
+            <a href="/menu-programming"></a>
+            <div class = "menu_programming_info">
+              君だけの作品を作りだそう！
+            </div>
+            <div class = "menu_programming_title">
+              プログラミング
+            </div>
+            <div class = "menu_programming_title_en">
+              Programming
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class= "right">
+        <div class = "wrapper_r">
+          <div class = "menu_watching">
+            <a href="/menu-watching"></a>
+            <div class = "menu_watching_info">
+              友達の試合を見て見よう！
+            </div>
+            <div class = "menu_watching_title">
+              観 戦
+            </div>
+            <div class = "menu_programming_title_en">
+              Watching
+            </div>
+          </div>
+        </div>
+      </div>
+      
+    </div>
+  </div>
 
+  
 </body>
 </html>

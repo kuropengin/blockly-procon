@@ -382,10 +382,15 @@ Code.init = function() {
       el.style.width = (2 * bBox.width - el.offsetWidth) + 'px';
     }
     // Make the 'Blocks' tab line up with the toolbox.
-    if (Code.workspace && Code.workspace.toolbox_.width) {
-      document.getElementById('tab_blocks').style.minWidth =
-          (Code.workspace.toolbox_.width - 38) + 'px';
-          // Account for the 19 pixel margin and on each side.
+    try{
+      if (Code.workspace && Code.workspace.toolbox_.width) {
+        document.getElementById('tab_blocks').style.minWidth =
+            (Code.workspace.toolbox_.width - 38) + 'px';
+            // Account for the 19 pixel margin and on each side.
+      }
+    }
+    catch(e){
+      console.log("warning:no block tab");
     }
   };
   window.addEventListener('resize', onresize, false);
@@ -409,6 +414,14 @@ Code.init = function() {
   toolboxText = toolboxText.replace(/(^|[^%]){(\w+)}/g,
       function(m, p1, p2) {return p1 + MSG[p2];});
   var toolboxXml = Blockly.Xml.textToDom(toolboxText);
+  
+  var blocklimit;
+  try{
+    blocklimit = satage_data["block_limit"];
+  }
+  catch(e){
+    blocklimit = "";
+  }
 
   Code.workspace = Blockly.inject('content_blocks',
       {grid:
@@ -417,12 +430,26 @@ Code.init = function() {
            colour: '#ccc',
            snap: true},
        media: '/media/',
+       maxBlocks: blocklimit ,
        rtl: rtl,
        toolbox: toolboxXml,
        zoom:
            {controls: true,
-            wheel: true}
+            wheel: false},
+       move:{
+        scrollbars: true,
+        drag: true,
+        wheel: true}
       });
+      
+  if(blocklimit!=""){
+    function onchange(event) {
+      document.getElementById('capacity').textContent = Code.workspace.remainingCapacity();
+    }
+    
+    Code.workspace.addChangeListener(onchange);
+    onchange();
+  }
 
   // Add to reserved word list: Local variables in execution environment (runJS)
   // and the infinite loop detection function.
@@ -442,6 +469,9 @@ Code.init = function() {
   Code.bindClick('runButton', Code.runJS);
   
   Code.bindClick('stopButton', Code.stopJS);
+  
+  Code.bindClick('downloadButton', Code.download);
+  
   // Disable the link button if page isn't backed by App Engine storage.
   var linkButton = document.getElementById('linkButton');
   if ('BlocklyStorage' in window) {
@@ -465,6 +495,7 @@ Code.init = function() {
 
   // Lazy-load the syntax-highlighting.
   window.setTimeout(Code.importPrettify, 1);
+  initDataLoad();
 };
 
 /**
