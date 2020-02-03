@@ -53,3 +53,6 @@ C#プログラムからゲームの操作を行えるようにする為のライ
 ## Contributing
 [CONTRIBUTING.md](.github/CONTRIBUTING.md)
 
+## Licence
+[LICENSE](.github/LICENSE)
+本製作物には一部[Apache License 2.0](.github/ApacheLicense)で配布されている製作物が含まれています。
