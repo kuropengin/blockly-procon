@@ -22,7 +22,7 @@
     
     position: absolute;
     left: calc((100% - 1250px)/2);
-    overflow: hidden;
+    overflow: auto;
 }
 .slider-x > div{
 

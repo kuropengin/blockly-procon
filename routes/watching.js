@@ -6,7 +6,16 @@ var server_list = JSON.parse(fs.readFileSync('./load_data/game_server_data/serve
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-  res.render('menu-watching', { title: 'ルーム選択' ,list:server_list});
+    var roomId,roomName;
+    if(req.query.room_id){
+        roomName = server_list[req.query.room_id].name;
+        roomId = req.query.room_id;
+    }
+    else{
+        roomName = "デフォルト";
+        roomId = false;
+    }
+    res.render('watching', { title: roomName, id: roomId});
 });
 
 module.exports = router;

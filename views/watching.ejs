@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Procon</title>
+  <link rel='stylesheet' href='/stylesheets/style.css' />
+  <link rel='stylesheet' href='/stylesheets/menu.css' />
+  <link rel='stylesheet' href='/stylesheets/game-board.css' />
+  
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="/javascripts/jquery-3.4.1.min.js"></script>
+  <script src="/javascripts/game_board.js"></script>
+  
+</head>
+<body>
+  <script>
+    var socket = io();
+    var c_name = "NoName";
+    var h_name = "NoName";
+    var temp_msg;
+    socket.emit('looker_join','<%- id %>');
+    
+    socket.on("joined_room", function (msg) {
+      load_map_size_x = msg.x_size;
+      load_map_size_y = msg.y_size;
+      if(msg.cool_name){
+          c_name = msg.cool_name;
+      }
+      if(msg.hot_name){
+          h_name = msg.hot_name; 
+      }
+      if(msg.cpu_name){
+          h_name = msg.cpu_name;     
+      }
+      ready_game("game_board");
+    });
+    
+    socket.on("updata_board", function (msg) {
+      temp_msg = msg;
+      if(msg.effect){
+          makeTable(msg,17, msg.effect,"game_board");
+      }
+      else{
+          makeTable(msg,17, 0,"game_board");
+      }
+    });
+    
+    socket.on("new_board", function (msg) {
+      temp_msg = msg;
+      if(msg.effect){
+          makeTable(msg,17, msg.effect,"game_board");
+      }
+      else{
+          makeTable(msg,17, 0,"game_board");
+      }
+    });
+    
+    socket.on("game_result", function (msg) {
+      //console.log(msg);
+      var result = document.createElement("div"); 
+      result.setAttribute("id","game_result");
+      var img = document.createElement('img');
+      if(msg.winer == "cool"){
+          img.src = '/images/coolwin.png';
+      }
+      else if(msg.winer == "hot"){
+          img.src = '/images/hotwin.png';
+      }
+      else{
+          img.src = '/images/draw.png';
+      }
+      result.appendChild(img);
+      document.getElementById("game_board").appendChild(result);
+    });
+    
+    window.addEventListener( "resize", function () {
+    	if(temp_msg.effect){
+          makeTable(temp_msg,17, temp_msg.effect,"game_board");
+      }
+      else{
+          makeTable(temp_msg,17, 0,"game_board");
+      }
+    });
+    
+  </script>
+  <div class="header">
+    
+    <div class = "back_page">
+      <div class = "back_button"><a href="../"></a></div>
+    </div>
+    <div class="control_area">
+      <div class = "page_title">
+        <h1><span class = "page_title_span">観戦</span><%- title %></h1>
+      </div>
+    </div>  
+    
+  </div>
+  <div class="game_area">
+    <div id="game_board"></div>
+    <div id="game_info"></div>
+  </div>
+  
+  
+  
+</body>
+</html>

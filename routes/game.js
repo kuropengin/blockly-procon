@@ -318,7 +318,6 @@ function create_map(key){
       }
     }    
   }
-  
 }
 
 

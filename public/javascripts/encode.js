@@ -1,5 +1,13 @@
 Blockly.JavaScript.addReservedWords('exit');
 
+
+var outputArea = document.getElementById('output');
+var runButton = document.getElementById('runButton');
+var myInterpreter = null;
+var runner;
+var map_data_hiyasinsu_kuropengin = false;
+
+
 class ObjInterpreter extends Interpreter {
   constructor(code, initAlert) {
     super(code, initAlert);
@@ -55,20 +63,10 @@ class ObjInterpreter extends Interpreter {
 
 
 
-
-var outputArea = document.getElementById('output');
-var runButton = document.getElementById('runButton');
-var myInterpreter = null;
-var runner;
-
-
-var myObject = {
-  x: false
-};
-
-
 function initApi(interpreter, scope) {
   // Add an API function for the alert() block, generated for "text_print" blocks.
+  
+  interpreter.connectObject(scope, "map_data_hiyasinsu_kuropengin", map_data_hiyasinsu_kuropengin);
   
   var wrapper = function(text) {
     text.toString();
@@ -102,73 +100,108 @@ function initApi(interpreter, scope) {
   var wrapper = function(id,name) {
     id = id ? id.toString() : '';
     name = name ? name.toString() : '';
-    join(id,name);
+    
+    var user = {};
+    user.room_id = id;
+    user.name = name;
+    socket.emit("player_join", user);
   };
   interpreter.setProperty(scope, 'join',
       interpreter.createNativeFunction(wrapper));
       
   var wrapper = function(direction) {
     direction = direction ? direction.toString() : '';
-    move_player(direction);
+    socket.emit("move_player", direction);
+    my_turn = false;
   };
   interpreter.setProperty(scope, 'move_player',
-      interpreter.createNativeFunction(wrapper));    
-   
-  var wrapper = function(direction) {
-    direction = direction ? direction.toString() : '';
-    look(direction);
-  };
-  interpreter.setProperty(scope, 'look',
       interpreter.createNativeFunction(wrapper)); 
       
   var wrapper = function(direction) {
     direction = direction ? direction.toString() : '';
-    search(direction);
-  };
-  interpreter.setProperty(scope, 'search',
-      interpreter.createNativeFunction(wrapper)); 
-  
-  var wrapper = function(direction) {
-    direction = direction ? direction.toString() : '';
-    put_wall(direction);
+    socket.emit("put_wall", direction);
+    my_turn = false;
   };
   interpreter.setProperty(scope, 'put_wall',
-      interpreter.createNativeFunction(wrapper));    
+      interpreter.createNativeFunction(wrapper)); 
+    
 
-
-  Blockly.JavaScript.addReservedWords('wait');
-  
-  var wrapper = interpreter.createAsyncFunction(
-      function(timeInSeconds,callback) {
-          setTimeout(callback, timeInSeconds * 1000);
-      }
-  );
-  interpreter.setProperty(scope, 'wait', wrapper);
-  
-  
-  var wrapper = function(href, callback) {
-    var req = new XMLHttpRequest();
-    req.open('GET', href, true);
-    req.onreadystatechange = function() {
-      if (req.readyState == 4 && req.status == 200) {
-        callback(req.responseText);
-      }
-    };
-    req.send(null);
+  var wrapper = function(text) {
+    text = text ? text.toString() : '';
+    return +text;
   };
-  interpreter.setProperty(scope, 'getXhr',
+  interpreter.setProperty(scope, 'valueNum',
+      interpreter.createNativeFunction(wrapper));
+      
+
+  
+  var wrapper = function(callback) {
+    my_turn = false;
+    var getDate =function(){
+      if (my_turn) {
+        callback(my_turn.join(''));
+      }
+      else if(myInterpreter){
+        socket.emit("get_ready");
+        setTimeout(getDate,100);
+      } 
+    };
+    getDate();
+  };
+  interpreter.setProperty(scope, 'get_ready',
       interpreter.createAsyncFunction(wrapper));
-  
-  
-  interpreter.connectObject(scope, "outside", myObject);
-  interpreter.connectObject(scope, "var_stor", var_stor);
+      
+  var wrapper = function(direction,callback) {
+    if (my_turn){
+      var getDate =function(){
+        if (look_search_data) {
+          callback(look_search_data.join(''));
+          my_turn = false;
+          look_search_data = false;
+        }
+        else if(myInterpreter){
+          setTimeout(getDate,100);
+        }
+      };
+      socket.emit("look",direction);
+      getDate();
+    }
+    else{
+      callback(map_data_hiyasinsu_kuropengin.join(''));
+    }
+  };
+  interpreter.setProperty(scope, 'look',
+      interpreter.createAsyncFunction(wrapper));
+      
+  var wrapper = function(direction,callback) {
+    if (my_turn){
+      var getDate =function(){
+        if (look_search_data) {
+          callback(look_search_data.join(''));
+          my_turn = false;
+          look_search_data = false;
+        }
+        else if(myInterpreter){
+          setTimeout(getDate,100);
+        } 
+      };
+      socket.emit("search",direction);
+      getDate();
+    }
+    else{
+      callback(map_data_hiyasinsu_kuropengin.join(''));
+    }
+  };
+  interpreter.setProperty(scope, 'search',
+      interpreter.createAsyncFunction(wrapper));
+      
+      
   
 }
 
 
 var highlightPause = false;
 var latestCode = '';
-var var_stor = {};
 
 function highlightBlock(id) {
   Code.workspace.highlightBlock(id);
@@ -183,6 +216,27 @@ function resetStepUi(clearOutput) {
   if (clearOutput) {
     outputArea.value = 'Program output:\n=================';
   }
+  
+  generateUiCodeAndLoadIntoInterpreter();
+}
+
+function generateUiCodeAndLoadIntoInterpreter() {
+  Blockly.JavaScript.STATEMENT_PREFIX = '';
+  latestCode = Blockly.JavaScript.workspaceToCode(Code.workspace);
+}
+
+function generateCodeAndLoadIntoInterpreter() {
+  // Generate JavaScript code and parse it.
+  Blockly.JavaScript.STATEMENT_PREFIX = 'highlightBlock(%1);\n';
+  Blockly.JavaScript.addReservedWords('highlightBlock');
+  latestCode = Blockly.JavaScript.workspaceToCode(Code.workspace);
+}
+
+function saveCodelocalStorage() {
+  var xmlDom = Blockly.Xml.workspaceToDom(Code.workspace);
+  var xmlText = Blockly.Xml.domToPrettyText(xmlDom);
+  
+  localStorage.setItem("LastRun", xmlText); 
 }
 
 function resetInterpreter() {
@@ -191,176 +245,51 @@ function resetInterpreter() {
     clearTimeout(runner);
     runner = null;
   }
+  if (runner) {
+    clearTimeout(runner);
+    runner = null;
+  }
 }
 
-function resetVarStor(){
+function resetVar(){
   if(servar_connect_status){
     socket.emit("leave_room");
   }
-  var_stor = {};
   my_turn = false;
   servar_connect_status = false;
-  my_map_data = [];
+  map_data_hiyasinsu_kuropengin = false;
 }
 
-var runspeed = 0;
-var programming_mode = "";
-try{
-  if(satage_data){
-    runspeed = 100;
-    programming_mode = "t";
-  }
-  else{
-    runspeed = 0;
-    programming_mode = "p";
-  }
-}
-catch(e){
-  runspeed = 0;
-  programming_mode = "p";
-}
 
 Code.runJS = function(){
   if (!myInterpreter) {
-    if(!servar_status()){
-      resetInterpreter();
-      resetStepUi(true);
-    }
+
+    resetStepUi(true);
     runButton.disabled = 'disabled';
-
-    Blockly.JavaScript.STATEMENT_PREFIX = 'highlightBlock(%1);\n';
-    Blockly.JavaScript.addReservedWords('highlightBlock');
-    latestCode = Blockly.JavaScript.workspaceToCode(Code.workspace);
     
-    var xmlDom = Blockly.Xml.workspaceToDom(Code.workspace);
-    var xmlText = Blockly.Xml.domToPrettyText(xmlDom);
-    
-    if(programming_mode == "p"){
-      localStorage.setItem("LastRun", xmlText);
-    }
-    else if(programming_mode == "t"){
-      makeTable("game_board");
-    }
-    
-    var c1 = latestCode.split(/\r\n|\r|\n/)[0];
-    if(c1.substr(0,3) === "var"){
-      var c2 = '';
-    	for(let i of c1.substring(4,c1.length-1).split(', ')) {
-    	  if(!(i in var_stor)){
-    		  var_stor[i] = null;
-    	  }
-    	  else{
-    	    if(typeof(var_stor[i]) == "number"){
-    	      c2 += ''+ i + ' = ' + var_stor[i] + ';'; 
-    	    }
-    	    else{
-    	      c2 += ''+ i + ' = "' + var_stor[i] + '";'; 
-    	    }
-    	  }
-    		latestCode += 'var_stor.'+ i + ' = ' + i + ';'; 
-      }
-      var c3 = latestCode.split(/\r\n|\r|\n/);//.splice(1,0,c2).join('\n');
-      c3[1] = c2;
-      latestCode = c3.join('\n');
-    }
-    
-    if(!(latestCode.indexOf('join("') == -1) && !servar_status()){
-      servar_connect_status = true;
-      alert('サーバー接続ブロックを検出しました。\n誤動作防止のためサーバー接続ブロックに接続されたブロック以外は無視して実行されます。');
-    }
-    
-
-    if(!var_stor["map_data_hiyasinsu_kuropengin"]){
-      latestCode = 'var action_turn_hiyasinsu_kuropengin = false;\n' +  latestCode;
-      latestCode = 'var map_data_hiyasinsu_kuropengin = [];\n' +  latestCode;
-    }
-    else{
-      latestCode = 'var action_turn_hiyasinsu_kuropengin = [' + var_stor["action_turn_hiyasinsu_kuropengin"] + '];\n' +  latestCode;
-      latestCode = 'var map_data_hiyasinsu_kuropengin = [' + var_stor["map_data_hiyasinsu_kuropengin"] + '];\n' +  latestCode;
-    }
-    if(my_map_data.length){
-      latestCode = latestCode + 'var_stor.map_data_hiyasinsu_kuropengin = map_data_hiyasinsu_kuropengin;\n';
-    }
-    latestCode = latestCode + 'var_stor.action_turn_hiyasinsu_kuropengin = action_turn_hiyasinsu_kuropengin;\n';
-    
-    
-    console.log(latestCode);
-    
-    myInterpreter = new ObjInterpreter(latestCode, initApi);
-    
-    runner = function() {
-      if (myInterpreter) {
-        var hasMore
-        try {
-          hasMore = myInterpreter.step();
-        }
-        catch (e) {
-          outputArea.value += '\n\n<< Program error >>\n' + e +'\n';
-          Code.stopJS();
-        }
-        
-        if (hasMore) {
-          if(programming_mode == "p"){
-            runner();
+    setTimeout(function() {
+      highlightPause = false;
+      generateCodeAndLoadIntoInterpreter();
+      saveCodelocalStorage();
+      
+      myInterpreter = new ObjInterpreter(latestCode, initApi);
+      runner = function() {
+        if (myInterpreter) {
+          //var hasMore = myInterpreter.run();
+          var hasMore = myInterpreter.run();
+          if (hasMore) {
+            setTimeout(runner,100);
           }
-          else{
-            setTimeout(runner, 10);
-          }
-        }
-        else {
-          if(servar_connect_status){
-            resetInterpreter();
-            if(var_stor["action_turn_hiyasinsu_kuropengin"]){
-              roop_run = setTimeout(Code.runJS,100);
-            }
-            if(next_my_trun){
-              next_my_trun = false;
-              roop_run = setTimeout(Code.runJS,100);
-            }
-            //Code.runJS();
-          }
-          else{
+          else {
             outputArea.value += '\n\n<< Program complete >>';
             resetInterpreter();
+            resetVar();
             resetStepUi(false);
-            if(programming_mode == "t"){
-              endCode();
-            }
-          }
-        }
-      }
-    };
-    runner();
-    
-    
-    /*
-    setTimeout(function() {
-      highlightPause = true;
-
-      runner = function() {
-        highlightPause = false;
-        if (myInterpreter) {
-          var hasMore = myInterpreter.step();
-          
-          if (hasMore) {
-            setTimeout(runner, 1);
-          } else {
-            // Program is complete.
-            if(servar_connect_status){
-              resetInterpreter();
-              setTimeout(Code.runJS, 1);
-            }
-            else{
-              outputArea.value += '\n\n<< Program complete >>';
-              resetInterpreter();
-              resetStepUi(false);
-            }
           }
         }
       };
       runner();
-    }, 1);
-    */
+    }, 100);
     return;
   }
 };
@@ -369,15 +298,7 @@ Code.runJS = function(){
 Code.stopJS = function(){
   if (myInterpreter) {
     clearTimeout();
-    resetVarStor();
-    runButton.disabled = 'disabled';
-    outputArea.value += '\n\n<< Stop Program >>';
-    resetInterpreter();
-    resetStepUi(false);
-  }
-  else if(servar_status()){
-    resetVarStor();
-    clearTimeout(roop_run);
+    resetVar();
     runButton.disabled = 'disabled';
     outputArea.value += '\n\n<< Stop Program >>';
     resetInterpreter();
@@ -386,9 +307,6 @@ Code.stopJS = function(){
   var c = document.getElementById("ready_player");
   if(c){
       c.parentNode.removeChild(c);
-  }
-  if(programming_mode == "t"){
-    endCode();
   }
 };
 

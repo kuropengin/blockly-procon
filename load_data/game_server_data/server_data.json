@@ -21,11 +21,18 @@
                     [0,0,0,0,0,0,0,0,0,0,0,0,4,0,0],
                     [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
                     [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]],
-        "cool_x": 2,
-        "cool_y": 2,
-        "hot_x": 12,
-        "hot_y": 14,
-        "vs": "user",
+        "cool": {
+            "status": false,
+            "turn": false,
+            "x": 2,
+            "y": 2
+        },
+        "hot": {
+            "status": false,
+            "turn": false,
+            "x": 12,
+            "y": 14
+        },
         "turn":100
     },
     "game_server_02": {
@@ -37,7 +44,14 @@
         "auto_block": 15,
         "auto_point": 14,
         "auto_symmetry": true,
-        "vs": "user",
+        "cool": {
+            "status": false,
+            "turn": false
+        },
+        "hot": {
+            "status": false,
+            "turn": false
+        },
         "turn":100
     },
     "game_server_03": {
@@ -49,7 +63,14 @@
         "auto_block": 14,
         "auto_point": 15,
         "auto_symmetry": false,
-        "vs": "user",
+        "cool": {
+            "status": false,
+            "turn": false
+        },
+        "hot": {
+            "status": false,
+            "turn": false
+        },
         "turn":100
     },
     "game_server_04": {
@@ -74,11 +95,18 @@
                     [0,0,0,0,0,0,0,0,0,0,0,1,4,1,0],
                     [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
                     [0,1,2,1,0,0,0,0,0,0,0,1,2,1,0]],
-        "cool_x": 2,
-        "cool_y": 2,
-        "hot_x": 12,
-        "hot_y": 14,
-        "vs": "user",
+        "cool": {
+            "status": false,
+            "turn": false,
+            "x": 2,
+            "y": 2
+        },
+        "hot": {
+            "status": false,
+            "turn": false,
+            "x": 12,
+            "y": 14
+        },
         "turn":100
     },
     "game_server_11": {
@@ -103,11 +131,22 @@
                     [0,0,0,0,0,0,0,0,0,0,0,0,4,0,0],
                     [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
                     [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]],
-        "cool_x": 2,
-        "cool_y": 2,
-        "hot_x": 12,
-        "hot_y": 14,
-        "vs": "cpu",
+        "cool": {
+            "status": false,
+            "turn": false,
+            "x": 2,
+            "y": 2
+        },
+        "hot": {
+            "status": false,
+            "turn": false,
+            "x": 12,
+            "y": 14
+        },
+        "cpu": {
+            "level":0,
+            "turn":"cool"
+        },  
         "turn":100
     },
     "game_server_12": {
@@ -132,11 +171,22 @@
                     [0,2,2,2,2,2,2,2,2,2,2,2,4,0,0],
                     [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
                     [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]],
-        "cool_x": 7,
-        "cool_y": 8,
-        "hot_x": 12,
-        "hot_y": 14,
-        "vs": "cpu",
+        "cool": {
+            "status": false,
+            "turn": false,
+            "x": 7,
+            "y": 8
+        },
+        "hot": {
+            "status": false,
+            "turn": false,
+            "x": 12,
+            "y": 14
+        },
+        "cpu": {
+            "level":1,
+            "turn":"hot"
+        },
         "turn":100
     }
 }

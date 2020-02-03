@@ -73,9 +73,7 @@ function makeTable(msg, y, effect, tableId){
         c.parentNode.removeChild(c);
     }
     
-    var h = document.getElementById(tableId).clientHeight;
-    console.log(h);
-    var _y = (h - (3*y)-20 )/ y;
+    var _y = (450 - (4*y) )/ y;
     _y =  _y.toString();
     
     var cx = false,cy = false,hx = false,hy = false;
@@ -263,9 +261,99 @@ function makeTable(msg, y, effect, tableId){
 }
 
 
+var socket = io();
+var servar_connect_status = false;
+var timeId = null;
+var my_turn = false;
+var look_search_data = false;
+var variable_record = {};
 
 
+var load_map_size_x;
+var load_map_size_y;
+var now_x = null;
+var now_y = null;
+var c_name = "NoName";
+var h_name = "NoName";
 
+var roop_run;
+var next_my_trun = false;
+
+
+socket.on("joined_room", function (msg) {
+    servar_connect_status = true;
+    load_map_size_x = msg.x_size;
+    load_map_size_y = msg.y_size;
+    if(msg.cool_name){
+        c_name = msg.cool_name;
+    }
+    if(msg.hot_name){
+        h_name = msg.hot_name; 
+    }
+    if(msg.cpu_name){
+        h_name = msg.cpu_name;     
+    }
+    ready_game("game_board");
+});
+
+
+socket.on("updata_board", function (msg) {
+    if(msg.effect){
+        makeTable(msg,load_map_size_y, msg.effect,"game_board");
+    }
+    else{
+        makeTable(msg,load_map_size_y, 0,"game_board");
+    }
+});
+
+socket.on("new_board", function (msg) {
+    if(msg.effect){
+        makeTable(msg,load_map_size_y, msg.effect,"game_board");
+    }
+    else{
+        makeTable(msg,load_map_size_y, 0,"game_board");
+    }
+});
+
+socket.on("get_ready_rec", function (msg) {
+    my_turn = msg.rec_data;
+});
+
+socket.on("look_rec", function (msg) {
+    if(my_turn){
+        look_search_data = msg.rec_data;
+    }
+});
+
+socket.on("search_rec", function (msg) {
+    if(my_turn){
+        look_search_data = msg.rec_data;
+    }
+});
+
+socket.on("game_result", function (msg) {
+    //console.log(msg);
+    Code.stopJS();
+    var result = document.createElement("div"); 
+    result.setAttribute("id","game_result");
+    var img = document.createElement('img');
+    if(msg.winer == "cool"){
+        img.src = '/images/coolwin.png';
+    }
+    else if(msg.winer == "hot"){
+        img.src = '/images/hotwin.png';
+    }
+    else{
+        img.src = '/images/draw.png';
+    }
+    result.appendChild(img);
+    document.getElementById("game_board").appendChild(result);
+});
+
+socket.on("error", function (msg) {
+    Code.stopJS();
+    window.alert(msg);
+});
 
 
 

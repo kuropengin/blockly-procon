@@ -184,3 +184,17 @@ Blockly.JavaScript['wait'] = function(block) {
   var code = 'wait(' + seconds + ');\n';
   return code;
 };
+
+Blockly.JavaScript['server_join'] = function(block) {
+  var dropdown_room_id = block.getFieldValue('room_id');
+  var text_name = block.getFieldValue('name');
+  // TODO: Assemble JavaScript into code variable.
+  var code = '...;\n';
+  return code;
+};
+
+Blockly.JavaScript['get_ready'] = function(block) {
+  // TODO: Assemble JavaScript into code variable.
+  var code = '...;\n';
+  return code;
+};

@@ -128,3 +128,31 @@ Blockly.Blocks['wait'] = {
   }
 };
 
+Blockly.Blocks['server_join'] = {
+  init: function() {
+    this.appendDummyInput()
+        .appendField(new Blockly.FieldDropdown([["0","0"], ["1","1"], ["2","2"]]), "room_id")
+        .appendField("にプレイヤー名")
+        .appendField(new Blockly.FieldTextInput(""), "name")
+        .appendField("で接続する");
+    this.setInputsInline(true);
+    this.setPreviousStatement(true, null);
+    this.setNextStatement(true, null);
+    this.setColour(195);
+ this.setTooltip("");
+ this.setHelpUrl("");
+  }
+};
+
+Blockly.Blocks['get_ready'] = {
+  init: function() {
+    this.appendDummyInput()
+        .appendField("自分のターンを待つ");
+    this.setInputsInline(true);
+    this.setPreviousStatement(true, null);
+    this.setNextStatement(true, null);
+    this.setColour(195);
+ this.setTooltip("");
+ this.setHelpUrl("");
+  }
+};

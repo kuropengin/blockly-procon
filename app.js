@@ -6,16 +6,19 @@ var logger = require('morgan');
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
-var gameRouter = require('./routes/game');
+//var gameRouter = require('./routes/game');
 var menuProgrammingRouter = require('./routes/menu-programming');
+var programmingRouter = require('./routes/programming');
 var menuTutorialRouter = require('./routes/menu-tutorial');
 var tutorialRouter = require('./routes/tutorial');
+var menuWatchingRouter = require('./routes/menu-watching');
+var watchingRouter = require('./routes/watching');
 
 var app = express();
 
 
 //socket.io
-app.io = gameRouter.io;
+app.io = programmingRouter.io;
 
 
 // view engine setup
@@ -30,10 +33,13 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
-app.use('/programming', gameRouter);
+//app.use('/programming', gameRouter);
 app.use('/menu-programming', menuProgrammingRouter);
+app.use('/programming', programmingRouter);
 app.use('/menu-tutorial', menuTutorialRouter);
 app.use('/tutorial', tutorialRouter);
+app.use('/menu-watching',menuWatchingRouter);
+app.use('/watching',watchingRouter);
 
 
 // catch 404 and forward to error handler
