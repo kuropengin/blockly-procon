@@ -143,7 +143,7 @@ function initApi(interpreter, scope) {
       }
       else if(myInterpreter){
         socket.emit("get_ready");
-        setTimeout(getDate,500);
+        setTimeout(getDate,100);
       } 
     };
     getDate();
@@ -153,17 +153,17 @@ function initApi(interpreter, scope) {
       
   var wrapper = function(direction,callback) {
     if (my_turn){
+      look_search_data = false;
+      my_turn = false;
       var getDate =function(){
         if (look_search_data) {
           callback(look_search_data.join(''));
-          my_turn = false;
-          look_search_data = false;
         }
         else if(myInterpreter){
+          socket.emit("look",direction);
           setTimeout(getDate,100);
         }
       };
-      socket.emit("look",direction);
       getDate();
     }
     else{
@@ -175,17 +175,17 @@ function initApi(interpreter, scope) {
       
   var wrapper = function(direction,callback) {
     if (my_turn){
+      look_search_data = false;
+      my_turn = false;
       var getDate =function(){
         if (look_search_data) {
           callback(look_search_data.join(''));
-          my_turn = false;
-          look_search_data = false;
         }
         else if(myInterpreter){
+          socket.emit("search",direction);
           setTimeout(getDate,100);
         } 
       };
-      socket.emit("search",direction);
       getDate();
     }
     else{
