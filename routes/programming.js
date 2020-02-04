@@ -268,13 +268,13 @@ function game_result_check(room,chara,effect_t = "r",effect_d = false,winer = fa
       var rhx = server_store[room].hot.x;
       var rhy = server_store[room].hot.y;
       
-      if(server_store[room].map_data[rcy][rcx] != 3 && server_store[room].map_data[rhy][rhx] != 4){
+      if(server_store[room].map_data[rcy][rcx] != 34 && server_store[room].map_data[rcy][rcx] != 3 && server_store[room].map_data[rhy][rhx] != 4){
         winer = "draw";
       }
-      else if(server_store[room].map_data[rcy][rcx] != 3){
+      else if(server_store[room].map_data[rcy][rcx] != 34 && server_store[room].map_data[rcy][rcx] != 3){
         winer = "hot";
       }
-      else if(server_store[room].map_data[rhy][rhx] != 4){
+      else if(server_store[room].map_data[rcy][rcx] != 34 && server_store[room].map_data[rhy][rhx] != 4){
         winer = "cool";
       }
       else{

@@ -143,7 +143,7 @@ function initApi(interpreter, scope) {
       }
       else if(myInterpreter){
         socket.emit("get_ready");
-        setTimeout(getDate,100);
+        setTimeout(getDate,500);
       } 
     };
     getDate();
