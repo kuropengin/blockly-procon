@@ -316,17 +316,21 @@ socket.on("new_board", function (msg) {
 });
 
 socket.on("get_ready_rec", function (msg) {
-    my_turn = msg.rec_data;
+    if(!my_turn){
+        my_turn = msg.rec_data;
+    }
 });
 
 socket.on("look_rec", function (msg) {
     if(my_turn){
+        my_turn = false;
         look_search_data = msg.rec_data;
     }
 });
 
 socket.on("search_rec", function (msg) {
     if(my_turn){
+        my_turn = false;
         look_search_data = msg.rec_data;
     }
 });

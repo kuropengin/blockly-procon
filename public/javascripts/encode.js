@@ -154,7 +154,6 @@ function initApi(interpreter, scope) {
   var wrapper = function(direction,callback) {
     if (my_turn){
       look_search_data = false;
-      my_turn = false;
       var getDate =function(){
         if (look_search_data) {
           callback(look_search_data.join(''));
@@ -176,7 +175,6 @@ function initApi(interpreter, scope) {
   var wrapper = function(direction,callback) {
     if (my_turn){
       look_search_data = false;
-      my_turn = false;
       var getDate =function(){
         if (look_search_data) {
           callback(look_search_data.join(''));

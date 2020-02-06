@@ -389,9 +389,6 @@ function get_ready(room,chara,id=false){
     var load_map_size_x = server_store[room].map_size_x;
     var load_map_size_y = server_store[room].map_size_y;
     
-    if(chara == "hot"){
-      console.log(server_store[room].turn,chara,now_x,now_y);
-    }
     
     for(var y of [-1,0,1]){
       if(0 > (now_y + y) || (load_map_size_y - 1) < (now_y + y)){
@@ -440,7 +437,7 @@ function get_ready(room,chara,id=false){
       }
     }
     if(id){
-      io.in(id).emit('get_ready_rec',{
+      io.to(id).emit('get_ready_rec',{
         "rec_data":my_map_data
       });
       server_store[room][chara].getready = false;
@@ -452,7 +449,7 @@ function get_ready(room,chara,id=false){
   }
   else{
     if(id){
-      io.in(id).emit('get_ready_rec',{
+      io.to(id).emit('get_ready_rec',{
         "rec_data":server_store[room][chara].true
       });
     }
@@ -587,7 +584,7 @@ function look(room,chara,msg,id=false){
       }
     }
     if(id){
-      io.in(id).emit('look_rec',{
+      io.to(id).emit('look_rec',{
         "rec_data":look_map_data
       });
       game_result_check(room,chara,"l",msg);
@@ -599,7 +596,7 @@ function look(room,chara,msg,id=false){
   }
   else{
     if(id){
-      io.in(id).emit('look_rec',{
+      io.to(id).emit('look_rec',{
         "rec_data":server_store[room][chara].true
       });
     }
@@ -656,7 +653,7 @@ function search(room,chara,msg,id=false){
       }
     }
     if(id){
-      io.in(id).emit('search_rec',{
+      io.to(id).emit('search_rec',{
         "rec_data":look_map_data
       });
       game_result_check(room,chara,"s",msg);
@@ -668,7 +665,7 @@ function search(room,chara,msg,id=false){
   }
   else{
     if(id){
-      io.in(id).emit('search_rec',{
+      io.to(id).emit('search_rec',{
         "rec_data":server_store[room][chara].true
       });
     }
