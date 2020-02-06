@@ -84,23 +84,23 @@ function makeTable(msg, y, effect, tableId){
             cell=rows[i].insertCell(-1);
             
             if(data[i][j] == 1){
-                cell.style.backgroundImage = "url(/images/wall.png)";
+                cell.classList.add("wall_img");
             }
             else if(data[i][j] == 2){
-                cell.style.backgroundImage = "url(/images/hart.png)";
+                cell.classList.add("hart_img");
             }
             else if(data[i][j] == 3){
-                cell.style.backgroundImage = "url(/images/cool.png)";
+                cell.classList.add("cool_img");
                 cx = j;
                 cy = i;
             }
             else if(data[i][j] == 4){
-                cell.style.backgroundImage = "url(/images/hot.png)";
+                cell.classList.add("hot_img");
                 hx = j;
                 hy = i;
             }
             else if(data[i][j] == 34){
-                cell.style.backgroundImage = "url(/images/ch.png)";
+                cell.classList.add("ch_img");
                 cx = j;
                 cy = i;
                 hx = j;
@@ -260,6 +260,11 @@ function makeTable(msg, y, effect, tableId){
     document.getElementById("game_info").appendChild(odiv);
 }
 
+var gameBgm = new Howl({ src: ['sound/01.mp3'] });
+var resultSound = new Howl({ src: ['sound/02.mp3'] });
+
+
+
 
 var socket = io();
 var servar_connect_status = false;
@@ -307,6 +312,7 @@ socket.on("updata_board", function (msg) {
 });
 
 socket.on("new_board", function (msg) {
+    gameBgm.play();
     if(msg.effect){
         makeTable(msg,load_map_size_y, msg.effect,"game_board");
     }
@@ -338,6 +344,8 @@ socket.on("search_rec", function (msg) {
 socket.on("game_result", function (msg) {
     //console.log(msg);
     Code.stopJS();
+    gameBgm.stop();
+    resultSound.play();
     var result = document.createElement("div"); 
     result.setAttribute("id","game_result");
     var img = document.createElement('img');
