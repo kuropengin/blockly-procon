@@ -75,8 +75,8 @@ function makeTable(msg, y, effect, tableId){
     
     var h = document.getElementById(tableId).clientHeight;
     console.log(h);
-    var _y = (h - (3*y)-20 )/ y;
-    _y =  _y.toString();
+    var _x = (h / y)*x;
+    _x =  _x.toString();
     
     var cx = false,cy = false,hx = false,hy = false;
 

@@ -393,13 +393,13 @@ function get_ready(room,chara,id=false){
     for(var y of [-1,0,1]){
       if(0 > (now_y + y) || (load_map_size_y - 1) < (now_y + y)){
           for(var x of [-1,0,1]){
-              my_map_data.push(1);
+              my_map_data.push(2);
           }
       }
       else{
           for(var x of [-1,0,1]){
               if(0 > (now_x + x) || (load_map_size_x - 1) < (now_x + x)){
-                  my_map_data.push(1);
+                  my_map_data.push(2);
               }
               else{
                   if(tmp_map_data[now_y][now_x] == 3){
@@ -407,29 +407,53 @@ function get_ready(room,chara,id=false){
                           my_map_data.push(0); 
                       }
                       else if(tmp_map_data[now_y + y][now_x + x] == 4){
-                          my_map_data.push(3); 
+                          my_map_data.push(1); 
                       }
                       else{
-                          my_map_data.push(tmp_map_data[now_y + y][now_x + x]); 
+                        if(tmp_map_data[now_y + y][now_x + x] == 0){
+                          my_map_data.push(tmp_map_data[now_y + y][now_x + x]);
+                        }
+                        else if(tmp_map_data[now_y + y][now_x + x] == 1){
+                          my_map_data.push(2);
+                        }
+                        else{
+                          my_map_data.push(3);
+                        }
                       }
                   }
                   else if(tmp_map_data[now_y][now_x] == 4){
                       if(tmp_map_data[now_y + y][now_x + x] == 3){
-                          my_map_data.push(3); 
+                          my_map_data.push(1); 
                       }
                       else if(tmp_map_data[now_y + y][now_x + x] == 4){
                           my_map_data.push(0); 
                       }
                       else{
-                          my_map_data.push(tmp_map_data[now_y + y][now_x + x]); 
+                        if(tmp_map_data[now_y + y][now_x + x] == 0){
+                          my_map_data.push(tmp_map_data[now_y + y][now_x + x]);
+                        }
+                        else if(tmp_map_data[now_y + y][now_x + x] == 1){
+                          my_map_data.push(2);
+                        }
+                        else{
+                          my_map_data.push(3);
+                        }
                       }
                   }
                   else{
                       if(tmp_map_data[now_y + y][now_x + x] == 43 || tmp_map_data[now_y + y][now_x + x] == 34){
-                          my_map_data.push(3); 
+                          my_map_data.push(1); 
                       }
                       else{
-                          my_map_data.push(tmp_map_data[now_y + y][now_x + x]); 
+                        if(tmp_map_data[now_y + y][now_x + x] == 0){
+                          my_map_data.push(tmp_map_data[now_y + y][now_x + x]);
+                        }
+                        else if(tmp_map_data[now_y + y][now_x + x] == 1){
+                          my_map_data.push(2);
+                        }
+                        else{
+                          my_map_data.push(3);
+                        } 
                       } 
                   }
               }
@@ -571,14 +595,22 @@ function look(room,chara,msg,id=false){
     for(var y of y_range){
       for(var x of x_range){
         if(0 > (now_x + x) || (load_map_size_x - 1) < (now_x + x) || 0 > (now_y + y) || (load_map_size_y - 1) < (now_y + y)){
-          look_map_data.push(1);
+          look_map_data.push(2);
         }
         else{
           if(tmp_map_data[now_y + y][now_x + x] == chara_num_diff[chara] || tmp_map_data[now_y + y][now_x + x] == 34){
-            look_map_data.push(3);
+            look_map_data.push(1);
           }
           else{
-            look_map_data.push(tmp_map_data[now_y + y][now_x + x]);
+            if(tmp_map_data[now_y + y][now_x + x] == 0){
+              look_map_data.push(tmp_map_data[now_y + y][now_x + x]);
+            }
+            else if(tmp_map_data[now_y + y][now_x + x] == 1){
+              look_map_data.push(2);
+            }
+            else{
+              look_map_data.push(3);
+            } 
           } 
         }
       }
@@ -640,14 +672,22 @@ function search(room,chara,msg,id=false){
     for(var y of y_range){
       for(var x of x_range){
         if(0 > (now_x + x) || (load_map_size_x - 1) < (now_x + x) || 0 > (now_y + y) || (load_map_size_y - 1) < (now_y + y)){
-          look_map_data.push(1);
+          look_map_data.push(2);
         }
         else{
           if(tmp_map_data[now_y + y][now_x + x] == chara_num_diff[chara] || tmp_map_data[now_y + y][now_x + x] == 34){
-            look_map_data.push(3);
+            look_map_data.push(1);
           }
           else{
-            look_map_data.push(tmp_map_data[now_y + y][now_x + x]);
+            if(tmp_map_data[now_y + y][now_x + x] == 0){
+              look_map_data.push(tmp_map_data[now_y + y][now_x + x]);
+            }
+            else if(tmp_map_data[now_y + y][now_x + x] == 1){
+              look_map_data.push(2);
+            }
+            else{
+              look_map_data.push(3);
+            } 
           } 
         }
       }

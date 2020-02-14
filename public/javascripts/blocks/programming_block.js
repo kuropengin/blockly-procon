@@ -114,7 +114,7 @@ Blockly.Blocks['if_value'] = {
     this.appendDummyInput()
         .appendField(new Blockly.FieldDropdown([["1","0"], ["2","1"], ["3","2"], ["4","3"], ["5","4"], ["6","5"], ["7","6"], ["8","7"], ["9","8"]]), "map_value")
         .appendField("マス目が")
-        .appendField(new Blockly.FieldDropdown([["なにもない","0"], ["ブロックがある","1"], ["ハートがある","2"], ["プレイヤーがいる","3"]]), "map_item")
+        .appendField(new Blockly.FieldDropdown([["なにもない","0"], ["プレイヤーがいる","1"], ["ブロックがある","2"], ["ハートがある","3"]]), "map_item")
         .appendField("なら");
     this.setInputsInline(true);
     this.setOutput(true, "Boolean");

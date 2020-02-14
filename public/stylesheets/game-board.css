@@ -6,6 +6,7 @@ table {
   padding: 0;
   border: none;
   font-size: 0px;
+  height:100%;
 }
 td {
   padding: 0;
@@ -89,7 +90,8 @@ td img{
 }
 
 #game_board{
-  height:100%;
+  position: relative;
+  height: calc(100% - 20px);
   margin:10px;
 }
 
