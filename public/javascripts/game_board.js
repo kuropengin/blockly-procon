@@ -13,9 +13,9 @@ function ready_game(elementId){
     }
     
     var ready_player = document.createElement("div");
-    ready_player.setAttribute("id","ready_player");
+    ready_player.setAttribute("id","ready_player_div");
     
-    c = document.getElementById("ready_player");
+    c = document.getElementById("ready_player_div");
     if(c){
         c.parentNode.removeChild(c);
     }
@@ -49,13 +49,14 @@ function ready_game(elementId){
         ready_player.appendChild(ready_hot); 
     }
     
-    document.getElementById(elementId).appendChild(ready_player);
+    document.getElementById("ready_player").appendChild(ready_player);
     
 }
 
-function makeTable(msg, y, effect, tableId){
+function makeTable(msg, x, y, effect, tableId){
     var data = msg.map_data;
-    var c = document.getElementById("ready_player");
+    var item_num = 0;
+    var c = document.getElementById("ready_player_div");
     if(c){
         c.parentNode.removeChild(c);
     }
@@ -74,9 +75,18 @@ function makeTable(msg, y, effect, tableId){
     }
     
     var h = document.getElementById(tableId).clientHeight;
-    console.log(h);
+    var w = document.getElementById("game_area").clientWidth;
+    console.log(w);
     var _x = (h / y)*x;
-    _x =  _x.toString();
+    
+    
+    if(w > _x){
+        _x =  _x.toString();
+    }
+    else{
+        _x =  w.toString();
+    }
+    table.style.width = _x + "px";
     
     var cx = false,cy = false,hx = false,hy = false;
 
@@ -86,30 +96,31 @@ function makeTable(msg, y, effect, tableId){
             cell=rows[i].insertCell(-1);
             
             if(data[i][j] == 1){
-                cell.style.backgroundImage = "url(/images/wall.png)";
+                cell.classList.add("wall_img");
             }
             else if(data[i][j] == 2){
-                cell.style.backgroundImage = "url(/images/hart.png)";
+                cell.classList.add("hart_img");
+                item_num += 1;
             }
             else if(data[i][j] == 3){
-                cell.style.backgroundImage = "url(/images/cool.png)";
+                cell.classList.add("cool_img");
                 cx = j;
                 cy = i;
             }
             else if(data[i][j] == 4){
-                cell.style.backgroundImage = "url(/images/hot.png)";
+                cell.classList.add("hot_img");
                 hx = j;
                 hy = i;
             }
             else if(data[i][j] == 34){
-                cell.style.backgroundImage = "url(/images/ch.png)";
+                cell.classList.add("ch_img");
                 cx = j;
                 cy = i;
                 hx = j;
                 hy = i;
             }
             else if(data[i][j] == 43){
-                cell.style.backgroundImage = "url(/images/hc.png)";
+                cell.classList.add("ch_img");
                 cx = j;
                 cy = i;
                 hx = j;
@@ -118,8 +129,8 @@ function makeTable(msg, y, effect, tableId){
             
             //cell.appendChild(document.createTextNode(data[i][j]));
 
-            cell.style.height = _y + "px";
-            cell.style.width = _y + "px";
+            //cell.style.height = _y + "px";
+            //cell.style.width = _x + "px";
             
         }
     }
@@ -249,17 +260,68 @@ function makeTable(msg, y, effect, tableId){
     newContent = document.createTextNode(msg.hot_score); 
     hsdiv.appendChild(newContent);
     
+    
+    var hartdiv = document.createElement("div");
+    hartdiv.setAttribute("id","hart_div");
+    
+    var thart = document.createElement("div");
+    thart.setAttribute("id","hart_title");
+    newContent = document.createTextNode("残りアイテム数"); 
+    thart.appendChild(newContent);
+    
+    var nhart = document.createElement("div");
+    nhart.setAttribute("id","hart_n");
+    newContent = document.createTextNode(item_num);
+    nhart.appendChild(newContent);
+    
+    hartdiv.appendChild(thart);
+    hartdiv.appendChild(nhart);
+    
+    
     hdiv.appendChild(hndiv);
     hdiv.appendChild(hsdiv);
     
     
-    odiv.appendChild(cdiv);
     odiv.appendChild(turndiv);
+    odiv.appendChild(cdiv);
     odiv.appendChild(hdiv);
+    odiv.appendChild(hartdiv);
     
     
     document.getElementById(tableId).appendChild(table);
     document.getElementById("game_info").appendChild(odiv);
+}
+
+
+
+function reqFullscreen() {
+    var target = document.getElementById("game_area");
+	if (target.webkitRequestFullscreen) {
+		target.webkitRequestFullscreen();
+	} else if (target.mozRequestFullScreen) {
+		target.mozRequestFullScreen();
+	} else if (target.msRequestFullscreen) {
+		target.msRequestFullscreen();
+	} else if (target.requestFullscreen) {
+		target.requestFullscreen();
+	} else {
+		alert('ご利用のブラウザはフルスクリーン操作に対応していません');
+		return;
+	}
+}
+
+function exitFullscreen() {
+	if (document.webkitCancelFullScreen) {
+		document.webkitCancelFullScreen();
+	} else if (document.mozCancelFullScreen) {
+		document.mozCancelFullScreen();
+	} else if (document.msExitFullscreen) {
+		document.msExitFullscreen();
+	} else if(document.cancelFullScreen) {
+		document.cancelFullScreen();
+	} else if(document.exitFullscreen) {
+		document.exitFullscreen();
+	}
 }
 
 

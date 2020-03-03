@@ -260,8 +260,15 @@ function makeTable(msg, y, effect, tableId){
     document.getElementById("game_info").appendChild(odiv);
 }
 
-var gameBgm = new Howl({ src: ['sound/01.mp3'] });
-var resultSound = new Howl({ src: ['sound/02.mp3'] });
+var gameBgm = new Howl({
+    src: ['sound/01.mp3'],
+    loop: true,
+    volume: 0.2
+});
+var resultSound = new Howl({
+    src: ['sound/02.mp3'],
+    volume: 0.2
+});
 
 
 

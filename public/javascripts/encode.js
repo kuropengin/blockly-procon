@@ -220,6 +220,8 @@ function resetStepUi(clearOutput) {
 
 function generateUiCodeAndLoadIntoInterpreter() {
   Blockly.JavaScript.STATEMENT_PREFIX = '';
+  Blockly.JavaScript.INFINITE_LOOP_TRAP = '';
+  
   latestCode = Blockly.JavaScript.workspaceToCode(Code.workspace);
 }
 
@@ -227,7 +229,12 @@ function generateCodeAndLoadIntoInterpreter() {
   // Generate JavaScript code and parse it.
   Blockly.JavaScript.STATEMENT_PREFIX = 'highlightBlock(%1);\n';
   Blockly.JavaScript.addReservedWords('highlightBlock');
+  
+  var LoopTrap = 1000;
+  Blockly.JavaScript.INFINITE_LOOP_TRAP = 'if(--LoopTrap == 0) throw "Infinite loop.";\n';
   latestCode = Blockly.JavaScript.workspaceToCode(Code.workspace);
+  
+  latestCode = "var LoopTrap = " + LoopTrap + ";\n" + latestCode;
 }
 
 function saveCodelocalStorage() {
@@ -261,7 +268,7 @@ function resetVar(){
 
 Code.runJS = function(){
   if (!myInterpreter) {
-
+    
     resetStepUi(true);
     runButton.disabled = 'disabled';
     
@@ -272,14 +279,22 @@ Code.runJS = function(){
       
       myInterpreter = new ObjInterpreter(latestCode, initApi);
       runner = function() {
+        var hasMore;
         if (myInterpreter) {
-          //var hasMore = myInterpreter.run();
-          var hasMore = myInterpreter.run();
-          if (hasMore) {
-            setTimeout(runner,100);
+          try{
+            hasMore = myInterpreter.run();
+            if (hasMore) {
+              setTimeout(runner,100);
+            }
+            else {
+              outputArea.value += '\n\n<< Program complete >>';
+              resetInterpreter();
+              resetVar();
+              resetStepUi(false);
+            }
           }
-          else {
-            outputArea.value += '\n\n<< Program complete >>';
+          catch(e){
+            outputArea.value += '\n\n<< Error ' + e + '>>';
             resetInterpreter();
             resetVar();
             resetStepUi(false);

@@ -418,6 +418,7 @@ Code.init = function() {
   var blocklimit;
   try{
     blocklimit = satage_data["block_limit"];
+
   }
   catch(e){
     blocklimit = "";

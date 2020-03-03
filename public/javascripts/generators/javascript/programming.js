@@ -64,3 +64,4 @@ Blockly.JavaScript['if_value'] = function(block) {
   var code = 'map_data_hiyasinsu_kuropengin['+ dropdown_map_value +'] == ' + dropdown_map_item + '';
   return [code, Blockly.JavaScript.ORDER_NONE];
 };
+

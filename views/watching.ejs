@@ -9,14 +9,13 @@
   
   <script src="/socket.io/socket.io.js"></script>
   <script src="/javascripts/jquery-3.4.1.min.js"></script>
-  <script src="/javascripts/game_board.js"></script>
   
-</head>
-<body>
   <script>
     var socket = io();
     var c_name = "NoName";
     var h_name = "NoName";
+    var load_map_size_x;
+    var load_map_size_y;
     var temp_msg;
     socket.emit('looker_join','<%- id %>');
     
@@ -38,20 +37,20 @@
     socket.on("updata_board", function (msg) {
       temp_msg = msg;
       if(msg.effect){
-          makeTable(msg,17, msg.effect,"game_board");
+          makeTable(msg,load_map_size_x,load_map_size_y, msg.effect,"game_board");
       }
       else{
-          makeTable(msg,17, 0,"game_board");
+          makeTable(msg,load_map_size_x,load_map_size_y, 0,"game_board");
       }
     });
     
     socket.on("new_board", function (msg) {
       temp_msg = msg;
       if(msg.effect){
-          makeTable(msg,17, msg.effect,"game_board");
+          makeTable(msg,load_map_size_x,load_map_size_y, msg.effect,"game_board");
       }
       else{
-          makeTable(msg,17, 0,"game_board");
+          makeTable(msg,load_map_size_x,load_map_size_y, 0,"game_board");
       }
     });
     
@@ -75,27 +74,36 @@
     
     window.addEventListener( "resize", function () {
     	if(temp_msg.effect){
-          makeTable(temp_msg,17, temp_msg.effect,"game_board");
+          makeTable(temp_msg,load_map_size_x,load_map_size_y, temp_msg.effect,"game_board");
       }
       else{
-          makeTable(temp_msg,17, 0,"game_board");
+          makeTable(temp_msg,load_map_size_x,load_map_size_y, 0,"game_board");
       }
     });
     
   </script>
+  
+  <script src="/javascripts/game_board.js"></script>
+  
+</head>
+<body>
   <div class="header">
     
     <div class = "back_page">
-      <div class = "back_button"><a href="../"></a></div>
+      <div class = "back_button"><a href="./menu-watching"></a></div>
     </div>
     <div class="control_area">
       <div class = "page_title">
         <h1><span class = "page_title_span">観戦</span><%- title %></h1>
       </div>
+      <div class = "control_button">
+        <button id="fullscreenButton" onclick="reqFullscreen()" class="notext" title="最大化"></button>
+      </div>
     </div>  
     
   </div>
-  <div class="game_area">
+  <div id="game_area">
+    <div id="ready_player"></div>
     <div id="game_board"></div>
     <div id="game_info"></div>
   </div>

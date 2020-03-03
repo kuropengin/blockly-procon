@@ -18,8 +18,21 @@ td img{
   width:100%;
 }
 
+#fullscreenButton{
+  border: 2px solid #ffffff;
+  background-color: #5d5d5d;
+  background-image: url(../media/fullscreen.png);
+  background-repeat: no-repeat;
+  background-size: 25px;
+  background-position: center center;
+  width: 40px;
+  height: 35px;
+  border-radius: 4px;
+  box-shadow: 0px 1px 2px 1px #7d7d7d;
+}
 
-.game_area{
+
+#game_area{
   position: relative;
   width: calc(100% - 14px);
   height: calc(100% - 65px);
@@ -33,8 +46,18 @@ td img{
   background-repeat: no-repeat;
   background-size: contain;
   background-position: 0% 40%;
+  
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  overflow: auto;
 }
 
+
+#ready_player{
+  width: 100%;
+  position: absolute;
+}
 
 
 #ready_server{
@@ -93,38 +116,53 @@ td img{
   position: relative;
   height: calc(100% - 20px);
   margin:10px;
+  
+  display: flex;
+  align-items: center;
+}
+
+#game_info{
+  width: 450px;
 }
 
 #game_info_div{
   display: flex;
+  flex-wrap: wrap;
+  
+  font-size: 18px;
+  font-weight: bold;
+  color: #1c1c1c;
 }
 
 #cool_info_div{
   display: block;
   position: relative;
-  width: calc(40% - 20px);
-  margin: 0px 8px;
+  width: 100%;
+  margin: 11px 8px;
   border: solid 2px #0d8eff;
   border-radius: 10px;
 }
 #cool_name{
+  height: 29px;
+  padding-top: 1px;
   text-align: left;
   white-space: nowrap;
-  padding-left: 50px;
+  padding-left: 60px;
   padding-right: 5px;
-  font-size: 14px;
   overflow: hidden;
   background: #5d5d5d;
   color: #FFF;
   border-radius: 8px 8px 0 0;
 }
 #cool_name:before{
+  height: 29px;
+  padding-top: 1px;
   content: "cool";
   position: absolute;
   text-align: left;
   top: 0px;
   left: 0px;
-  width: 20px;
+  width: 30px;
   background: #0e8eff;
   color: #FFF;
   border-right: solid 18px #0e8eff;
@@ -132,6 +170,10 @@ td img{
   border-radius: 8px 15px 15px 0px;
 }
 
+#cool_score{
+  height: 29px;
+  padding-top: 1px;
+}
 
 #cool_score:after{
   content: "point";
@@ -141,23 +183,52 @@ td img{
  
 #turn_div{
   display: block;
-  width: 20%;
+  width: 100%;
+  margin: 11px 8px;
   background: linear-gradient(90deg, rgba(14,142,255,1) 0%, rgba(255,34,34,1) 100%);
   border-radius: 10px;
 }
  
 
 #turn_title{
-  font-size: 12px;
+  height: 30px;
   margin: 2px;
   margin-bottom: 0px;
-  padding-top: 3px;
   color: #FFF;
   background: #5d5d5d;
   border-radius: 10px 10px 0 0;
 }
 
 #turn_n{
+  height: 29px;
+  padding-top: 1px;
+  margin: 2px;
+  margin-top: 0;
+  background: #FFF;
+  border-radius: 0 0 10px 10px;
+}
+
+#hart_div{
+  display: block;
+  width: 100%;
+  margin: 11px 8px;
+  background: linear-gradient(90deg, rgba(14,142,255,1) 0%, rgba(255,34,34,1) 100%);
+  border-radius: 10px;
+}
+ 
+
+#hart_title{
+  height: 30px;
+  margin: 2px;
+  margin-bottom: 0px;
+  color: #FFF;
+  background: #5d5d5d;
+  border-radius: 10px 10px 0 0;
+}
+
+#hart_n{
+  height: 29px;
+  padding-top: 1px;
   margin: 2px;
   margin-top: 0;
   background: #FFF;
@@ -167,35 +238,45 @@ td img{
 #hot_info_div{
   display: block;
   position: relative;
-  width: calc(40% - 20px);
-  margin: 0px 8px;
+  width: 100%;
+  margin: 11px 8px;
   border: solid 2px #ff2222;
   border-radius: 10px;
 }
 #hot_name{
-  padding-left: 50px;
+  height: 29px;
+  padding-top: 1px;
+  padding-left: 60px;
   padding-right: 5px;
   text-align: left;
   white-space: nowrap;
-  font-size: 14px;
   overflow: hidden;
   background: #5d5d5d;
   color: #FFF;
   border-radius: 8px 8px 0 0;
 }
+
 #hot_name:before{
+  height: 29px;
+  padding-top: 1px;
   content: "hot";
   position: absolute;
   text-align: left;
   top: 0px;
   left: 0px;
-  width: 20px;
+  width: 30px;
   background: #ff2222;
   color: #FFF;
   border-right: solid 15px #ff2222;
   border-left: solid 8px #ff2222;
   border-radius: 8px 15px 15px 0px;
 }
+
+#hot_score{
+  height: 29px;
+  padding-top: 1px;
+}
+
 #hot_score:after{
   content: "point";
   font-size: 11px;
@@ -208,4 +289,28 @@ td img{
   position: absolute;
   top: 20%;
   left: 10%;
+}
+
+.hart_img{
+  background-image: url(/images/hart.png);
+  background-repeat: no-repeat;
+}
+
+.wall_img{
+  background-image: url(/images/wall.png);
+}
+
+.cool_img{
+  background-image: url(/images/cool.png);
+  background-repeat: no-repeat;
+}
+
+.hot_img{
+  background-image: url(/images/hot.png);
+  background-repeat: no-repeat;
+}
+
+.ch_img{
+  background-image: url(/images/ch.png);
+  background-repeat: no-repeat;
 }

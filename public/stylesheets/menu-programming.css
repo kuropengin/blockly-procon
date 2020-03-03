@@ -43,11 +43,6 @@
     justify-content: center;
 }
 
-/* デモ用のデザイン 
-.slider-x > div:nth-child(3){background-color: #00873C}
-.slider-x > div:nth-child(4){background-color: #005AA0}
-.slider-x > div:nth-child(5){background-color: #DFD000}
-*/
 
 #d1{
     transform: scale(1.14);
@@ -164,4 +159,3 @@
     opacity: 1.0;
     display: none;
 }
-
