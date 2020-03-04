@@ -368,7 +368,9 @@ function game_server_reset(room){
   
   for(var user_id in store){
     if(store[user_id].room == room){
-      io.sockets.sockets[user_id].leave(room);
+      if(io.sockets.sockets[user_id]){
+        io.sockets.sockets[user_id].leave(room);
+      }
       delete store[user_id];
     }
   }
