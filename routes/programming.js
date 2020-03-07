@@ -10,7 +10,8 @@ router.io = io;
 
 //game_server_list
 var fs = require('fs');
-var game_server = JSON.parse(fs.readFileSync('./load_data/game_server_data/server_data.json', 'utf8'));
+var path = require('path');
+var game_server = JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'load_data/game_server_data/server_data.json'), 'utf8'));
 var server_list = [];
 Object.keys(game_server).forEach(function(key) {
   server_list.push([game_server[key].name,key]);
@@ -199,16 +200,16 @@ function cpu(room,level,chara){
     }
     else if(level == 1){
       var random_list = [];
-      if(cpu_map_date[1] != 1){
+      if(cpu_map_date[1] != 2){
         random_list.push('top');
       }
-      if(cpu_map_date[3] != 1){
+      if(cpu_map_date[3] != 2){
         random_list.push('left');
       }
-      if(cpu_map_date[5] != 1){
+      if(cpu_map_date[5] != 2){
         random_list.push('right');
       }
-      if(cpu_map_date[7] != 1){
+      if(cpu_map_date[7] != 2){
         random_list.push('bottom');
       }
       

@@ -86,9 +86,13 @@ function stage_result(){
         result.setAttribute("id","game_result");
         var img = document.createElement('img');
         img.src = '/images/stageclear.png';
-    
         result.appendChild(img);
         document.getElementById("game_board").appendChild(result);
+        
+        var xmlDom = Blockly.Xml.workspaceToDom(Code.workspace);
+        var xmlText = Blockly.Xml.domToPrettyText(xmlDom);
+        
+        localStorage.setItem(satage_data["stage_id"], xmlText); 
     }
 }
 
