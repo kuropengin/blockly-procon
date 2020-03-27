@@ -260,14 +260,29 @@ function makeTable(msg, y, effect, tableId){
     document.getElementById("game_info").appendChild(odiv);
 }
 
+var Sound_Volume = 0.5;
+if(localStorage["SOUND_VOLUME"]){
+    Sound_Volume = localStorage["SOUND_VOLUME"] / 100;
+}
+
+var gameBgmFile = "sound/01.mp3";
+var resultSoundFile = "sound/02.mp3";
+if(localStorage["GAME_BGM"]){
+    gameBgmFile = "sound/" + localStorage["GAME_BGM"];
+}
+if(localStorage["RESULT_BGM"]){
+    resultSoundFile = "sound/" + localStorage["RESULT_BGM"];
+}
+
+
 var gameBgm = new Howl({
-    src: ['sound/01.mp3'],
+    src: [gameBgmFile],
     loop: true,
-    volume: 0.2
+    volume: Sound_Volume
 });
 var resultSound = new Howl({
-    src: ['sound/02.mp3'],
-    volume: 0.2
+    src: [resultSoundFile],
+    volume: Sound_Volume
 });
 
 
@@ -319,7 +334,15 @@ socket.on("updata_board", function (msg) {
 });
 
 socket.on("new_board", function (msg) {
-    gameBgm.play();
+    if(localStorage["SOUND_STATUS"]){
+        if(localStorage["SOUND_STATUS"] == "on"){
+            gameBgm.play();
+        }
+    }
+    else{
+        gameBgm.play();
+    }
+    
     if(msg.effect){
         makeTable(msg,load_map_size_y, msg.effect,"game_board");
     }
@@ -331,6 +354,20 @@ socket.on("new_board", function (msg) {
 socket.on("get_ready_rec", function (msg) {
     if(!my_turn){
         my_turn = msg.rec_data;
+    }
+});
+
+socket.on("move_rec", function (msg) {
+    if(my_turn){
+        my_turn = false;
+        look_search_data = msg.rec_data;
+    }
+});
+
+socket.on("put_rec", function (msg) {
+    if(my_turn){
+        my_turn = false;
+        look_search_data = msg.rec_data;
     }
 });
 
@@ -351,8 +388,18 @@ socket.on("search_rec", function (msg) {
 socket.on("game_result", function (msg) {
     //console.log(msg);
     Code.stopJS();
-    gameBgm.stop();
-    resultSound.play();
+    
+    if(localStorage["SOUND_STATUS"]){
+        if(localStorage["SOUND_STATUS"] == "on"){
+            gameBgm.stop();
+            resultSound.play();
+        }
+    }
+    else{
+        gameBgm.stop();
+        resultSound.play();
+    }
+    
     var result = document.createElement("div"); 
     result.setAttribute("id","game_result");
     var img = document.createElement('img');

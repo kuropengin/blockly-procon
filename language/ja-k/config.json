@@ -1,0 +1,12 @@
+{
+    "LNG_TITLE":"げんご",
+    "PAGE_RELOAD":"ページこうしんごにかわります",
+    "UNSUPPORTED":"いちぶかわらないかしょがあります",
+    "AUTO_SAVE":"じどうほぞんきのう",
+    "RESET_SPAN":"じどうほぞんきのうによるデータ,オプションのせっていがさくじょされます",
+    "SOUND_VOLUME":"おんりょう",
+    "BGM_CONFIG":"BGMせってい",
+    "LOWSPEED_CONFIG":"ていそくモード",
+    "LOOP_CONFIG":"ループせいげん",
+    "LOOP_SPAN":"OFFにしたばあい、アプリがどうさしなくなるばあいがあります。つかうときはていそくモードをONにしてください"
+}

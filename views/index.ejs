@@ -1,12 +1,16 @@
 <!DOCTYPE html>
-<html>
+<html lang="ja">
 <head>
   <meta charset="utf-8">
   <title>Procon</title>
   <link rel='stylesheet' href='/stylesheets/style.css' />
   <link rel='stylesheet' href='/stylesheets/menu.css' />
+  <link rel='stylesheet' href='/stylesheets/animation.css' />
+  <%- include('./common/config-init') %>
 </head>
 <body>
+  <%- include('./common/config', {LNG: C_LNG}) %>
+  
   <div class="header">
     
     <div class = "back_page">
@@ -17,13 +21,12 @@
         <h1><span class = "page_title_span">メニュー</span><%- title %></h1>
       </div>
       <div class = "control_button">
-        <button>
-          <div class = "menu_config">設定</div>
-        </button>
+        <button id ="configButton" title="<%- LNG["CONFIG"] %>"></button>
       </div>
     </div>  
     
   </div>
+  
   <div class="content">
     
     <div class="main">
@@ -32,7 +35,7 @@
           <div class = "menu_tutorial">
             <a href="/menu-tutorial"></a>
             <div class = "menu_tutorial_info">
-              まずは練習♪ 基本を学ぼう！
+              <%- LNG["TUTORIAL_INFO"] %>
             </div>
             <div class = "menu_tutorial_title">
               チュートリアル
@@ -46,7 +49,7 @@
           <div class = "menu_programming">
             <a href="/menu-programming"></a>
             <div class = "menu_programming_info">
-              君だけの作品を作りだそう！
+              <%- LNG["PROGRAMMING_INFO"] %>
             </div>
             <div class = "menu_programming_title">
               プログラミング
@@ -63,10 +66,10 @@
           <div class = "menu_watching">
             <a href="/menu-watching"></a>
             <div class = "menu_watching_info">
-              友達の試合を見て見よう！
+              <%- LNG["WATCHIING_INFO"] %>
             </div>
             <div class = "menu_watching_title">
-              観 戦
+              <%- LNG["WATCHIING_TITLE"] %>
             </div>
             <div class = "menu_programming_title_en">
               Watching
@@ -78,6 +81,5 @@
     </div>
   </div>
 
-  
 </body>
 </html>

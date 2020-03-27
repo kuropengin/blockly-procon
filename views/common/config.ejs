@@ -1,0 +1,109 @@
+<div id="config">
+    <div id="config_area">
+        <div class="config_title">オプション<div id="config_close"></div></div>
+      
+        <div class="config_tab_wrap">
+            <input id="config_tab_01" type="radio" name="CONFIG_TAB" class="config_tab_switch" checked="checked" /><label class="config_tab_label config_tab_left" for="config_tab_01">システム</label>
+            <div class="config_tab_content">
+              <div class="config_item">
+                <div class="config_item_title"><%- LNG["LNG_TITLE"] %></div>
+                  <div class="radioArea" id="lng_config">
+                    <input type="radio" name="lng" id="lng_ja" checked><label for="lng_ja">日本語</label>
+                    <input type="radio" name="lng" id="lng_ja-k" ><label for="lng_ja-k">にほんご</label>
+                  </div>
+                <span><%- LNG["PAGE_RELOAD"] %></span>
+                <span><%- LNG["UNSUPPORTED"] %></span>
+              </div>
+              
+              <div class="config_item">
+                <div class="config_item_title"><%- LNG["AUTO_SAVE"] %></div>
+                  <div class="radioArea" id="save_config">
+                    <input type="radio" name="save" id="save_on" checked><label for="save_on">ON</label>
+                    <input type="radio" name="save" id="save_off"><label for="save_off">OFF</label>
+                  </div>
+              </div>
+              
+              <div class="config_item">
+                <div class="config_item_title">セーブデータ</div>
+                
+                <div id="save_data_reset">リセット</div>
+                <span><%- LNG["RESET_SPAN"] %></span>
+              </div>
+              
+              
+            </div>
+            <input id="config_tab_02" type="radio" name="CONFIG_TAB" class="config_tab_switch" /><label class="config_tab_label" for="config_tab_02">サウンド</label>
+            <div class="config_tab_content">
+              <div class="config_item">
+                <div class="config_item_title">サウンド</div>
+                  <div class="radioArea" id="sound_config">
+                    <input type="radio" name="sound" id="sound_on" checked><label for="sound_on">ON</label>
+                    <input type="radio" name="sound" id="sound_off"><label for="sound_off">OFF</label>
+                  </div>
+              </div>
+              
+              <div class="config_item">
+                <div class="config_item_title"><%- LNG["SOUND_VOLUME"] %></div>
+                <input id="sound_volume" type="range" value="50" min="1" max="100" step="1"oninput="document.getElementById('sound_volume_output').value=this.value">
+                <output id="sound_volume_output"></output>
+              </div>
+              
+              <div class="config_item">
+                <div class="config_item_title"><%- LNG["BGM_CONFIG"] %></div>
+                  <div class="config_item_sub_title">バトルBGM</div>
+                  <select name="game_bgm" id="gameBgm">
+                    
+                  </select>
+                  
+                  <div class="config_item_sub_title">リザルトBGM</div>
+                  <select name="result_bgm" id="resultBgm">
+                    
+                  </select>
+              </div>
+              
+            </div>
+            <input id="config_tab_03" type="radio" name="CONFIG_TAB" class="config_tab_switch" /><label class="config_tab_label" for="config_tab_03">プログラミング</label>
+            <div class="config_tab_content">
+              
+              <div class="config_item">
+                <div class="config_item_title">デバックモード</div>
+                <div class="radioArea" id="debug_config">
+                  <input type="radio" name="debug" id="debug_on"><label for="debug_on">ON</label>
+                  <input type="radio" name="debug" id="debug_off" checked><label for="debug_off">OFF</label>
+                </div>
+              </div>
+              
+              <div class="config_item">
+                <div class="config_item_title"><%- LNG["LOWSPEED_CONFIG"] %></div>
+                <div class="radioArea" id="lowspeed_config">
+                  <input type="radio" name="lowspeed" id="lowspeed_on"><label for="lowspeed_on">ON</label>
+                  <input type="radio" name="lowspeed" id="lowspeed_off" checked><label for="lowspeed_off">OFF</label>
+                </div>
+              </div>
+              
+              <div class="config_item">
+                <div class="config_item_title"><%- LNG["LOOP_CONFIG"] %></div>
+                <div class="radioArea" id="loop_config">
+                  <input type="radio" name="loop" id="loop_on" checked><label for="loop_on">ON</label>
+                  <input type="radio" name="loop" id="loop_off"><label for="loop_off">OFF</label>
+                </div>
+                <span><%- LNG["LOOP_SPAN"] %></span>
+              </div>
+              
+            </div>
+            <input id="config_tab_04" type="radio" name="CONFIG_TAB" class="config_tab_switch" /><label class="config_tab_label config_tab_right" for="config_tab_04">アプリについて</label>
+            <div class="config_tab_content">
+              
+              <div class="config_item">
+                <div class="config_item_title">利用規約</div>
+              </div>
+              
+              <div class="config_item">
+                <div class="config_item_title">権利表記</div>
+              </div>
+        
+            </div>
+        </div>
+    </div>
+</div>
+<script src="/javascripts/config.js"></script>

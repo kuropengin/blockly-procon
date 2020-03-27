@@ -12,20 +12,35 @@ Blockly.Blocks['wait'] = {
   }
 };
 
-Blockly.Blocks['server_join'] = {
-  init: function() {
-    this.appendDummyInput()
-        .appendField(new Blockly.FieldDropdown(get_server_list), "room_id")
-        .appendField("にプレイヤー名")
-        .appendField(new Blockly.FieldTextInput(""), "name")
-        .appendField("で接続する");
-    this.setInputsInline(true);
-    this.setNextStatement(true, null);
-    this.setColour(195);
- this.setTooltip("");
- this.setHelpUrl("");
-  }
+window.onload = function () {
+    getServarList();
 };
+
+function getServarList() {
+    var url = './../api/join';
+    fetch(url)
+    .then(function (data) {
+        return data.json(); 
+    })
+    .then(function (json) {
+        Blockly.Blocks['server_join'] = {
+          init: function() {
+            this.appendDummyInput()
+                .appendField(new Blockly.FieldDropdown(json), "room_id")
+                .appendField("にプレイヤー名")
+                .appendField(new Blockly.FieldTextInput(""), "name")
+                .appendField("で接続する");
+            this.setInputsInline(true);
+            this.setNextStatement(true, null);
+            this.setColour(195);
+         this.setTooltip("");
+         this.setHelpUrl("");
+          }
+        };
+        initDataLoad();
+    });
+}
+        
 
 Blockly.Blocks['get_ready'] = {
   init: function() {

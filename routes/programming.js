@@ -26,9 +26,17 @@ var room_store = {};
 var cpu_store = {};
 
 
+
 //GET page
 router.get('/', function(req, res, next) {
-  res.render('programming', { title: 'プログラミング',server_list:server_list });
+  try{
+    var lg = req.query.lang;
+    var LNG = JSON.parse(fs.readFileSync(path.join(__dirname, '..', "language", lg, "programming.json"), "utf-8"));
+  }
+  catch(e){
+    var LNG = JSON.parse(fs.readFileSync(path.join(__dirname, '..', "language", "ja", "programming.json"), "utf-8"));
+  }
+  res.render('programming', { "title": 'プログラミング',"server_list":server_list,"LNG":LNG});
 });
 
 
@@ -224,8 +232,16 @@ function cpu(room,level,chara){
   }
 }
 
+function game_time_out(room,winer){
+  io.in(room).emit("game_result",{
+      "winer": winer
+    });
+  game_server_reset(room);
+}
 
 function game_result_check(room,chara,effect_t = "r",effect_d = false,winer = false){
+  
+  clearTimeout(server_store[room].timer);
   
   var effect_chara = {"cool":"hot","hot":"cool"};
   
@@ -358,6 +374,13 @@ function game_result_check(room,chara,effect_t = "r",effect_d = false,winer = fa
   else{
     server_store[room][effect_chara[chara]].turn = true;
     
+    if(server_store[room].timeout){
+      server_store[room].timer = setTimeout(game_time_out, 1000 * server_store[room].timeout, room, chara);
+    }
+    else{
+      server_store[room].timer = setTimeout(game_time_out, 10000, room, chara);
+    }
+    
     if(server_store[room].cpu && server_store[room][server_store[room].cpu.turn].turn){
       cpu(room,server_store[room].cpu.level,server_store[room].cpu.turn);
     }
@@ -366,7 +389,7 @@ function game_result_check(room,chara,effect_t = "r",effect_d = false,winer = fa
 }
 
 function game_server_reset(room){
-  
+  console.log(room);
   for(var user_id in store){
     if(store[user_id].room == room){
       if(io.sockets.sockets[user_id]){
@@ -486,17 +509,18 @@ function get_ready(room,chara,id=false){
   }  
 }
 
-function move_player(room,chara,msg){
+function move_player(room,chara,msg,id=false){
   if(server_store[room][chara].turn && server_store[room][chara].getready == false){
     server_store[room][chara].turn = false;
     server_store[room][chara].getready = true;
     var x = server_store[room][chara].x;
     var y = server_store[room][chara].y;
     
-    
     var xy_check = false;
     var chara_num = {"cool":3,"hot":4};
     var chara_num_diff = {"cool":4,"hot":3};
+    
+    var move_map_data = [];
     
     if(server_store[room].map_data[y][x] == 34){
       server_store[room].map_data[y][x] = chara_num_diff[chara];
@@ -559,9 +583,48 @@ function move_player(room,chara,msg){
       else if(server_store[room].map_data[y][x] == chara_num_diff[chara]){
         server_store[room].map_data[y][x] = 34;
       }
+      
+      var tmp_map_data = Array.from(server_store[room].map_data);
+      var x_range = [-1,0,1];
+      var y_range = [-1,0,1];
+      var load_map_size_x = server_store[room].map_size_x;
+      var load_map_size_y = server_store[room].map_size_y;
+    
+      for(var _y of y_range){
+        for(var _x of x_range){
+          if(0 > (_x + x) || (load_map_size_x - 1) < (_x + x) || 0 > (_y + y) || (load_map_size_y - 1) < (_y + y)){
+            move_map_data.push(2);
+          }
+          else{
+            if(tmp_map_data[_y + y][_x + x] == chara_num_diff[chara] || tmp_map_data[_y + y][_x + x] == 34){
+              move_map_data.push(1);
+            }
+            else{
+              if(tmp_map_data[_y + y][_x + x] == 0 || tmp_map_data[_y + y][_x + x] == chara_num[chara]){
+                move_map_data.push(0);
+              }
+              else if(tmp_map_data[_y + y][_x + x] == 1){
+                move_map_data.push(2);
+              }
+              else{
+                move_map_data.push(3);
+              } 
+            } 
+          }
+        }
+      }
+      if(id){
+        io.to(id).emit('move_rec',{
+          "rec_data":move_map_data
+        });
+      }
     }   
     
     game_result_check(room,chara);
+    
+    if(!id){
+      return move_map_data;
+    }
   }
 }
 
@@ -718,7 +781,7 @@ function search(room,chara,msg,id=false){
   }
 }
 
-function put_wall(room,chara,msg){
+function put_wall(room,chara,msg,id=false){
   if(server_store[room][chara].turn && server_store[room][chara].getready == false){
     server_store[room][chara].turn = false;
     server_store[room][chara].getready = true;
@@ -756,7 +819,53 @@ function put_wall(room,chara,msg){
       server_store[room].map_data[y][x] = 1;
     }
     
-    game_result_check(room,chara);
+    var tmp_map_data = Array.from(server_store[room].map_data);
+    var put_map_data = [];
+    var now_x = server_store[room][chara].x;
+    var now_y = server_store[room][chara].y;
+    var x_range = [-1,0,1];
+    var y_range = [-1,0,1];
+    var load_map_size_x = server_store[room].map_size_x;
+    var load_map_size_y = server_store[room].map_size_y;
+    
+    var chara_num = {"cool":3,"hot":4};
+    var chara_num_diff = {"cool":4,"hot":3};
+  
+    for(var _y of y_range){
+      for(var _x of x_range){
+        if(0 > (_x + now_x) || (load_map_size_x - 1) < (_x + now_x) || 0 > (_y + now_y) || (load_map_size_y - 1) < (_y + now_y)){
+          put_map_data.push(2);
+        }
+        else{
+          if(tmp_map_data[_y + now_y][_x + now_x] == chara_num_diff[chara] || tmp_map_data[_y + now_y][_x + now_x] == 34){
+            put_map_data.push(1);
+          }
+          else{
+            if(tmp_map_data[_y + now_y][_x + now_x] == 0 || tmp_map_data[_y + now_y][_x + now_x] == chara_num[chara]){
+              put_map_data.push(0);
+            }
+            else if(tmp_map_data[_y + now_y][_x + now_x] == 1){
+              put_map_data.push(2);
+            }
+            else{
+              put_map_data.push(3);
+            } 
+          } 
+        }
+      }
+    }
+    
+    if(id){
+      io.to(id).emit('put_rec',{
+        "rec_data":put_map_data
+      });
+      game_result_check(room,chara);
+    }
+    else{
+      game_result_check(room,chara);
+      return put_map_data;
+    }
+    
   }
 }
 
@@ -847,6 +956,13 @@ io.on('connection',function(socket){
           
           server_store[room].cool.turn = true;
           
+          if(server_store[room].timeout){
+            server_store[room].timer = setTimeout(game_time_out, 1000 * server_store[room].timeout, room, "hot");
+          }
+          else{
+            server_store[room].timer = setTimeout(game_time_out, 10000, room, "hot");
+          }
+          
           if(server_store[room].cpu && server_store[room].cool.name == "cpu"){
             cpu(room,server_store[room].cpu.level,server_store[room].cpu.turn);
           }
@@ -865,7 +981,7 @@ io.on('connection',function(socket){
   
   socket.on('move_player', function(msg) {
     if(store[socket.id]){
-      move_player(store[socket.id].room,store[socket.id].chara,msg);
+      move_player(store[socket.id].room,store[socket.id].chara,msg,socket.id);
     }
   });
   
@@ -889,7 +1005,7 @@ io.on('connection',function(socket){
   
   socket.on('put_wall', function(msg) {
     if(store[socket.id]){
-      put_wall(store[socket.id].room,store[socket.id].chara,msg);
+      put_wall(store[socket.id].room,store[socket.id].chara,msg,socket.id);
     }
   });
   
@@ -901,7 +1017,6 @@ io.on('connection',function(socket){
     
     var cool_name = "接続待機中";
     var hot_name = "接続待機中";
-    
     if(server_store[msg].cool.status){
       cool_name = server_store[msg].cool.name;
     }
@@ -925,10 +1040,10 @@ io.on('connection',function(socket){
     if (store[socket.id]) {
       if(server_store[store[socket.id].room].cool.status && server_store[store[socket.id].room].hot.status){
         if(store[socket.id].chara == "cool"){
-          game_result_check(store[socket.id].room,store[socket.id].chara,"r",false,"hot");
+          game_result_check(store[socket.id].room, store[socket.id].chara , "r", false, "hot");
         }
         else{
-          game_result_check(store[socket.id].room,store[socket.id].chara,"r",false,"cool");
+          game_result_check(store[socket.id].room, store[socket.id].chara , "r", false, "cool");
         }
       }
       else{
@@ -946,10 +1061,10 @@ io.on('connection',function(socket){
     if (store[socket.id]) {
       if(server_store[store[socket.id].room].cool.status && server_store[store[socket.id].room].hot.status){
         if(store[socket.id].chara == "cool"){
-          game_result_check(store[socket.id].room,store[socket.id].chara,"r",false,"hot");
+          game_result_check(store[socket.id].room, store[socket.id].chara , "r", false, "hot");
         }
         else{
-          game_result_check(store[socket.id].room,store[socket.id].chara,"r",false,"cool");
+          game_result_check(store[socket.id].room, store[socket.id].chara , "r", false, "cool");
         }
       }
       else{

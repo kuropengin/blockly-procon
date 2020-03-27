@@ -53,7 +53,48 @@ function ready_game(elementId){
     
 }
 
+var game_bgm_flag = true;
+
+var Sound_Volume = 0.5;
+if(localStorage["SOUND_VOLUME"]){
+    Sound_Volume = localStorage["SOUND_VOLUME"] / 100;
+}
+
+var gameBgmFile = "sound/01.mp3";
+var resultSoundFile = "sound/02.mp3";
+if(localStorage["GAME_BGM"]){
+    gameBgmFile = "sound/" + localStorage["GAME_BGM"];
+}
+if(localStorage["RESULT_BGM"]){
+    resultSoundFile = "sound/" + localStorage["RESULT_BGM"];
+}
+
+
+var gameBgm = new Howl({
+    src: [gameBgmFile],
+    loop: true,
+    volume: Sound_Volume
+});
+var resultSound = new Howl({
+    src: [resultSoundFile],
+    volume: Sound_Volume
+});
+
+
+
 function makeTable(msg, x, y, effect, tableId){
+    if(game_bgm_flag){
+        game_bgm_flag = false;
+        if(localStorage["SOUND_STATUS"]){
+            if(localStorage["SOUND_STATUS"] == "on"){
+                gameBgm.play();
+            }
+        }
+        else{
+            gameBgm.play();
+        }
+    }
+
     var data = msg.map_data;
     var item_num = 0;
     var c = document.getElementById("ready_player_div");

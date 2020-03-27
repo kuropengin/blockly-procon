@@ -71,10 +71,26 @@ function makeTable(tableId){
     }
 
     document.getElementById(tableId).appendChild(table);
+    
+    document.getElementById('turn_now').textContent = String(satage_data["turn"]);
 }
 
-function stage_result(){
+var Sound_Volume = 0.5;
+if(localStorage["SOUND_VOLUME"]){
+    Sound_Volume = localStorage["SOUND_VOLUME"] / 100;
+}
+
+var resultSound = new Howl({
+    src: ['sound/tutorial_result.mp3'],
+    volume: Sound_Volume
+});
+
+function stage_result(status = false){
     var result_flag = false;
+    
+    satage_data["turn"] -= 1;
+    makeTable("game_board");
+    
     
     if(satage_data["mode"] == "gethart" && satage_data["get_hart_value"] <= hart_score){
         result_flag = true;
@@ -82,6 +98,16 @@ function stage_result(){
     
     if(result_flag){
         Code.stopJS();
+        
+        if(localStorage["SOUND_STATUS"]){
+            if(localStorage["SOUND_STATUS"] == "on"){
+                resultSound.play();
+            }
+        }
+        else{
+            resultSound.play();
+        }
+        
         var result = document.createElement("div"); 
         result.setAttribute("id","game_result");
         var img = document.createElement('img');
@@ -92,9 +118,117 @@ function stage_result(){
         var xmlDom = Blockly.Xml.workspaceToDom(Code.workspace);
         var xmlText = Blockly.Xml.domToPrettyText(xmlDom);
         
-        localStorage.setItem(satage_data["stage_id"], xmlText); 
+        if(localStorage["AUTO_SAVE"]){
+            if(localStorage["AUTO_SAVE"] == "on"){
+                localStorage.setItem(satage_data["stage_id"], xmlText); 
+            }
+        }
+        
+        document.getElementById('overlay').classList.add("overlay_on");
+        
+        
+        var cancel_button = document.getElementById('cancel');
+        var overlay_off = function(){
+            document.getElementById('overlay').classList.remove("overlay_on");
+        }
+        cancel_button.addEventListener('click', overlay_off, true);
+        cancel_button.addEventListener('touchend', overlay_off, true);
+        
+    }
+    
+    my_turn = true;
+    return result_flag;
+}
+
+
+function get_map_data(mode, direction = false){
+    var x_range = [];
+    var y_range = [];
+    
+    var now_x = satage_data["cool_x"];
+    var now_y = satage_data["cool_y"];
+    var load_map_size_x = satage_data["map_size_x"];
+    var load_map_size_y = satage_data["map_size_y"];
+    
+    var chara = "cool";
+    var chara_num_diff = {"cool":4,"hot":3};
+    
+    if(mode == "search"){
+        if(direction == "top"){
+          x_range = [0];
+          y_range = [-1,-2,-3,-4,-5,-6,-7,-8,-9];
+        }else if(direction == "bottom"){
+          x_range = [0];
+          y_range = [1,2,3,4,5,6,7,8,9];
+        }else if(direction == "left"){
+          x_range = [-1,-2,-3,-4,-5,-6,-7,-8,-9];
+          y_range = [0];
+        }else{
+          x_range = [1,2,3,4,5,6,7,8,9];
+          y_range = [0];
+        }
+    }
+    else if(mode == "look"){
+        if(direction == "top"){
+          x_range = [-1,0,1];
+          y_range = [-3,-2,-1];
+        }else if(direction == "bottom"){
+          x_range = [-1,0,1];
+          y_range = [1,2,3];
+        }else if(direction == "left"){
+          x_range = [-3,-2,-1];
+          y_range = [-1,0,1];
+        }else{
+          x_range = [1,2,3];
+          y_range = [-1,0,1];
+        }
+    }
+    else{
+        x_range = [-1,0,1];
+        y_range = [-1,0,1];
+    }
+    
+    var tmp_map_data = satage_data["map_data"];
+    var return_map_data = [];
+    
+    for(var y of y_range){
+      for(var x of x_range){
+        if(0 > (now_x + x) || (load_map_size_x - 1) < (now_x + x) || 0 > (now_y + y) || (load_map_size_y - 1) < (now_y + y)){
+          return_map_data.push(2);
+        }
+        else{
+          if(tmp_map_data[now_y + y][now_x + x] == chara_num_diff[chara] || tmp_map_data[now_y + y][now_x + x] == 34){
+            return_map_data.push(1);
+          }
+          else{
+            if(tmp_map_data[now_y + y][now_x + x] == 2){
+              return_map_data.push(3);
+            }
+            else if(tmp_map_data[now_y + y][now_x + x] == 1){
+              return_map_data.push(2);
+            }
+            else{
+              return_map_data.push(0);
+            } 
+          } 
+        }
+      }
+    }
+    
+    return return_map_data;
+    
+}
+
+
+function get_ready(){
+    if(my_turn){
+        return get_map_data("get_ready");
+    }
+    else{
+        return my_turn;
     }
 }
+
 
 function move_player(direction){
     var move_x = 0;
@@ -137,25 +271,83 @@ function move_player(direction){
             satage_data["cool_x"] = satage_data["cool_x"] + move_x;
             satage_data["cool_y"] = satage_data["cool_y"] + move_y;
             
-            makeTable("game_board");
-            stage_result();
+            
+            if(!stage_result()){
+                return get_map_data("move");
+            }
+            
         }
       
     }
     else{
-        makeTable("game_board");
+        stage_result("gameover");
         Code.stopJS();
+    }
+}
+
+function look(direction){
+    if(!stage_result()){
+        return get_map_data("look",direction);
+    }
+}
+
+function search(direction){
+    if(!stage_result()){
+        return get_map_data("search",direction);
+    }
+}
+
+function put_wall(direction){
+    var put_check = false;
+    var put_x = 0;
+    var put_y = 0;
+    
+    var x = satage_data["map_size_x"];
+    var y = satage_data["map_size_y"];
+    
+    var px = satage_data["cool_x"];
+    var py = satage_data["cool_y"];
+    
+    if(direction === "top"){
+      if(0 <= py - 1){
+        put_y = py - 1;
+        put_check = true;
+      }
+    }
+    else if(direction === "bottom"){
+      if(y > py + 1){
+        put_y = py + 1;
+        put_check = true;
+      }
+    }
+    else if(direction === "left"){
+      if(0 <= px - 1){
+        put_x = px - 1;
+        put_check = true;
+      }
+    }
+    else{
+      if(x > px + 1){
+        put_x = px + 1;
+        put_check = true;
+      }
+    }
+    
+    if(put_check){
+      server_store[room].map_data[put_y][put_x] = 1;
+    }
+    
+    if(!stage_result()){
+        return get_map_data("put");
     }
     
 }
 
-var servar_connect_status = false;
+
 var my_map_data = [];
 var hart_score = 0;
+var my_turn = false;
 
-function servar_status(){
-    return servar_connect_status;
-}
 
 function endCode(){
     hart_score = 0;

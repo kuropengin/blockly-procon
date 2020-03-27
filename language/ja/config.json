@@ -1,0 +1,12 @@
+{
+    "LNG_TITLE":"言語",
+    "PAGE_RELOAD":"ページ更新後に適応されます",
+    "UNSUPPORTED":"一部適応されない箇所があります",
+    "AUTO_SAVE":"自動保存機能",
+    "RESET_SPAN":"自動保存機能によるデータ,オプションの設定値が削除されます",
+    "SOUND_VOLUME":"音量",
+    "BGM_CONFIG":"BGM設定",
+    "LOWSPEED_CONFIG":"低速モード",
+    "LOOP_CONFIG":"ループ制限",
+    "LOOP_SPAN":"OFFにした場合、アプリが動作しなくなる可能性があります。利用する場合は低速モードをONにしてください"
+}

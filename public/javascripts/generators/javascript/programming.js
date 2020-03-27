@@ -25,7 +25,7 @@ Blockly.JavaScript['get_ready'] = function(block) {
 Blockly.JavaScript['move_player'] = function(block) {
   var dropdown_move = block.getFieldValue('move');
   // TODO: Assemble JavaScript into code variable.
-  var code = 'move_player("' + dropdown_move + '");\n';
+  var code = 'map_data_hiyasinsu_kuropengin = move_player("' + dropdown_move + '");\n';
   return code;
 };
 
@@ -44,7 +44,7 @@ Blockly.JavaScript['search'] = function(block) {
 Blockly.JavaScript['put_wall'] = function(block) {
   var dropdown_put_wall = block.getFieldValue('put_wall').toString();
   // TODO: Assemble JavaScript into code variable.
-  var code = 'put_wall("' + dropdown_put_wall + '");\n';
+  var code = 'map_data_hiyasinsu_kuropengin = put_wall("' + dropdown_put_wall + '");\n';
   return code;
 };
 

@@ -3,14 +3,13 @@
 <head>
   <meta charset="utf-8">
   <meta name="google" value="notranslate">
-  <title>Blockly Demo:</title>
+  <title>Procon</title>
   
   <script>
     var satage_data = <%- JSON.stringify(stagedata) %>;
     var reset_data = <%- JSON.stringify(stagedata) %>;
   </script>
 
-  <script src="/socket.io/socket.io.js"></script>
   <script src="/javascripts/blockly_compressed.js"></script>
   <script src="/javascripts/blocks_compressed.js"></script>
   
@@ -19,6 +18,8 @@
   <script src = "/javascripts/blocks/tutorial_mode_block.js" ></script> 
   <script src = "/javascripts/generators/javascript/tutorial_mode.js" ></script>
   <script src="/javascripts/acorn_interpreter.js"></script>
+  
+  <script src="/javascripts/howler.min.js"></script>
 
   <script src="/javascripts/code.js"></script>
   <script src="/javascripts/tutorial_board.js"></script>
@@ -27,20 +28,37 @@
   <link rel='stylesheet' href='/stylesheets/blockly.css' />
   <link rel='stylesheet' href='/stylesheets/tutorial.css' />
   <link rel='stylesheet' href='/stylesheets/style.css' />
+  <link rel='stylesheet' href='/stylesheets/animation.css' />
 </head>
 <body>
+  <div id="overlay">
+    <div id="result_area">
+      <div class="result_title">ステージクリア！</div>
+      <div class="result_message">他のステージにもチャレンジしてみよう！</div>
+      <div id="result_button_area">
+        <div id="cancel" class="result_button">キャンセル</div>
+        <div id="back_menu" class="result_button">ステージ選択<a href="/menu-tutorial"></a></div>
+      </div>
+    </div>
+  </div>
+  
   <div class="header">
     <div class = "back_page">
       <div class = "back_button"><a href="/menu-tutorial"></a></div>
     </div>
     <div class="control_area">
       <div class = "page_title">
-        <h1><span class = "page_title_span">プログラミング</span><%- title %></h1>
+        <h1><span class = "page_title_span">チュートリアル</span><%- title %></h1>
       </div>
       <div class = "control_button">
         <button id="runButton" class="notext" title="実行">
           
         </button>
+        
+        <button id="reloadButton" class="notext Button_hidden" title="リセット">
+          
+        </button>
+        
         <button id="stopButton" class="notext" title="停止">
           
         </button>
@@ -55,11 +73,6 @@
         </label>
       </div>
     </div>  
-    
-    <div class="farSide">
-      <select id="languageMenu"></select>
-    </div>
-    
     
   </div>
   <div class="left_area">
@@ -86,14 +99,17 @@
         <div id="block_limit_area">
             あと <div id="capacity"></div> ブロック使えます
         </div>
-          
+        
+        <div id="turn_area">
+            あと <div id="turn_now"></div> ターン
+        </div> 
       </div>
     </div>
     <textarea class="console_area" id="output" disabled="disabled"></textarea>
     
   </div>
   
-  <script src="/javascripts/enn.js"></script>
+  <script src="/javascripts/encode_tutorial.js"></script>
   <script>
     makeTable("game_board");
   </script>

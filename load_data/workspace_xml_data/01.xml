@@ -1,3 +1,5 @@
 <xml xmlns="https://developers.google.com/blockly/xml" id="toolbox" style="display: none">
-    <block type="tutorial_move_player"></block>
+    <block type="move_player"></block>
+    <block type="get_value"></block>
+    <block type="text_print"></block>
 </xml>

@@ -6,12 +6,17 @@
   <link rel='stylesheet' href='/stylesheets/style.css' />
   <link rel='stylesheet' href='/stylesheets/menu.css' />
   <link rel='stylesheet' href='/stylesheets/menu-programming.css' />
+  <link rel='stylesheet' href='/stylesheets/animation.css' />
+  
+  <%- include('./common/config-init') %>
   
   <script src="/javascripts/jquery-3.4.1.min.js"></script>
   <script src="/javascripts/scroll-x.js"></script>
   
 </head>
 <body>
+  <%- include('./common/config', {LNG: C_LNG}) %>
+  
   <div class="header">
     
     <div class = "back_page">
@@ -22,9 +27,7 @@
         <h1><span class = "page_title_span">プログラミング</span><%- title %></h1>
       </div>
       <div class = "control_button">
-        <button>
-          <div class = "menu_config">設定</div>
-        </button>
+        <button id ="configButton" title="<%- LNG["CONFIG"] %>"></button>
       </div>
     </div>  
     
@@ -39,12 +42,9 @@
           <div class="onebox"  id="d1">
             <div class="inbox">
               <a href="#d1"></a>
-              <div class="boxtitle">新 規</div>
+              <div class="boxtitle"><%- LNG["NEW_DATA"] %></div>
               <div class="boxnewimage"></div>
-              <div class="boxinfo">
-新しく
-データを作る
-              </div>
+              <div class="boxinfo"><%- LNG["NEW_DATA_INFO"] %></div>
             </div>
           </div>
         </div>
@@ -52,12 +52,9 @@
           <div class="onebox" id="d2">
             <div class="inbox">
               <a href="#d2"></a>
-              <div class="boxtitle">開 く</div>
+              <div class="boxtitle"><%- LNG["OPEN_DATA"] %></div>
               <div class="boxopenimage"></div>
-              <div class="boxinfo">
-保存した
-データを開く
-              </div>
+              <div class="boxinfo"><%- LNG["OPEN_DATA_INFO"] %></div>
             </div>
           </div>
         </div>
@@ -65,12 +62,9 @@
           <div class="onebox"  id="d3">
             <div class="inbox">
               <a href="#d3"></a>
-              <div class="boxtitle">再 開</div>
+              <div class="boxtitle"><%- LNG["REOPEN_DATA"] %></div>
               <div class="boxdbimage"></div>
-              <div class="boxinfo">
-前回実行した
-データを開く
-              </div>
+              <div class="boxinfo"><%- LNG["REOPEN_DATA_INFO"] %></div>
             </div>
           </div>
         </div>

@@ -11,7 +11,7 @@ router.get('/', function(req, res, next) {
     try{
         var stage = req.query.stage;
         var xmldata = fs.readFileSync(path.join(__dirname, '..', "load_data/workspace_xml_data/" + stage_data[stage].load_workspace), "utf-8");
-        res.render('tutorial', { title: 'チュートリアル' , blockly_xml: xmldata , stagedata: stage_data[stage]});
+        res.render('tutorial', { title: stage_data[stage].name , blockly_xml: xmldata , stagedata: stage_data[stage]});
     }
     catch(e){
         res.send('不正なアクセス');

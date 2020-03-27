@@ -1,0 +1,336 @@
+#config{
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background: rgba(0, 0, 0, 0.2);
+    filter: drop-shadow(10px 10px 10px rgba(0,0,0,0.5));
+    opacity: 0;
+    visibility: hidden;
+    transition: .3s linear;
+}
+
+#config.overlay_on{
+    opacity: 1;
+    visibility: visible;
+}
+
+#config_area{
+    width: 720px;
+    max-width: 90%;
+    height: 500px;
+    max-height: 90%;
+    z-index: 2;
+    background: #FFF;
+    padding: 10px;
+    -webkit-clip-path: polygon(5% 0, 95% 0, 100% 5%, 100% 95%, 95% 100%, 5% 100%, 0 95%, 0 5%);
+    clip-path: polygon(5% 0, 95% 0, 100% 5%, 100% 95%, 95% 100%, 5% 100%, 0 95%, 0 5%);
+}
+
+.config_title{
+    position: relative;
+    text-align: center;
+    font-size: 20px;
+    font-weight: bold;
+    padding: 10px 0;
+    color: #5d5d5d;
+    text-shadow: 1px 1px 1px #ccc;
+}
+
+.config_item{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.config_item span{
+    display: block;
+    width: 100%;
+    margin: 0 10px;
+    margin-top: 5px;
+    text-align: center;
+    font-size: 14px;
+    color: #ff3131;
+}
+
+.config_item select{
+    width: calc(100% - 140px);
+    margin: 0 10px;
+}
+
+#config_close{
+    position: absolute;
+    right: 50px;
+    top: 0;
+    width: 30px;
+    height: 30px;
+    background: #00a0e6;
+    border-radius: 15px;
+    box-shadow: 1px 1px 1px #5f5f5f;
+    color: #fff;
+    cursor: pointer;
+}
+
+#config_close:before{
+    content:"×";
+    text-align: center;
+    line-height: 30px;
+}
+
+#config_close:hover{
+    opacity: 0.5;
+}
+
+
+.config_tab_wrap {
+    display: flex;
+    flex-wrap: wrap;
+    height: calc(100% - 70px);
+}
+.config_tab_label {
+    color: #FFF;
+    background: #00a0e6;
+    text-align: center;
+    border: solid 1px #0092d2;
+    width: calc(25% - 2px);
+    padding: 5px 0;
+    order: -1;
+    overflow: hidden;
+    white-space: nowrap;
+    cursor: pointer;
+}
+.config_tab_left{
+    border-radius: 15px 0px 0 15px;
+}
+.config_tab_right{
+    border-radius: 0 15px 15px 0;
+}
+.config_tab_content {
+    width: 100%;
+    height: calc(100% - 38px);
+    display: none;
+    overflow: auto;
+}
+
+.config_tab_switch:checked+.config_tab_label {
+    background: #909090;
+    border: solid 1px #c1c1c1;
+}
+.config_tab_switch:checked+.config_tab_label+.config_tab_content {
+     display: block;
+}
+
+.config_tab_switch {
+    display: none;
+}
+
+.config_item_title{
+    position:relative;
+    color: #FFF;
+    background: #5d5d5d;
+    width: 100%;
+    height: 30px;
+    margin: 10px;
+    margin-top: 15px;
+    text-align: center;
+    line-height: 30px;
+    border-radius: 15px;
+}
+
+.config_item_sub_title{
+    width: 100px;
+    height: 30px;
+    margin: 10px;
+    font-size: 13px;
+    font-weight: bold;
+    text-align: center;
+    line-height: 30px;
+    background: #00a0e6;
+    color: #FFF;
+    border-radius: 15px;
+}
+
+
+button {
+    margin: 5px;
+    padding: 10px;
+    border-radius: 4px;
+    border: 2px solid #fff;
+    font-size: large;
+    background-color: #5d5d5d;
+    color: #000;
+    box-shadow: 0px 1px 2px 1px #7d7d7d;
+    cursor: pointer;
+}
+button.primary {
+
+}
+button.primary>img {
+    opacity: 1;
+}
+button>img {
+    opacity: 0.6;
+    vertical-align: text-bottom;
+}
+button:hover>img {
+    opacity: 1;
+}
+button:active {
+    border: 1px solid #888 !important;
+}
+button:hover {
+    box-shadow: 2px 2px 5px #888;
+}
+button.disabled:hover>img {
+    opacity: 0.6;
+}
+button.disabled {
+    display: none;
+}
+button.notext {
+    font-size: 10%;
+}
+
+#configButton{
+    border: 2px solid #ffffff;
+    background-color: #5d5d5d;
+    background-image: url(../media/config.png);
+    background-repeat: no-repeat;
+    background-size: 25px;
+    background-position: center center;
+    width: 40px;
+    height: 35px;
+    border-radius: 4px;
+    box-shadow: 0px 1px 2px 1px #7d7d7d;
+}
+
+.radioArea{
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.radioArea input[type="radio"] {
+    width: 20pt;
+    height: 20pt;
+    vertical-align: top;
+    display: none;
+}
+
+.radioArea input[type="radio"] + label {
+    display: block;
+    width: 120px;
+    height: 30px;
+    margin: 0 5px;
+    line-height: 30px;
+    text-align: center;
+    font-size: 18px;
+    font-weight: bold;
+    border-radius: 15px;
+    background: #909090;
+    color: #FFF;
+    cursor: pointer;
+    transition: .2s;
+}
+
+.radioArea input[type="radio"]:checked + label {
+    background: #00a0e6;
+}
+
+.radioArea input[type="radio"]:not(:checked) + label:hover {
+    background: rgba(0, 160, 230, 0.40);
+}
+
+#save_data_reset{
+    display: block;
+    width: 150px;
+    height: 30px;
+    margin: 0 auto;
+    text-align: center;
+    line-height: 30px;
+    font-size: 18px;
+    font-weight: bold;
+    color: #FFF;
+    border-radius: 15px;
+    background: #ff9e9e;
+    cursor: pointer;
+    transition: .2s;
+}
+
+#save_data_reset:hover{
+    background: #ff0000;
+}
+
+
+input[type=range] {
+    -webkit-appearance: none;
+    margin: 10px;
+    width: calc(100% - 70px);
+    overflow: hidden;
+    border: 1px solid #909090;
+    border-radius: 25px;
+}
+input[type=range]:focus {
+    outline: none;
+}
+input[type=range]::-webkit-slider-runnable-track {
+    width: 100%;
+    height: 20px;
+    cursor: pointer;
+    animate: 0.2s;
+    box-shadow: 0px 0px 0px #000000, 0px 0px 0px #0d0d0d;
+    background: #d1d1d1;
+    border: 0px solid #000101;
+}
+input[type=range]::-webkit-slider-thumb {
+    box-shadow: -100vw 0 0 100vw #00a0e6;
+    
+    height: 22px;
+    width: 20px;
+    border-radius: 2px;
+    border: 1px solid #909090;
+    background: #FFF;
+    cursor: pointer;
+    -webkit-appearance: none;
+    margin-top:-1px;
+    
+}
+input[type=range]:focus::-webkit-slider-runnable-track {
+    background: #d1d1d1;
+}
+input[type=range]::-moz-range-track {
+    width: 100%;
+    height: 20px;
+    overflow:hidden;
+    cursor: pointer;
+    animate: 0.2s;
+    box-shadow: 0px 0px 0px #000000, 0px 0px 0px #0d0d0d;
+    background: #d1d1d1;
+    border: 0px solid #000101;
+    
+}
+input[type=range]::-moz-range-thumb {
+    box-shadow: -100vw 0 0 100vw #00a0e6;
+    border: 1px solid #909090;
+    height: 20px;
+    width: 20px;
+    border-radius: 2px;
+    background: #FFF;
+    cursor: pointer;
+}
+
+#sound_volume_output{
+    width: 38px;
+    height: 20px;
+    line-height: 20px;
+    margin-right: 10px;
+    text-align: center;
+    font-size: 18px;
+    font-weight: bold;
+    color: #00a0e6;
+}

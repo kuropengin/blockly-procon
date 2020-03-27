@@ -1,5 +1,6 @@
 var createError = require('http-errors');
 var express = require('express');
+var fs = require('fs');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
@@ -41,6 +42,31 @@ app.use('/tutorial', tutorialRouter);
 app.use('/menu-watching',menuWatchingRouter);
 app.use('/watching',watchingRouter);
 
+
+//API
+app.get('/api/bgm', (req, res) => {
+  const bgm_list = fs.readdirSync(path.join(__dirname, "public", "sound"));
+  res.json(bgm_list);
+});
+
+app.get('/api/game', (req, res) => {
+  const servar_data = JSON.parse(fs.readFileSync(path.join(__dirname, "load_data", "game_server_data", "server_data.json"), 'utf8'));
+  res.json(servar_data);
+});
+
+app.get('/api/tutorial', (req, res) => {
+  const stage_data = JSON.parse(fs.readFileSync(path.join(__dirname, "load_data", "tutorial_stage_data", "stage_data.json"), 'utf8'));
+  res.json(stage_data);
+});
+
+app.get('/api/join', (req, res) => {
+  const game_server = JSON.parse(fs.readFileSync(path.join(__dirname, "load_data", "game_server_data", "server_data.json"), 'utf8'));
+  var join_list = [];
+  Object.keys(game_server).forEach(function(key) {
+    join_list.push([game_server[key].name,key]);
+  });
+  res.json(join_list);
+});
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

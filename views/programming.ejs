@@ -4,12 +4,8 @@
   <meta charset="utf-8">
   <meta name="google" value="notranslate">
   
-  <title>Blockly Demo:</title>
+  <title>Procon</title>
   
-  <script>
-    var get_server_list = <%- JSON.stringify(server_list) %>;
-  </script>
-
   <script src="/socket.io/socket.io.js"></script>
   <script src="/javascripts/blockly_compressed.js"></script>
   <script src="/javascripts/blocks_compressed.js"></script>
@@ -29,6 +25,7 @@
   
   <link rel='stylesheet' href='/stylesheets/blockly.css' />
   <link rel='stylesheet' href='/stylesheets/style.css' />
+  <link rel='stylesheet' href='/stylesheets/animation.css' />
 </head>
 <body>
   <div class="header">
@@ -40,27 +37,23 @@
         <h1><span class = "page_title_span">プログラミング</span><%- title %></h1>
       </div>
       <div class = "control_button">
-        <button id="runButton" class="notext" title="実行">
+        <button id="runButton" class="notext" title="<%- LNG["RUN"] %>">
           
         </button>
-        <button id="stopButton" class="notext" title="停止">
+        <button id="stopButton" class="notext" title="<%- LNG["STOP"] %>">
           
         </button>
-        <button id="trashButton" class="notext" title="ブロックをすべて削除">
+        <button id="trashButton" class="notext" title="<%- LNG["TRASH"] %>">
           
         </button>
-        <button id="downloadButton" class="notext" title="保存">
+        <button id="downloadButton" class="notext" title="<%- LNG["SAVE"] %>">
           
         </button>
-        <label for="file_load">
+        <label for="file_load" title="<%- LNG["LOAD"] %>">
           <input type="file" id="file_load" style="display:none;">
         </label>
       </div>
     </div>  
-    
-    <div class="farSide">
-      <select id="languageMenu"></select>
-    </div>
     
     
   </div>
