@@ -1,4 +1,13 @@
 {
     "TITLE":"観戦",
-    "CONFIG":"設定"
+    "CONFIG":"設定",
+    "SERVER_INFO": "サーバー情報",
+    "FIXITY":"固定",
+    "AUTOMATIC_GENERATION": "自動生成",
+    "SYMMETRY": "(点対称)",
+    "RANDOM": "(ランダム)",
+    "CONNECTION_ORDER": "接続順",
+    "TURN_C": "(先手)",
+    "TURN_H": "(後手)",
+    "WATCHING": "観戦する"
 }

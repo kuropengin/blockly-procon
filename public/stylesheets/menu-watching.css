@@ -44,6 +44,7 @@
     float: left;
     background: #5d5d5d;
     border-radius: 10px;
+    cursor: pointer;
 }
 
 .server_vs_player{
@@ -246,7 +247,8 @@ td img{
 
 #server_info_div:after{
     position: absolute;
-    content: 'サーバー情報';
+    content: '';
+    width: 120px;
     font-size: 15px;
     font-weight: bold;
     color:#fff;
@@ -261,7 +263,8 @@ td img{
 
 #server_info_div:before{
     position: absolute;
-    content: 'サーバー情報';
+    content: '';
+    width: 120px;
     color:#fff;
     font-size: 15px;
     font-weight: bold;
@@ -273,6 +276,16 @@ td img{
     border-style: solid;
     border-color: #ffffff00 #ffffff00 #ffffff #ffffff00;
     border-width: 0px 20px 20px 0px;
+}
+
+#server_info_div span{
+    position: absolute;
+    top: -20px;
+    left: 8px;
+    font-size: 15px;
+    font-weight: bold;
+    color: #FFF;
+    z-index: 1;
 }
 
 #server_info_name{

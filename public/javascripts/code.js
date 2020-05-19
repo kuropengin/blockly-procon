@@ -20,6 +20,14 @@ Code.getStringParamFromUrl = function(name, defaultValue) {
 
 Code.getLang = function() {
   var lang = Code.getStringParamFromUrl('lang', '');
+  for(let lng_s of document.cookie.trim().split(";")){
+    var lng_t = lng_s.split("=");
+    if(lng_t[0]=="lng"){
+      lang = lng_t[1];
+    }
+  }
+  
+  
   if (Code.LANGUAGE_NAME[lang] === undefined) {
     // Default to ja.
     lang = 'ja';
@@ -265,7 +273,7 @@ Code.checkAllGeneratorFunctionsDefined = function(generator) {
  * Initialize Blockly.  Called on page load.
  */
 Code.init = function() {
-  //Code.initLanguage();
+  //ode.initLanguage();
 
   var container = document.getElementById('content_area');
   var onresize = function(e) {
@@ -316,6 +324,12 @@ Code.init = function() {
   var toolboxXml = Blockly.Xml.textToDom(toolboxText);
   
   var blocklimit;
+  var BlockSound = true;
+  if(localStorage["SOUND_STATUS"]){
+    if(localStorage["SOUND_STATUS"] == "off"){
+      BlockSound = false;
+    }
+  }
   try{
     blocklimit = satage_data["block_limit"];
   }
@@ -332,6 +346,7 @@ Code.init = function() {
        media: '/media/',
        maxBlocks: blocklimit ,
        toolbox: toolboxXml,
+       sounds: BlockSound,
        zoom:
            {controls: true,
             wheel: false},

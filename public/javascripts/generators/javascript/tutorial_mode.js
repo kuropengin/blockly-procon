@@ -46,3 +46,12 @@ Blockly.JavaScript['if_value'] = function(block) {
   var code = 'map_data_hiyasinsu_kuropengin['+ dropdown_map_value +'] == ' + dropdown_map_item + '';
   return [code, Blockly.JavaScript.ORDER_NONE];
 };
+
+Blockly.JavaScript['infinite_loop'] = function(block) {
+  var statements_infinite_loop_content = Blockly.JavaScript.statementToCode(block, 'infinite_loop_content');
+  // TODO: Assemble JavaScript into code variable.
+  statements_infinite_loop_content = Blockly.JavaScript.addLoopTrap(statements_infinite_loop_content, block);
+  var code = 'while (!false) {\n' + statements_infinite_loop_content + '}\n';
+  return code;
+};
+

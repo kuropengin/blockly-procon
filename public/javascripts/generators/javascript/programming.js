@@ -65,3 +65,11 @@ Blockly.JavaScript['if_value'] = function(block) {
   return [code, Blockly.JavaScript.ORDER_NONE];
 };
 
+Blockly.JavaScript['infinite_loop'] = function(block) {
+  var statements_infinite_loop_content = Blockly.JavaScript.statementToCode(block, 'infinite_loop_content');
+  // TODO: Assemble JavaScript into code variable.
+  statements_infinite_loop_content = Blockly.JavaScript.addLoopTrap(statements_infinite_loop_content, block);
+  var code = 'while (!false) {\n'+ statements_infinite_loop_content + '}\n';
+  return code;
+};
+

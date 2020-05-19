@@ -1,3 +1,10 @@
 {
-    "CONFIG":"せってい"
+    "CONFIG":"せってい",
+    "CLEAR_CONDITION": "クリアじょうけん",
+    "INFO_HART_B": "ハートを",
+    "INFO_HART_A": "こゲットしてクリア",
+    "INFO_PUT": "HOTにブロックをおいてクリア",
+    "INFO_BLOCK_B": "プログラムブロックを",
+    "INFO_BLOCK_A": "こいかでクリア",
+    "INFO_TURN": "ターンいないでクリア"
 }

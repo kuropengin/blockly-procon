@@ -132,9 +132,9 @@ Blockly.Blocks['server_join'] = {
   init: function() {
     this.appendDummyInput()
         .appendField(new Blockly.FieldDropdown([["0","0"], ["1","1"], ["2","2"]]), "room_id")
-        .appendField("にプレイヤー名")
+        .appendField("%{SERVER_JOIN_BEFORE}")
         .appendField(new Blockly.FieldTextInput(""), "name")
-        .appendField("で接続する");
+        .appendField("%{SERVER_JOIN_AFTER}");
     this.setInputsInline(true);
     this.setPreviousStatement(true, null);
     this.setNextStatement(true, null);
@@ -147,11 +147,25 @@ Blockly.Blocks['server_join'] = {
 Blockly.Blocks['get_ready'] = {
   init: function() {
     this.appendDummyInput()
-        .appendField("自分のターンを待つ");
+        .appendField("%{WAIT_MY_TURN}");
     this.setInputsInline(true);
     this.setPreviousStatement(true, null);
     this.setNextStatement(true, null);
     this.setColour(195);
+ this.setTooltip("");
+ this.setHelpUrl("");
+  }
+};
+
+Blockly.Blocks['infinite_loop'] = {
+  init: function() {
+    this.appendDummyInput()
+        .appendField("ずっと繰り返す");
+    this.appendStatementInput("infinite_loop_content")
+        .setCheck(null);
+    this.setPreviousStatement(true, null);
+    this.setNextStatement(true, null);
+    this.setColour(120);
  this.setTooltip("");
  this.setHelpUrl("");
   }

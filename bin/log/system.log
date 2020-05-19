@@ -1,0 +1,5 @@
+[2020-05-09T08:31:54.725] [ERROR] default - Failed to read the tutorial data. Data to be loaded "tutorial_03.json"
+[2020-05-09T08:52:34.414] [ERROR] default - The format of the tutorial data is incorrect. Data to be loaded "stage_data.json"
+[2020-05-09T08:53:49.561] [ERROR] default - The format of the tutorial data is incorrect. Data to be loaded "stage_data.json"
+[2020-05-09T08:56:05.028] [ERROR] default - The format of the tutorial data is incorrect. Data to be loaded "stage_data.json"
+[2020-05-09T08:56:09.290] [ERROR] default - The format of the tutorial data is incorrect. Data to be loaded "stage_data.json"

@@ -1,6 +1,6 @@
 body {
   background: url("/images/mainbg.jpg");
-  /*animation: bgiLoop 10s linear infinite;*/
+  animation: bgiLoop 15s linear infinite;
 }
 @keyframes bgiLoop {
     0% { background-position: 0 0;}

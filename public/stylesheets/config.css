@@ -246,7 +246,7 @@ button.notext {
     background: rgba(0, 160, 230, 0.40);
 }
 
-#save_data_reset{
+.save_data_reset{
     display: block;
     width: 150px;
     height: 30px;
@@ -262,7 +262,7 @@ button.notext {
     transition: .2s;
 }
 
-#save_data_reset:hover{
+.save_data_reset:hover{
     background: #ff0000;
 }
 

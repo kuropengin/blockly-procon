@@ -5,7 +5,7 @@ var outputArea = document.getElementById('output');
 var runButton = document.getElementById('runButton');
 var myInterpreter = null;
 var runner;
-var map_data_hiyasinsu_kuropengin = false;
+var map_data_hiyasinsu_kuropengin = [0,0,0,0,0,0,0,0,0];
 
 
 class ObjInterpreter extends Interpreter {
@@ -61,12 +61,15 @@ class ObjInterpreter extends Interpreter {
 }
 
 
+Blockly.JavaScript.addLoopTrap("infinite_loop");
 
 
 function initApi(interpreter, scope) {
   // Add an API function for the alert() block, generated for "text_print" blocks.
   
   interpreter.connectObject(scope, "map_data_hiyasinsu_kuropengin", map_data_hiyasinsu_kuropengin);
+  
+  
   
   var wrapper = function(text) {
     text.toString();
@@ -76,12 +79,12 @@ function initApi(interpreter, scope) {
       interpreter.createNativeFunction(wrapper));
 
   // Add an API function for the prompt() block.
-  var wrapper = function(text) {
+  var wrapper = function(text,callback) {
     text = text ? text.toString() : '';
-    return interpreter.createPrimitive(prompt(text));
+    self_prompt_b(text,callback);
   };
   interpreter.setProperty(scope, 'prompt',
-      interpreter.createNativeFunction(wrapper));
+      interpreter.createAsyncFunction(wrapper));
 
   // Add an API function for highlighting blocks.
   var wrapper = function(id) {
@@ -261,15 +264,16 @@ function generateCodeAndLoadIntoInterpreter() {
   Blockly.JavaScript.STATEMENT_PREFIX = 'highlightBlock(%1);\n';
   Blockly.JavaScript.addReservedWords('highlightBlock');
   
+  
   if(localStorage["LOOP_STATUS"]){
     if(localStorage["LOOP_STATUS"] == "on"){
       var LoopTrap = 1000;
       Blockly.JavaScript.INFINITE_LOOP_TRAP = 'if(--LoopTrap == 0) throw "Infinite loop.";\n';
       latestCode = Blockly.JavaScript.workspaceToCode(Code.workspace);
-      
       latestCode = "var LoopTrap = " + LoopTrap + ";\n" + latestCode;
     }
   }
+  
       
 }
 
@@ -328,6 +332,8 @@ Code.runJS = function(){
       highlightPause = false;
       generateCodeAndLoadIntoInterpreter();
       saveCodelocalStorage();
+      
+      console.log(latestCode);
       
       myInterpreter = new ObjInterpreter(latestCode, initApi);
       runner = function() {
@@ -417,22 +423,22 @@ Code.download = function(){
   else{
     var blob = new Blob([xmlText], {type: "application/octet-stream"}); 
     
-    var file_name = window.prompt("ファイル名を入力してください", "");
-    
-    if(file_name){
-      if(window.navigator.msSaveBlob)
-      {
-          // IE
-          window.navigator.msSaveBlob(blob, file_name + ".xml");
-      } else {
-          // another
-          var a = document.createElement("a");
-          a.href = URL.createObjectURL(blob);
-          a.target = '_blank';
-          a.download = file_name + ".xml";
-          a.click();
+    self_prompt("ファイル名を入力してください",function(file_name){
+      if(file_name){
+        if(window.navigator.msSaveBlob)
+        {
+            // IE
+            window.navigator.msSaveBlob(blob, file_name + ".xml");
+        } else {
+            // another
+            var a = document.createElement("a");
+            a.href = URL.createObjectURL(blob);
+            a.target = '_blank';
+            a.download = file_name + ".xml";
+            a.click();
+        }
       }
-    }
+    });
   }
 }
 
@@ -481,21 +487,22 @@ function initDataLoad(){
     var queryArr = queryStr.split('=');
     queries[queryArr[0]] = queryArr[1];
   });
-
   if(queries.loaddata){
     var xmlTextarea = document.getElementById('content_xml');
     var xmlDom;
     var xmlText;
-    try {
-      xmlText = localStorage.getItem(queries.loaddata).toString();
-      xmlDom = Blockly.Xml.textToDom(xmlText);
-    }
-    catch (e) {
-      window.alert("ファイルの読み込みに失敗しました");
-    }
-    if (xmlDom) {
-      Code.workspace.clear();
-      Blockly.Xml.domToWorkspace(xmlDom, Code.workspace);
+    if(localStorage[queries.loaddata]){
+      try {
+        xmlText = localStorage.getItem(queries.loaddata).toString();
+        xmlDom = Blockly.Xml.textToDom(xmlText);
+      }
+      catch (e) {
+        window.alert("ファイルの読み込みに失敗しました");
+      }
+      if (xmlDom) {
+        Code.workspace.clear();
+        Blockly.Xml.domToWorkspace(xmlDom, Code.workspace);
+      }
     }
   }
 }
@@ -510,3 +517,128 @@ if(localStorage["DEBUG_MODE"]){
 else{
   localStorage["DEBUG_MODE"] == "off"
 }
+
+function self_prompt(message,callback){
+  var input_text="";
+  var pdiv = document.createElement("div");
+  pdiv.setAttribute("id","input_text_area");
+  
+  var pmdiv = document.createElement("div"); 
+  pmdiv.setAttribute("id","input_text_message");
+  var newContent = document.createTextNode(message); 
+  pmdiv.appendChild(newContent);
+  pdiv.appendChild(pmdiv);
+  
+  var pidiv = document.createElement("input");
+	pidiv.setAttribute("type","text"); 
+	pidiv.setAttribute("maxlength","25"); 
+	pidiv.setAttribute("id","input_text_form");
+	pdiv.appendChild(pidiv);
+	
+	var pddiv = document.createElement("div"); 
+  pddiv.setAttribute("id","input_text_button");
+  
+  var podiv = document.createElement("div"); 
+  podiv.setAttribute("id","input_text_ok");
+  var newContent = document.createTextNode("OK"); 
+  podiv.appendChild(newContent);
+  
+  var input_text_ok = function(){
+      input_text = "" + document.getElementById("input_text_form").value;
+      var c = document.getElementById("input_text_area");
+      if(c){
+          c.parentNode.removeChild(c);
+      }
+      callback(input_text);
+  }
+  podiv.addEventListener('click', input_text_ok, true);
+  podiv.addEventListener('touchend', input_text_ok, true);
+  
+  var pcdiv = document.createElement("div"); 
+  pcdiv.setAttribute("id","input_text_cancel");
+  var newContent = document.createTextNode("キャンセル"); 
+  pcdiv.appendChild(newContent);
+  
+  var input_text_cancel = function(){
+      var c = document.getElementById("input_text_area");
+      if(c){
+          c.parentNode.removeChild(c);
+      }
+      callback(false);
+  }
+  pcdiv.addEventListener('click', input_text_cancel, true);
+  pcdiv.addEventListener('touchend', input_text_cancel, true);
+  
+  pddiv.appendChild(podiv);
+  pddiv.appendChild(pcdiv);
+  pdiv.appendChild(pddiv);
+	
+	document.body.appendChild(pdiv);
+	
+};
+
+
+function self_prompt_b(message,callback){
+  var input_text="";
+  var pdiv = document.createElement("div");
+  pdiv.setAttribute("id","input_text_area");
+  
+  var pmdiv = document.createElement("div"); 
+  pmdiv.setAttribute("id","input_text_message");
+  var newContent = document.createTextNode(message); 
+  pmdiv.appendChild(newContent);
+  pdiv.appendChild(pmdiv);
+  
+  var pidiv = document.createElement("input");
+	pidiv.setAttribute("type","text"); 
+	pidiv.setAttribute("maxlength","25"); 
+	pidiv.setAttribute("id","input_text_form");
+	pdiv.appendChild(pidiv);
+	
+	var pddiv = document.createElement("div"); 
+  pddiv.setAttribute("id","input_text_button");
+  
+  var podiv = document.createElement("div"); 
+  podiv.setAttribute("id","input_text_ok");
+  var newContent = document.createTextNode("OK"); 
+  podiv.appendChild(newContent);
+  
+  var input_text_ok = function(){
+      input_text = "" + document.getElementById("input_text_form").value;
+      var c = document.getElementById("input_text_area");
+      if(c){
+          c.parentNode.removeChild(c);
+      }
+      callback(input_text);
+  }
+  podiv.addEventListener('click', input_text_ok, true);
+  podiv.addEventListener('touchend', input_text_ok, true);
+  
+  var pcdiv = document.createElement("div"); 
+  pcdiv.setAttribute("id","input_text_cancel");
+  var newContent = document.createTextNode("キャンセル"); 
+  pcdiv.appendChild(newContent);
+  
+  var input_text_cancel = function(){
+      var c = document.getElementById("input_text_area");
+      if(c){
+          c.parentNode.removeChild(c);
+      }
+      callback('');
+  }
+  pcdiv.addEventListener('click', input_text_cancel, true);
+  pcdiv.addEventListener('touchend', input_text_cancel, true);
+  
+  pddiv.appendChild(podiv);
+  pddiv.appendChild(pcdiv);
+  pdiv.appendChild(pddiv);
+	
+	document.body.appendChild(pdiv);
+	
+};
+
+Blockly.prompt = function(msg, defaultValue, callback){
+  self_prompt_b(msg,callback)
+}
+
+

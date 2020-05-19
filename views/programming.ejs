@@ -4,7 +4,8 @@
   <meta charset="utf-8">
   <meta name="google" value="notranslate">
   
-  <title>Procon</title>
+  <title>Blockly CHaser</title>
+  <link rel="icon" href="/images/favicon.ico">
   
   <script src="/socket.io/socket.io.js"></script>
   <script src="/javascripts/blockly_compressed.js"></script>
@@ -60,7 +61,7 @@
   <div class="left_area">
     <div class="tab_area">
       <ul class="blockly_menu">
-        <li id="tab_blocks" class="tabon">ブロック</li>
+        <li id="tab_blocks" class="tabon">プログラムブロック</li>
         <li id="tab_javascript" class="taboff">javascript</li>
         <li id="tab_xml" class="taboff">xml</li>
       </ul>
@@ -120,6 +121,7 @@
         </value>
       </block>
       <block type="controls_whileUntil"></block>
+      <block type="infinite_loop"></block>
       <block type="controls_for">
         <value name="FROM">
           <shadow type="math_number">

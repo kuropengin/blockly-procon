@@ -3,7 +3,8 @@
 <head>
   <meta charset="utf-8">
   <meta name="google" value="notranslate">
-  <title>Procon</title>
+  <title>Blockly CHaser</title>
+  <link rel="icon" href="/images/favicon.ico">
   
   <script>
     var satage_data = <%- JSON.stringify(stagedata) %>;
@@ -78,7 +79,7 @@
   <div class="left_area">
     <div class="tab_area">
       <ul class="blockly_menu">
-        <li id="tab_blocks" class="tabon">ブロック</li>
+        <li id="tab_blocks" class="tabon">プログラムブロック</li>
         <li id="tab_javascript" class="taboff">javascript</li>
         <li id="tab_xml" class="taboff">xml</li>
       </ul>
@@ -97,11 +98,13 @@
       <div id="game_board"></div>
       <div id="game_info">
         <div id="block_limit_area">
-            あと <div id="capacity"></div> ブロック使えます
+          <div class="game_info_title">残りプログラムブロック数</div>
+          <div id="capacity"></div>
         </div>
         
         <div id="turn_area">
-            あと <div id="turn_now"></div> ターン
+          <div class="game_info_title">残りターン数</div>
+          <div id="turn_now"></div>
         </div> 
       </div>
     </div>

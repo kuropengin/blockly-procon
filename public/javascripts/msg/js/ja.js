@@ -436,5 +436,16 @@ Blockly.Msg["COLOUR_HUE"] = "20";
 Blockly.Msg["VARIABLES_DYNAMIC_HUE"] = "310";
 
 Blockly.Msg["GAME_SERVAR"] = "ゲーム";
-
-
+Blockly.Msg["WAIT_MY_TURN"] = "自分のターンを待つ";
+Blockly.Msg["SERVER_JOIN_BEFORE"] = "にプレイヤー名";
+Blockly.Msg["SERVER_JOIN_AFTER"] = "で接続する";
+Blockly.Msg["DIRECTION_COMMAND_TOP"] = "上";
+Blockly.Msg["DIRECTION_COMMAND_LEFT"] = "左";
+Blockly.Msg["DIRECTION_COMMAND_BOTTOM"] = "下";
+Blockly.Msg["DIRECTION_COMMAND_RIGHT"] = "右";
+Blockly.Msg["MOVE_INFO"] = "に移動する";
+Blockly.Msg["LOOK_INFO"] = "の周りを見る";
+Blockly.Msg["SEARCH_INFO"] = "の遠くを見る";
+Blockly.Msg["PUT_INFO"] = "にブロックを置く";
+Blockly.Msg["MAP_VALUE_INFO"] = "マス目";
+Blockly.Msg["INFINITE_LOOP"] = "ずっと繰り返す";

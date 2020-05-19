@@ -68,7 +68,7 @@ function createStageList(get_list){
     satage_div.appendChild(satage_name);
     satage_div.appendChild(satage_info);
     
-    satage_div.onclick = function() {
+    satage_div.onclick = function(e) {
       var satageId = this.classList[0];
       for(var select_id of satage_list){
         for(var select_class_list of document.getElementsByClassName(select_id)){
@@ -81,6 +81,7 @@ function createStageList(get_list){
         }
       }
       satage_info_create(satageId,get_list);
+      e.stopPropagation();
     };
     
     one_satage.appendChild(satage_div);
@@ -139,51 +140,38 @@ function satage_info_create(id,get_list){
     }
   }
   
-  
-  c = document.getElementById("satage_info_condition");
-  if(c){
-      c.parentNode.removeChild(c);
-  }
-  
   c = document.getElementById("satage_join_div");
   if(c){
       c.parentNode.removeChild(c);
   }
   
-  c = document.getElementById("satage_info_name");
-  if(c){
-      c.parentNode.removeChild(c);
+
+  
+  document.getElementById("satage_info_name").textContent = get_list[id].name;
+  
+  if(get_list[id].mode == "gethart"){
+    document.getElementById("satage_info_hart_data").textContent = get_list[id].get_hart_value;
+    if(document.getElementById("satage_info_hart").classList.contains('display_off')){
+      document.getElementById("satage_info_hart").classList.remove("display_off");
+    }
+    
+    if(!document.getElementById("satage_info_put").classList.contains('display_off')){
+      document.getElementById("satage_info_put").classList.add("display_off");
+    }
   }
+  else if(get_list[id].mode == "puthot"){
+    if(document.getElementById("satage_info_put").classList.contains('display_off')){
+      document.getElementById("satage_info_put").classList.remove("display_off");
+    }
+    
+    if(!document.getElementById("satage_info_hart").classList.contains('display_off')){
+      document.getElementById("satage_info_hart").classList.add("display_off");
+    }
+  }
+  document.getElementById("satage_info_block_data").textContent = get_list[id].block_limit;
+  document.getElementById("satage_info_turn_data").textContent = get_list[id].turn;
   
   
-  var satage_info_name = document.createElement('div');
-  satage_info_name.setAttribute("id","satage_info_name");
-  var newContent = document.createTextNode(get_list[id].name); 
-  satage_info_name.appendChild(newContent);
-  
-  
-  var satage_info_condition = document.createElement('div');
-  satage_info_condition.setAttribute("id","satage_info_condition");
-  
-  var satage_info_hart = document.createElement('div');
-  satage_info_hart.setAttribute("id","satage_info_hart");
-  newContent = document.createTextNode("ハートを" + get_list[id].get_hart_value + "個ゲットしてクリア"); 
-  satage_info_hart.appendChild(newContent);
-  
-  var satage_info_block = document.createElement('div');
-  satage_info_block.setAttribute("id","satage_info_block");
-  newContent = document.createTextNode("ブロックを" + get_list[id].block_limit + "個以内でクリア"); 
-  satage_info_block.appendChild(newContent);
-  
-  
-  var satage_info_turn = document.createElement('div');
-  satage_info_turn.setAttribute("id","satage_info_turn");
-  newContent = document.createTextNode(get_list[id].turn + "ターン以内でクリア"); 
-  satage_info_turn.appendChild(newContent);
-  
-  satage_info_condition.appendChild(satage_info_hart);
-  satage_info_condition.appendChild(satage_info_block);
-  satage_info_condition.appendChild(satage_info_turn);
   
   
   var satage_join_div = document.createElement('div');
@@ -198,19 +186,20 @@ function satage_info_create(id,get_list){
   satage_join_div.appendChild(satage_join_link);
   	
   
-  document.getElementById("satage_info").appendChild(table);
-  document.getElementById("satage_info").appendChild(satage_info_condition);
+  document.getElementById("satage_map").appendChild(table);
   document.getElementById("satage_info").appendChild(satage_join_div);
   
-  document.getElementById("menu_area").appendChild(satage_info_name);
+  document.getElementById("satage_map").classList.remove("display_off");
+  document.getElementById("satage_info_condition").classList.remove("display_off");
+  document.getElementById("satage_join_div").classList.remove("display_off");
+  document.getElementById("satage_info_name").classList.remove("display_off");
   document.getElementById("menu_area").classList.add("select_back");
 }
 
 
-
-window.onload = function () {
+window.addEventListener('load', function() {
     getStageList();
-};
+})
 
 function getStageList() {
     var url = './../api/tutorial';
@@ -223,3 +212,18 @@ function getStageList() {
     });
 }
 
+document.getElementById("menu_area").onclick = function(){
+  document.getElementById("satage_map").classList.add("display_off");
+  document.getElementById("satage_info_condition").classList.add("display_off");
+  document.getElementById("satage_join_div").classList.add("display_off");
+  document.getElementById("satage_info_name").classList.add("display_off");
+  document.getElementById("menu_area").classList.remove("select_back");
+}
+
+document.getElementById("satage_info").onclick = function(e){
+  e.stopPropagation();
+}
+
+document.getElementById("satage_info_name").onclick = function(e){
+  e.stopPropagation();
+}

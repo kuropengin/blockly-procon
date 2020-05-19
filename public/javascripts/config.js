@@ -80,7 +80,7 @@ function initBgm(){
         }
     }
     else{
-        localStorage["GAME_BGM"] = "01.mp3";
+        //localStorage["GAME_BGM"] = "01.mp3";
     }
     
     //result_bgm
@@ -93,7 +93,7 @@ function initBgm(){
         }
     }
     else{
-        localStorage["RESULT_BGM"] = "02.mp3";
+        //localStorage["RESULT_BGM"] = "02.mp3";
     }
     
 }
@@ -206,14 +206,47 @@ auto_save_option.forEach(function(e) {
 
 
 //reset
-var save_data_reset = document.getElementById('save_data_reset');
-var data_reset = function(){
-    if(window.confirm('セーブデータをリセットします。よろしいですか')){
-        localStorage.clear();
+var option_data_reset = document.getElementById('option_data_reset');
+var option_reset = function(){
+    if(window.confirm('データをリセットします。よろしいですか')){
+        var reset_list = ["GAME_BGM","SOUND_STATUS","DEBUG_MODE","SOUND_VOLUME","LOWSPEED_MODE","RESULT_BGM","LOOP_STATUS","AUTO_SAVE"]
+        for(var reset_name of reset_list){
+            localStorage.removeItem(reset_name);
+        }
+        document.cookie = "lng=ja";
     }
 }
-save_data_reset.addEventListener('click', data_reset, true);
-save_data_reset.addEventListener('touchend', data_reset, true);
+option_data_reset.addEventListener('click', option_reset, true);
+option_data_reset.addEventListener('touchend', option_reset, true);
+
+
+var tutorial_data_reset = document.getElementById('tutorial_data_reset');
+var tutorial_reset = function(){
+    if(window.confirm('データをリセットします。よろしいですか')){
+        var url = location.protocol + "//" + location.hostname + ":" + location.port + "/api/tutorial";
+        fetch(url)
+        .then(function (data) {
+            return data.json(); 
+        })
+        .then(function (json) {
+            for(var tutorial_data_name in json){
+                localStorage.removeItem(tutorial_data_name);
+            }
+        });
+    }
+}
+tutorial_data_reset.addEventListener('click', tutorial_reset, true);
+tutorial_data_reset.addEventListener('touchend', tutorial_reset, true);
+
+
+var programming_data_reset = document.getElementById('programming_data_reset');
+var programming_reset = function(){
+    if(window.confirm('データをリセットします。よろしいですか')){
+        localStorage.removeItem("LastRun");
+    }
+}
+programming_data_reset.addEventListener('click', programming_reset, true);
+programming_data_reset.addEventListener('touchend', programming_reset, true);
 
 
 //sound_status
@@ -316,7 +349,7 @@ loop_option.forEach(function(e) {
 
 
 //load_init
-window.onload = function () {
+window.addEventListener('load', function() {
     var config_button = document.getElementById('configButton');
     var config_overlay_on = function(){
         document.getElementById('config').classList.add("overlay_on");
@@ -324,8 +357,8 @@ window.onload = function () {
     config_button.addEventListener('click', config_overlay_on, true);
     config_button.addEventListener('touchend', config_overlay_on, true);
     
-    getBgmList();
-};
+    getBgmList();   
+})
 
 
 

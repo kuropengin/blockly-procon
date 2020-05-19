@@ -2,7 +2,8 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <title>Procon</title>
+  <title>Blockly CHaser</title>
+  <link rel="icon" href="/images/favicon.ico">
   <link rel='stylesheet' href='/stylesheets/style.css' />
   <link rel='stylesheet' href='/stylesheets/menu.css' />
   <link rel='stylesheet' href='/stylesheets/menu-tutorial.css' />
@@ -38,8 +39,17 @@
 
     </div>
     <div id="satage_info">
-      
+      <div id="satage_map" class="display_off"></div>
+      <div id="satage_info_condition" class="display_off">
+        <span><%- LNG["CLEAR_CONDITION"] %></span>
+        <div id="satage_info_hart" class="satage_info_data"><%- LNG["INFO_HART_B"] %><div id="satage_info_hart_data" class="satage_info_data_inline"></div><%- LNG["INFO_HART_A"] %></div>
+        <div id="satage_info_put" class="satage_info_data"><%- LNG["INFO_PUT"] %></div>
+        <div id="satage_info_block" class="satage_info_data"><%- LNG["INFO_BLOCK_B"] %><div id="satage_info_block_data" class="satage_info_data_inline"></div><%- LNG["INFO_BLOCK_A"] %></div>
+        <div id="satage_info_turn" class="satage_info_data"><div id="satage_info_turn_data" class="satage_info_data_inline"></div><%- LNG["INFO_TURN"] %></div>
+      </div>
+      <div id="satage_join_div" class="display_off"></div>
     </div>
+    <div id="satage_info_name" class="display_off"><div>
   </div>
   <script src="/javascripts/menu-tutorial.js"></script>
 

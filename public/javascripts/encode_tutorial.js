@@ -77,12 +77,12 @@ function initApi(interpreter, scope) {
       interpreter.createNativeFunction(wrapper));
 
   // Add an API function for the prompt() block.
-  var wrapper = function(text) {
+  var wrapper = function(text,callback) {
     text = text ? text.toString() : '';
-    return interpreter.createPrimitive(prompt(text));
+    self_prompt_b(text,callback);
   };
   interpreter.setProperty(scope, 'prompt',
-      interpreter.createNativeFunction(wrapper));
+      interpreter.createAsyncFunction(wrapper));
 
   // Add an API function for highlighting blocks.
   var wrapper = function(id) {
@@ -133,6 +133,29 @@ function initApi(interpreter, scope) {
     }
   };
   interpreter.setProperty(scope, 'move_player',
+      interpreter.createAsyncFunction(wrapper));
+      
+  var wrapper = function(direction,callback) {
+    if (my_turn){
+      my_map_data = false;
+      my_turn = false;
+      my_map_data = put_wall(direction);
+      
+      var getDate =function(){
+        if (my_map_data) {
+          callback(my_map_data.join(''));
+        }
+        else{
+          setTimeout(getDate,100);
+        }
+      };
+      setTimeout(getDate,200);
+    }
+    else{
+      callback(my_map_data.join(''));
+    }
+  };
+  interpreter.setProperty(scope, 'put_wall',
       interpreter.createAsyncFunction(wrapper));
 
 
@@ -231,7 +254,6 @@ function generateCodeAndLoadIntoInterpreter() {
       var LoopTrap = 1000;
       Blockly.JavaScript.INFINITE_LOOP_TRAP = 'if(--LoopTrap == 0) throw "Infinite loop.";\n';
       latestCode = Blockly.JavaScript.workspaceToCode(Code.workspace);
-      
       latestCode = "var LoopTrap = " + LoopTrap + ";\n" + latestCode;
     }
   }
@@ -281,7 +303,9 @@ Code.runJS = function(){
     setTimeout(function() {
       highlightPause = false;
       generateCodeAndLoadIntoInterpreter();
-      
+      if(!satage_data["cpu"]){
+        latestCode = 'map_data_hiyasinsu_kuropengin = [' + get_map_data("cool","get_ready") + ']\n' + latestCode;
+      }
       myInterpreter = new ObjInterpreter(latestCode, initApi);
       runner = function() {
         var hasMore;
@@ -319,6 +343,7 @@ Code.runJS = function(){
 };
 
 Code.reloadJS = function(){
+  Code.stopJS();
   endCode();
   makeTable("game_board");
   runButton.classList.toggle("Button_hidden");
@@ -375,24 +400,26 @@ Code.download = function(){
     window.alert("ご利用のブラウザは本機能を使用できません");
   }
   else{
+    
     var blob = new Blob([xmlText], {type: "application/octet-stream"}); 
     
-    var file_name = window.prompt("ファイル名を入力してください", "");
-    
-    if(file_name){
-      if(window.navigator.msSaveBlob)
-      {
-          // IE
-          window.navigator.msSaveBlob(blob, file_name + ".xml");
-      } else {
-          // another
-          var a = document.createElement("a");
-          a.href = URL.createObjectURL(blob);
-          a.target = '_blank';
-          a.download = file_name + ".xml";
-          a.click();
+    self_prompt("ファイル名を入力してください",function(file_name){
+      if(file_name){
+        if(window.navigator.msSaveBlob)
+        {
+            // IE
+            window.navigator.msSaveBlob(blob, file_name + ".xml");
+        } else {
+            // another
+            var a = document.createElement("a");
+            a.href = URL.createObjectURL(blob);
+            a.target = '_blank';
+            a.download = file_name + ".xml";
+            a.click();
+        }
       }
-    }
+    });
+    
   }
 }
 
@@ -402,7 +429,6 @@ function readSingleFile(e) {
   if (!file) {
     return;
   }
-  console.log(e);
   var reader = new FileReader();
   reader.onload = function(e) {
     var contents = e.target.result;
@@ -428,6 +454,10 @@ function readSingleFile(e) {
 
 document.getElementById('file_load').addEventListener('change', readSingleFile, false);
 
+window.addEventListener('load', function() {
+    initDataLoad();
+})
+
 
 function initDataLoad(){
 
@@ -442,7 +472,6 @@ function initDataLoad(){
     var queryArr = queryStr.split('=');
     queries[queryArr[0]] = queryArr[1];
   });
-
   if(localStorage[queries.stage]){
     var xmlTextarea = document.getElementById('content_xml');
     var xmlDom;
@@ -473,3 +502,123 @@ if(localStorage["DEBUG_MODE"]){
 else{
   localStorage["DEBUG_MODE"] == "off"
 }
+
+function self_prompt(message,callback){
+  var input_text="";
+  var pdiv = document.createElement("div");
+  pdiv.setAttribute("id","input_text_area");
+  
+  var pmdiv = document.createElement("div"); 
+  pmdiv.setAttribute("id","input_text_message");
+  var newContent = document.createTextNode(message); 
+  pmdiv.appendChild(newContent);
+  pdiv.appendChild(pmdiv);
+  
+  var pidiv = document.createElement("input");
+	pidiv.setAttribute("type","text"); 
+	pidiv.setAttribute("maxlength","25"); 
+	pidiv.setAttribute("id","input_text_form");
+	pdiv.appendChild(pidiv);
+	
+	var pddiv = document.createElement("div"); 
+  pddiv.setAttribute("id","input_text_button");
+  
+  var podiv = document.createElement("div"); 
+  podiv.setAttribute("id","input_text_ok");
+  var newContent = document.createTextNode("OK"); 
+  podiv.appendChild(newContent);
+  
+  var input_text_ok = function(){
+      input_text = "" + document.getElementById("input_text_form").value;
+      var c = document.getElementById("input_text_area");
+      if(c){
+          c.parentNode.removeChild(c);
+      }
+      callback(input_text);
+  }
+  podiv.addEventListener('click', input_text_ok, true);
+  podiv.addEventListener('touchend', input_text_ok, true);
+  
+  var pcdiv = document.createElement("div"); 
+  pcdiv.setAttribute("id","input_text_cancel");
+  var newContent = document.createTextNode("キャンセル"); 
+  pcdiv.appendChild(newContent);
+  
+  var input_text_cancel = function(){
+      var c = document.getElementById("input_text_area");
+      if(c){
+          c.parentNode.removeChild(c);
+      }
+      callback(false);
+  }
+  pcdiv.addEventListener('click', input_text_cancel, true);
+  pcdiv.addEventListener('touchend', input_text_cancel, true);
+  
+  pddiv.appendChild(podiv);
+  pddiv.appendChild(pcdiv);
+  pdiv.appendChild(pddiv);
+	
+	document.body.appendChild(pdiv);
+	
+};
+
+function self_prompt_b(message,callback){
+  var input_text="";
+  var pdiv = document.createElement("div");
+  pdiv.setAttribute("id","input_text_area");
+  
+  var pmdiv = document.createElement("div"); 
+  pmdiv.setAttribute("id","input_text_message");
+  var newContent = document.createTextNode(message); 
+  pmdiv.appendChild(newContent);
+  pdiv.appendChild(pmdiv);
+  
+  var pidiv = document.createElement("input");
+	pidiv.setAttribute("type","text"); 
+	pidiv.setAttribute("maxlength","25"); 
+	pidiv.setAttribute("id","input_text_form");
+	pdiv.appendChild(pidiv);
+	
+	var pddiv = document.createElement("div"); 
+  pddiv.setAttribute("id","input_text_button");
+  
+  var podiv = document.createElement("div"); 
+  podiv.setAttribute("id","input_text_ok");
+  var newContent = document.createTextNode("OK"); 
+  podiv.appendChild(newContent);
+  
+  var input_text_ok = function(){
+      input_text = "" + document.getElementById("input_text_form").value;
+      var c = document.getElementById("input_text_area");
+      if(c){
+          c.parentNode.removeChild(c);
+      }
+      callback(input_text);
+  }
+  podiv.addEventListener('click', input_text_ok, true);
+  podiv.addEventListener('touchend', input_text_ok, true);
+  
+  var pcdiv = document.createElement("div"); 
+  pcdiv.setAttribute("id","input_text_cancel");
+  var newContent = document.createTextNode("キャンセル"); 
+  pcdiv.appendChild(newContent);
+  
+  var input_text_cancel = function(){
+      var c = document.getElementById("input_text_area");
+      if(c){
+          c.parentNode.removeChild(c);
+      }
+      callback('');
+  }
+  pcdiv.addEventListener('click', input_text_cancel, true);
+  pcdiv.addEventListener('touchend', input_text_cancel, true);
+  
+  pddiv.appendChild(podiv);
+  pddiv.appendChild(pcdiv);
+  pdiv.appendChild(pddiv);
+	
+	document.body.appendChild(pdiv);
+	
+};
+
+window.prompt = self_prompt;

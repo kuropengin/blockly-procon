@@ -4,8 +4,6 @@ var router = express.Router();
 var fs = require('fs');
 var path = require('path');
 
-const bgm_list = fs.readdirSync(path.join(__dirname, '..', "public", "sound"));
-
 
 var LNG_JA = JSON.parse(fs.readFileSync(path.join(__dirname, '..', "language", "ja", "index.json"), "utf-8"));
 var LNG_JAK = JSON.parse(fs.readFileSync(path.join(__dirname, '..', "language", "ja-k", "index.json"), "utf-8"));

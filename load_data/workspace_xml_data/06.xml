@@ -1,0 +1,21 @@
+<xml xmlns="https://developers.google.com/blockly/xml" id="toolbox" style="display: none">
+    <block type="text_print"></block>
+    
+    <block type="get_ready"></block>
+    <block type="move_player"></block>
+    <block type="look"></block>
+    <block type="search"></block>
+    <block type="put_wall"></block>
+    <block type="get_value"></block>
+    <block type="if_value"></block>
+    
+    <block type="controls_if"></block>
+    
+    <block type="controls_repeat_ext">
+        <value name="TIMES">
+          <shadow type="math_number">
+            <field name="NUM">1</field>
+          </shadow>
+        </value>
+    </block>
+</xml>

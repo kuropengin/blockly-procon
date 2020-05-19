@@ -1,3 +1,10 @@
 {
-    "CONFIG":"設定"
+    "CONFIG":"設定",
+    "CLEAR_CONDITION": "クリア条件",
+    "INFO_HART_B": "ハートを",
+    "INFO_HART_A": "個ゲットしてクリア",
+    "INFO_PUT": "HOTにブロックを置いてクリア",
+    "INFO_BLOCK_B": "プログラムブロックを",
+    "INFO_BLOCK_A": "個以下でクリア",
+    "INFO_TURN": "ターン以内でクリア"
 }

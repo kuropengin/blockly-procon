@@ -30,13 +30,13 @@ var cpu_store = {};
 //GET page
 router.get('/', function(req, res, next) {
   try{
-    var lg = req.query.lang;
+    var lg = req.cookies.lng;
     var LNG = JSON.parse(fs.readFileSync(path.join(__dirname, '..', "language", lg, "programming.json"), "utf-8"));
   }
   catch(e){
     var LNG = JSON.parse(fs.readFileSync(path.join(__dirname, '..', "language", "ja", "programming.json"), "utf-8"));
   }
-  res.render('programming', { "title": 'プログラミング',"server_list":server_list,"LNG":LNG});
+  res.render('programming', { "title": 'プログラミング',"LNG":LNG});
 });
 
 
@@ -87,6 +87,7 @@ function create_map(key){
   var py;
   var bx;
   var by;
+  
   
   if(server_store[key].auto_symmetry){
     if((server_store[key].auto_point + server_store[key].auto_block)%2 == 1){
@@ -389,7 +390,6 @@ function game_result_check(room,chara,effect_t = "r",effect_d = false,winer = fa
 }
 
 function game_server_reset(room){
-  console.log(room);
   for(var user_id in store){
     if(store[user_id].room == room){
       if(io.sockets.sockets[user_id]){

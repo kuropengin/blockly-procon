@@ -76,13 +76,18 @@
 
 #game_info{
     display: flex;
+    height: 45px;
+    margin-top: 10px;
+}
+
+.game_info_title{
+    font-size: 12px;
 }
 
 #block_limit_area{
     display: block;
     position: relative;
     width: 50%;
-    margin: 15px 0px;
     margin-left: 35px;
     border: solid 2px #5d5d5d;
     background: #5d5d5d;
@@ -100,8 +105,8 @@
     display: block;
     position: relative;
     width: 30%;
-    margin: 15px;
     margin-right:35px;
+    margin-left: 15px;
     border: solid 2px #5d5d5d;
     background: #5d5d5d;
     font-weight: bold;

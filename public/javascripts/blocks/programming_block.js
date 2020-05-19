@@ -12,9 +12,9 @@ Blockly.Blocks['wait'] = {
   }
 };
 
-window.onload = function () {
+window.addEventListener('load', function() {
     getServarList();
-};
+})
 
 function getServarList() {
     var url = './../api/join';
@@ -27,9 +27,9 @@ function getServarList() {
           init: function() {
             this.appendDummyInput()
                 .appendField(new Blockly.FieldDropdown(json), "room_id")
-                .appendField("にプレイヤー名")
+                .appendField(Blockly.Msg["SERVER_JOIN_BEFORE"])
                 .appendField(new Blockly.FieldTextInput(""), "name")
-                .appendField("で接続する");
+                .appendField(Blockly.Msg["SERVER_JOIN_AFTER"]);
             this.setInputsInline(true);
             this.setNextStatement(true, null);
             this.setColour(195);
@@ -45,7 +45,7 @@ function getServarList() {
 Blockly.Blocks['get_ready'] = {
   init: function() {
     this.appendDummyInput()
-        .appendField("自分のターンを待つ");
+        .appendField(Blockly.Msg["WAIT_MY_TURN"]);
     this.setInputsInline(true);
     this.setPreviousStatement(true, null);
     this.setNextStatement(true, null);
@@ -58,8 +58,8 @@ Blockly.Blocks['get_ready'] = {
 Blockly.Blocks['move_player'] = {
   init: function() {
     this.appendDummyInput()
-        .appendField(new Blockly.FieldDropdown([["上","top"], ["下","bottom"], ["左","left"], ["右","right"]]), "move")
-        .appendField("に移動する");
+        .appendField(new Blockly.FieldDropdown([[Blockly.Msg["DIRECTION_COMMAND_TOP"],"top"], [Blockly.Msg["DIRECTION_COMMAND_BOTTOM"] ,"bottom"], [Blockly.Msg["DIRECTION_COMMAND_LEFT"] ,"left"], [Blockly.Msg["DIRECTION_COMMAND_RIGHT"],"right"]]), "move")
+        .appendField(Blockly.Msg["MOVE_INFO"]);
     this.setInputsInline(true);
     this.setPreviousStatement(true, null);
     this.setNextStatement(true, null);
@@ -72,8 +72,8 @@ Blockly.Blocks['move_player'] = {
 Blockly.Blocks['look'] = {
   init: function() {
     this.appendDummyInput()
-        .appendField(new Blockly.FieldDropdown([["上","top"], ["下","bottom"], ["左","left"], ["右","right"]]), "look")
-        .appendField("の周りを見る");
+        .appendField(new Blockly.FieldDropdown([[Blockly.Msg["DIRECTION_COMMAND_TOP"],"top"], [Blockly.Msg["DIRECTION_COMMAND_BOTTOM"] ,"bottom"], [Blockly.Msg["DIRECTION_COMMAND_LEFT"] ,"left"], [Blockly.Msg["DIRECTION_COMMAND_RIGHT"],"right"]]), "look")
+        .appendField(Blockly.Msg["LOOK_INFO"]);
     this.setInputsInline(true);
     this.setPreviousStatement(true, null);
     this.setNextStatement(true, null);
@@ -86,8 +86,8 @@ Blockly.Blocks['look'] = {
 Blockly.Blocks['search'] = {
   init: function() {
     this.appendDummyInput()
-        .appendField(new Blockly.FieldDropdown([["上","top"], ["下","bottom"], ["左","left"], ["右","right"]]), "search")
-        .appendField("の遠くを見る");
+        .appendField(new Blockly.FieldDropdown([[Blockly.Msg["DIRECTION_COMMAND_TOP"],"top"], [Blockly.Msg["DIRECTION_COMMAND_BOTTOM"] ,"bottom"], [Blockly.Msg["DIRECTION_COMMAND_LEFT"] ,"left"], [Blockly.Msg["DIRECTION_COMMAND_RIGHT"],"right"]]), "search")
+        .appendField(Blockly.Msg["SEARCH_INFO"]);
     this.setInputsInline(true);
     this.setPreviousStatement(true, null);
     this.setNextStatement(true, null);
@@ -100,8 +100,8 @@ Blockly.Blocks['search'] = {
 Blockly.Blocks['put_wall'] = {
   init: function() {
     this.appendDummyInput()
-        .appendField(new Blockly.FieldDropdown([["上","top"], ["下","bottom"], ["左","left"], ["右","right"]]), "put_wall")
-        .appendField("にブロックを置く");
+        .appendField(new Blockly.FieldDropdown([[Blockly.Msg["DIRECTION_COMMAND_TOP"],"top"], [Blockly.Msg["DIRECTION_COMMAND_BOTTOM"] ,"bottom"], [Blockly.Msg["DIRECTION_COMMAND_LEFT"] ,"left"], [Blockly.Msg["DIRECTION_COMMAND_RIGHT"],"right"]]), "put_wall")
+        .appendField(Blockly.Msg["PUT_INFO"]);
     this.setInputsInline(true);
     this.setPreviousStatement(true, null);
     this.setNextStatement(true, null);
@@ -115,7 +115,7 @@ Blockly.Blocks['get_value'] = {
   init: function() {
     this.appendDummyInput()
         .appendField(new Blockly.FieldDropdown([["1","0"], ["2","1"], ["3","2"], ["4","3"], ["5","4"], ["6","5"], ["7","6"], ["8","7"], ["9","8"]]), "get_value")
-        .appendField("マス目");
+        .appendField(Blockly.Msg["MAP_VALUE_INFO"]);
     this.setInputsInline(true);
     this.setOutput(true, "Number");
     this.setColour(195);
@@ -128,12 +128,26 @@ Blockly.Blocks['if_value'] = {
   init: function() {
     this.appendDummyInput()
         .appendField(new Blockly.FieldDropdown([["1","0"], ["2","1"], ["3","2"], ["4","3"], ["5","4"], ["6","5"], ["7","6"], ["8","7"], ["9","8"]]), "map_value")
-        .appendField("マス目が")
+        .appendField(Blockly.Msg["MAP_VALUE_INFO"] + "が")
         .appendField(new Blockly.FieldDropdown([["なにもない","0"], ["プレイヤーがいる","1"], ["ブロックがある","2"], ["ハートがある","3"]]), "map_item")
         .appendField("なら");
     this.setInputsInline(true);
     this.setOutput(true, "Boolean");
     this.setColour(195);
+ this.setTooltip("");
+ this.setHelpUrl("");
+  }
+};
+
+Blockly.Blocks['infinite_loop'] = {
+  init: function() {
+    this.appendDummyInput()
+        .appendField(Blockly.Msg["INFINITE_LOOP"]);
+    this.appendStatementInput("infinite_loop_content")
+        .setCheck(null);
+    this.setPreviousStatement(true, null);
+    this.setNextStatement(true, null);
+    this.setColour(120);
  this.setTooltip("");
  this.setHelpUrl("");
   }

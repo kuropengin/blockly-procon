@@ -297,3 +297,78 @@ body {
   font-size: 30px;
   font-weight: bold;
 }
+
+
+
+#input_text_area {
+  position: absolute;
+  z-index: 256;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%,-50%);
+  background: #FFF;
+  max-width: 300px;
+  width: 80%;
+  height: 80px;
+  margin: 10px auto;
+  border-radius: 15px;
+  box-shadow: 2px 2px 4px grey;
+  animation: fadeIn 0.25s ease 0s 1 normal;
+  -webkit-animation: fadeIn 0.25s ease 0s 1 normal;
+}
+
+#input_text_form {
+  width: 90%;
+  height: 15px;
+  margin: 0 5%;
+  border: solid 1px #c0c0c0;
+  border-radius: 5px;
+}
+
+#input_text_message {
+  padding-top: 5px;
+  font-size: 15px;
+  font-weight: bold;
+  width: 100%;
+  background: #00a0e6;
+  border-radius: 14px 14px 0 0;
+  color: #FFF;
+  text-align: center;
+}
+
+#input_text_ok {
+  width: 80px;
+  height: 20px;
+  margin: 2px;
+  border-radius: 5px;
+  line-height:20px;
+  font-size: 15px;
+  font-weight: bold;
+  text-align: center;
+  color: #FFF;
+  background: #00a0e6;
+  border: solid 1px #00a0e6;
+  cursor: pointer;
+}
+
+#input_text_cancel {
+  width: 80px;
+  height: 20px;
+  margin: 2px;
+  border-radius: 5px;
+  line-height:20px;
+  font-size: 15px;
+  font-weight: bold;
+  text-align: center;
+  color: #00a0e6;
+  background: #ffffff;
+  border: solid 1px #00a0e6;
+  cursor: pointer;
+}
+
+#input_text_button {
+  width: 95%;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}

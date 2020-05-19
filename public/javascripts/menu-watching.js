@@ -155,6 +155,10 @@ function server_info(id,get_list){
   var server_info_div = document.createElement('div');
   server_info_div.setAttribute("id","server_info_div");
   
+  var server_info_title = document.createElement('span');
+  newContent = document.createTextNode(lng_list["SERVER_INFO"]); 
+  server_info_title.appendChild(newContent);
+  
   var server_info_id = document.createElement('div');
   server_info_id.setAttribute("id","server_info_id");
   newContent = document.createTextNode(get_list[id].room_id); 
@@ -162,15 +166,15 @@ function server_info(id,get_list){
   
   var server_info_map = document.createElement('div');
   server_info_map.setAttribute("id","server_info_map");
-  var map_status = "固定";
+  var map_status = lng_list["FIXITY"];
   if(!get_list[id].map_data.length){
     table.classList.add("auto_create_map");
-    map_status = "自動生成";
+    map_status = lng_list["AUTOMATIC_GENERATION"];
     if(get_list[id].auto_symmetry){
-      map_status += "(点対称)";
+      map_status += lng_list["SYMMETRY"];
     }
     else{
-      map_status += "(ランダム)";
+      map_status += lng_list["RANDOM"];
     }
   }
   newContent = document.createTextNode(map_status); 
@@ -178,19 +182,20 @@ function server_info(id,get_list){
   
   var server_info_turn = document.createElement('div');
   server_info_turn.setAttribute("id","server_info_turn");
-  var turn_status = "接続順";
+  var turn_status = lng_list["CONNECTION_ORDER"];
   if(get_list[id].cpu){
-    turn_status = "固定";
+    turn_status = lng_list["FIXITY"];
     if(get_list[id].cpu.turn == "cool"){
-      turn_status += "(後手)";
+      turn_status += lng_list["TURN_H"];
     }
     else{
-      turn_status += "(先手)";
+      turn_status += lng_list["TURN_C"];
     }
   }
   newContent = document.createTextNode(turn_status); 
   server_info_turn.appendChild(newContent);
   
+  server_info_div.appendChild(server_info_title);
   server_info_div.appendChild(server_info_id);
   server_info_div.appendChild(server_info_map);
   server_info_div.appendChild(server_info_turn);
@@ -203,7 +208,7 @@ function server_info(id,get_list){
   server_join_link.classList.add("server_join_link");
   server_join_link.href = "/watching?room_id=" + id;
   	//server_join_link.target = "_blank";
-  	server_join_link.innerText = "観戦する"
+  	server_join_link.innerText = lng_list["WATCHING"];
   	
   	server_join_div.appendChild(server_join_link);
   	
@@ -217,9 +222,9 @@ function server_info(id,get_list){
 }
 
 
-window.onload = function () {
+window.addEventListener('load', function() {
     getServarList();
-};
+})
 
 function getServarList() {
     var url = './../api/game';
@@ -231,3 +236,4 @@ function getServarList() {
         createServarList(json);
     });
 }
+

@@ -198,3 +198,10 @@ Blockly.JavaScript['get_ready'] = function(block) {
   var code = '...;\n';
   return code;
 };
+
+Blockly.JavaScript['infinite_loop'] = function(block) {
+  var statements_infinite_loop_content = Blockly.JavaScript.statementToCode(block, 'infinite_loop_content');
+  // TODO: Assemble JavaScript into code variable.
+  var code = '...;\n';
+  return code;
+};

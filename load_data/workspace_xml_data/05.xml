@@ -1,0 +1,15 @@
+<xml xmlns="https://developers.google.com/blockly/xml" id="toolbox" style="display: none">
+    <block type="get_ready"></block>
+    <block type="move_player"></block>
+    <block type="put_wall"></block>
+    <block type="if_value"></block>
+    
+    <block type="controls_if">
+      <mutation else="1"/>
+    </block>
+    
+    <block type="infinite_loop"></block>
+    
+    
+    
+</xml>

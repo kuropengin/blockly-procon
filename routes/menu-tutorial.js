@@ -19,7 +19,7 @@ router.get('/', function(req, res, next) {
                 res.render('menu-tutorial', { title: 'ステージ選択', LNG: LNG_JA, C_LNG: CONFIG_LNG_JA});
             }
             else if(req.cookies.lng == "ja-k"){
-                res.render('menu-tutorial', { title: 'ステージせんたく', LNG: LNG_JA, C_LNG: CONFIG_LNG_JAK});
+                res.render('menu-tutorial', { title: 'ステージせんたく', LNG: LNG_JAK, C_LNG: CONFIG_LNG_JAK});
             }
             else{
                 res.render('menu-tutorial', { title: 'ステージ選択', LNG: LNG_JA, C_LNG: CONFIG_LNG_JA});

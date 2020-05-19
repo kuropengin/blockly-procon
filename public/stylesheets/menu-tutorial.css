@@ -44,6 +44,7 @@
     float: left;
     background: #5d5d5d;
     border-radius: 10px;
+    cursor: pointer;
 }
 
 .satage_level{
@@ -208,6 +209,10 @@ td img{
     background-repeat: no-repeat;
 }
 
+#satage_map{
+
+}
+
 #satage_info_condition{
     position: relative;
     width: 80%;
@@ -221,7 +226,8 @@ td img{
 
 #satage_info_condition:after{
     position: absolute;
-    content: 'クリア条件';
+    content: '';
+    width: 100px;
     font-size: 15px;
     font-weight: bold;
     color:#fff;
@@ -236,7 +242,8 @@ td img{
 
 #satage_info_condition:before{
     position: absolute;
-    content: 'クリア条件';
+    content: '';
+    width: 100px;
     color:#fff;
     font-size: 15px;
     font-weight: bold;
@@ -249,6 +256,17 @@ td img{
     border-color: #ffffff00 #ffffff00 #ffffff #ffffff00;
     border-width: 0px 20px 20px 0px;
 }
+
+#satage_info_condition span{
+    position: absolute;
+    top: -20px;
+    left: 8px;
+    font-size: 15px;
+    font-weight: bold;
+    color: #FFF;
+    z-index: 1;
+}
+
 
 #satage_info_name{
     position: absolute;
@@ -263,7 +281,10 @@ td img{
     padding-left: 20px;
 }
 
-#satage_info_hart{
+
+
+
+.satage_info_data{
     padding: 5px 0;
     padding-left: 10px;
     color: #fff;
@@ -271,53 +292,7 @@ td img{
     font-size: 15px;
 }
 
-#satage_info_hart:before{
-    content: '';
-    display: inline-block;
-    font-size: 13px;
-    font-weight: bold;
-    text-align: center;
-    color: #2f2f2f;
-    margin-right: 5px;
-    margin-left: 10px;
-    width: 10px;
-    height: 10px;
-    background: #fff;
-    border-radius: 10px;
-}
-
-#satage_info_block{
-    padding: 5px 0;
-    padding-left: 10px;
-    color: #fff;
-    font-weight: bold;
-    font-size: 15px;
-}
-
-#satage_info_block:before{
-    content: '';
-    display: inline-block;
-    font-size: 13px;
-    font-weight: bold;
-    text-align: center;
-    color: #2f2f2f;
-    margin-right: 5px;
-    margin-left: 10px;
-    width: 10px;
-    height: 10px;
-    background: #fff;
-    border-radius: 10px;
-}
-
-#satage_info_turn{
-    padding: 5px 0;
-    padding-left: 10px;
-    color: #fff;
-    font-weight: bold;
-    font-size: 15px;
-}
-
-#satage_info_turn:before{
+.satage_info_data:before{
     content: '';
     display: inline-block;
     font-size: 13px;
@@ -357,4 +332,16 @@ td img{
     color: #fff;
     padding: 5px 0;
     text-decoration: none;
+}
+
+.satage_info_data_inline{
+    display: inline-block;
+}
+
+.display_on{
+    display: block;
+}
+
+.display_off{
+    display: none;
 }

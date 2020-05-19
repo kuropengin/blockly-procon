@@ -63,10 +63,10 @@ if(localStorage["SOUND_VOLUME"]){
 var gameBgmFile = "sound/01.mp3";
 var resultSoundFile = "sound/02.mp3";
 if(localStorage["GAME_BGM"]){
-    gameBgmFile = "sound/" + localStorage["GAME_BGM"];
+    gameBgmFile = "bgm/" + localStorage["GAME_BGM"];
 }
 if(localStorage["RESULT_BGM"]){
-    resultSoundFile = "sound/" + localStorage["RESULT_BGM"];
+    resultSoundFile = "bgm/" + localStorage["RESULT_BGM"];
 }
 
 
@@ -231,12 +231,12 @@ function makeTable(msg, x, y, effect, tableId){
         
         for(var y of y_range){
             for(var x of x_range){
-                if(msg.effect.p == "cool" && cx){
+                if(msg.effect.p == "cool" && hx){
                     if(!(0 > (hx + x) || data[0].length-1 < (hx + x) || 0 > (hy + y) || data.length-1 < (hy + y))){
                         table.rows[hy+y].cells[hx+x].style.backgroundColor = "rgba(139, 195, 74, 0.3)";
                     }
                 }
-                else if(msg.effect.p == "hot" && hx){
+                else if(msg.effect.p == "hot" && cx){
                     if(!(0 > (cx + x) || data[0].length-1 < (cx + x) || 0 > (cy + y) || data.length-1 < (cy + y))){
                         table.rows[cy+y].cells[cx+x].style.backgroundColor = "rgba(139, 195, 74, 0.3)";
                     }

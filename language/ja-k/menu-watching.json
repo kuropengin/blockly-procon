@@ -1,4 +1,13 @@
 {
     "TITLE":"かんせん",
-    "CONFIG":"せってい"
+    "CONFIG":"せってい",
+    "SERVER_INFO": "サーバーじょうほう",
+    "FIXITY":"こてい",
+    "AUTOMATIC_GENERATION": "じどうせいせい",
+    "SYMMETRY": "(たいしょう)",
+    "RANDOM": "(ランダム)",
+    "CONNECTION_ORDER": "せつぞくじゅん",
+    "TURN_C": "(せんて)",
+    "TURN_H": "(ごて)",
+    "WATCHING": "かんせんする"
 }
