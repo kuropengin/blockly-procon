@@ -897,7 +897,7 @@ io.on('connection',function(socket){
   
   socket.on('player_join', function(msg) {
     
-    if(!server_store[msg.room_id].cool.status || !server_store[msg.room_id].hot.status){
+    if(server_store[msg.room_id] && (!server_store[msg.room_id].cool.status || !server_store[msg.room_id].hot.status)){
       var room_chara;
       
       if(server_store[msg.room_id].cpu){
@@ -990,10 +990,12 @@ io.on('connection',function(socket){
         setTimeout(game_start_timer, 500, store[socket.id].room);
       }
       
-      console.log("o:"+socket.id);
+      //console.log("o:"+msg.name);
+    }
+    else if(!server_store[msg.room_id]){
+      io.to(socket.id).emit("error", "サーバーIDが存在しません");
     }
     else{
-      console.log("e:"+socket.id);
       io.to(socket.id).emit("error", "接続先サーバーは満室です");
     }
     
