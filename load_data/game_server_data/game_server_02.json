@@ -1,0 +1,19 @@
+{
+    "name": "対戦広場02",
+    "room_id": "game_server_02",
+    "map_size_x": 15,
+    "map_size_y": 17,
+    "map_data":[],
+    "auto_block": 15,
+    "auto_point": 14,
+    "auto_symmetry": true,
+    "cool": {
+        "status": false,
+        "turn": false
+    },
+    "hot": {
+        "status": false,
+        "turn": false
+    },
+    "turn":100
+}

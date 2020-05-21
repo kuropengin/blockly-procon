@@ -278,7 +278,12 @@ sound_volume_option.addEventListener('touchend', sound_volume_change, true);
 //game_bgm
 var game_bgm_option = document.getElementById('gameBgm');
 var game_bgm_change = function(){
-    localStorage["GAME_BGM"] = game_bgm_option.value;
+    if(game_bgm_option.value == ""){
+        localStorage.removeItem("GAME_BGM");
+    }
+    else{
+        localStorage["GAME_BGM"] = game_bgm_option.value;
+    }
 }
 game_bgm_option.addEventListener('click', game_bgm_change, true);
 game_bgm_option.addEventListener('touchend', game_bgm_change, true);
@@ -286,7 +291,12 @@ game_bgm_option.addEventListener('touchend', game_bgm_change, true);
 //result_bgm
 var result_bgm_option = document.getElementById('resultBgm');
 var result_bgm_change = function(){
-    localStorage["RESULT_BGM"] = result_bgm_option.value;
+    if(result_bgm_option.value == ""){
+        localStorage.removeItem("RESULT_BGM");
+    }
+    else{
+        localStorage["RESULT_BGM"] = result_bgm_option.value;
+    }
 }
 result_bgm_option.addEventListener('click', result_bgm_change, true);
 result_bgm_option.addEventListener('touchend', result_bgm_change, true);
