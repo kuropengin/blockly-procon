@@ -12,10 +12,7 @@ router.io = io;
 var fs = require('fs');
 var path = require('path');
 var game_server = JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'load_data/game_server_data/server_data.json'), 'utf8'));
-var server_list = [];
-Object.keys(game_server).forEach(function(key) {
-  server_list.push([game_server[key].name,key]);
-});
+
 
 
 //game_server_store
@@ -993,9 +990,10 @@ io.on('connection',function(socket){
         setTimeout(game_start_timer, 500, store[socket.id].room);
       }
       
-      
+      console.log("o:"+socket.id);
     }
     else{
+      console.log("e:"+socket.id);
       io.to(socket.id).emit("error", "接続先サーバーは満室です");
     }
     

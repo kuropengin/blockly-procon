@@ -22,7 +22,7 @@ function ready_game(elementId){
     
     var ready_server = document.createElement("div"); 
     ready_server.setAttribute("id","ready_server");
-    var newContent = document.createTextNode("マッチング中"); 
+    var newContent = document.createTextNode("接続中・・・"); 
     ready_server.appendChild(newContent);
     ready_player.appendChild(ready_server);  
     

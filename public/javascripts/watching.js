@@ -45,14 +45,14 @@ socket.on("new_board", function (msg) {
 socket.on("game_result", function (msg) {
     //console.log(msg);
     if(localStorage["SOUND_STATUS"]){
+        console.log("1");
         if(localStorage["SOUND_STATUS"] == "on"){
-            if(game_bgm_flag){
-                gameBgm.stop();
-                resultSound.play();
-            }
+            gameBgm.stop();
+            resultSound.play();
         }
     }
     else{
+        console.log("3");
         gameBgm.stop();
         resultSound.play();
     }
