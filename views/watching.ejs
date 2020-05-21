@@ -13,9 +13,6 @@
   <script src="/javascripts/jquery-3.4.1.min.js"></script>
   
   <script src="/javascripts/howler.min.js"></script>
-  <script>
-    var servarId = "<%- id %>";
-  </script>
   
   <script src="/javascripts/game_board.js"></script>
   <script src="/javascripts/watching.js"></script>
@@ -30,7 +27,7 @@
     </div>
     <div class="control_area">
       <div class = "page_title">
-        <h1><span class = "page_title_span">観戦</span><%- title %></h1>
+        <h1><span class = "page_title_span">観戦</span><div id = "server_name"></div></h1>
       </div>
       <div class = "control_button">
         <button id="fullscreenButton" onclick="reqFullscreen()" class="notext" title="最大化"></button>

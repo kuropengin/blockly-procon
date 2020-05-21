@@ -1050,6 +1050,7 @@ io.on('connection',function(socket){
   
   
   socket.on('looker_join', function(msg) {
+    console.log(msg);
     var usrobj = {
       "room": msg,
     };

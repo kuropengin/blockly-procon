@@ -4,7 +4,31 @@ var h_name = "NoName";
 var load_map_size_x;
 var load_map_size_y;
 var temp_msg;
-socket.emit('looker_join',servarId);
+
+var query_list = {};
+var query = location.search.replace( "?" , "" ).split('&');
+
+for(parameters of query){
+    var qp = parameters.split('=');
+    if(qp.length == 2){
+        query_list[qp[0]] = qp[1];
+    }
+}
+
+if(query_list.room_id){
+    var url = './../api/game?room_id=' + query_list.room_id;
+    fetch(url)
+    .then(function (data) {
+        return data.json(); 
+    })
+    .then(function (json) {
+        socket.emit('looker_join',json.room_id);
+        document.getElementById('server_name').textContent = String(json.name);
+    });
+    
+}
+
+
 
 socket.on("joined_room", function (msg) {
     load_map_size_x = msg.x_size;

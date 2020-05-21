@@ -47,77 +47,72 @@ app.use('/watching',watchingRouter);
 
 
 //API
+
+//init load
+const bgm_list = fs.readdirSync(path.join(__dirname, "load_data", "bgm_data"));
+
+const game_server_list = fs.readdirSync(path.join(__dirname,  "load_data", "game_server_data"));
+let game_server = {};
+let join_list = [];
+for(let gs of game_server_list){
+    try{
+        var temp_game_server = JSON.parse(fs.readFileSync(path.join(__dirname,  'load_data','game_server_data',gs), 'utf8'));
+        if(temp_game_server.room_id){
+            game_server[temp_game_server.room_id] = temp_game_server;
+            join_list.push([temp_game_server.name,temp_game_server.room_id]);
+        }
+        else{
+            logger.error('The format of the game server data is incorrect. Data to be loaded "' + gs + '"');
+        }
+    }
+    catch(e){
+        logger.error('Failed to read the game server data. Data to be loaded "' + gs + '"');
+    }
+}
+
+const stage_data_list = fs.readdirSync(path.join(__dirname, "load_data", "tutorial_stage_data"));
+let stage_data = {};
+for(let sd of stage_data_list){
+    try{
+        var temp_stage_data = JSON.parse(fs.readFileSync(path.join(".","load_data","tutorial_stage_data",sd), 'utf8'));
+        if(temp_stage_data.stage_id){
+          stage_data[temp_stage_data.stage_id] = temp_stage_data;
+        }
+        else{
+            logger.error('The format of the tutorial data is incorrect. Data to be loaded "' + sd + '"');
+        }
+    }
+    catch(e){
+        logger.error('Failed to read the tutorial data. Data to be loaded "' + sd + '"');
+    }
+}
+
 app.get('/api/bgm', (req, res) => {
-  const bgm_list = fs.readdirSync(path.join(__dirname, "load_data", "bgm_data"));
   res.json(bgm_list);
 });
 
 app.get('/api/game', (req, res) => {
-  
-  const game_server_list = fs.readdirSync(path.join(__dirname,  "load_data", "game_server_data"));
-  let game_server = {};
-  for(let gs of game_server_list){
-      try{
-          var temp_game_server = JSON.parse(fs.readFileSync(path.join(__dirname,  'load_data','game_server_data',gs), 'utf8'));
-          if(temp_game_server.room_id){
-              game_server[temp_game_server.room_id] = temp_game_server;
-          }
-          else{
-              logger.error('The format of the game server data is incorrect. Data to be loaded "' + gs + '"');
-          }
-      }
-      catch(e){
-          logger.error('Failed to read the game server data. Data to be loaded "' + gs + '"');
-      }
+  if(req.query.room_id){
+    if(game_server[req.query.room_id]){
+      res.json(game_server[req.query.room_id]);
+    }
+    else{
+      res.json(false);
+    }
   }
-  
-  res.json(game_server);
+  else{
+    res.json(game_server);
+  }
 });
 
-  
-
 app.get('/api/tutorial', (req, res) => {
-  const stage_data_list = fs.readdirSync(path.join(__dirname, "load_data", "tutorial_stage_data"));
-  let stage_data = {};
-  for(let sd of stage_data_list){
-      try{
-          var temp_stage_data = JSON.parse(fs.readFileSync(path.join(".","load_data","tutorial_stage_data",sd), 'utf8'));
-          if(temp_stage_data.stage_id){
-            stage_data[temp_stage_data.stage_id] = temp_stage_data;
-          }
-          else{
-              logger.error('The format of the tutorial data is incorrect. Data to be loaded "' + sd + '"');
-          }
-      }
-      catch(e){
-          logger.error('Failed to read the tutorial data. Data to be loaded "' + sd + '"');
-      }
-  }
-  
   res.json(stage_data);
 });
 
 app.get('/api/join', (req, res) => {
-  
-  const game_join_list = fs.readdirSync(path.join(__dirname,  "load_data", "game_server_data"));
-  let join_list = [];
-  for(let jl of game_join_list){
-      try{
-          var temp_join_list = JSON.parse(fs.readFileSync(path.join(__dirname,  'load_data','game_server_data',jl), 'utf8'));
-          if(temp_join_list.room_id){
-            join_list.push([temp_join_list.name,temp_join_list.room_id]);
-          }
-          else{
-              logger.error('The format of the game server data is incorrect. Data to be loaded "' + jl + '"');
-          }
-      }
-      catch(e){
-          logger.error('Failed to read the game server data. Data to be loaded "' + jl + '"');
-      }
-  }
-
   res.json(join_list);
 });
+
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
