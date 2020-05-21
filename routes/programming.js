@@ -42,6 +42,7 @@ router.get('/', function(req, res, next) {
 
 //create_map
 function create_map(key){
+  
   var map = new Array(server_store[key].map_size_y);
   for(let y = 0; y < server_store[key].map_size_y; y++) {
     map[y] = new Array(server_store[key].map_size_x).fill(0);
@@ -49,31 +50,36 @@ function create_map(key){
   
   server_store[key].map_data = map;
   
+  var selectable_list = [];
   
-  var effect = new Array(server_store[key].map_size_y);
-  for(let y = 0; y < server_store[key].map_size_y; y++) {
-    effect[y] = new Array(server_store[key].map_size_x).fill(0);
+  for(var s_x = 0; s_x < Math.floor(server_store[key].map_size_x/2)+1; s_x++){
+    for(var s_y = 0; s_y < server_store[key].map_size_y; s_y++){
+      if(s_y == Math.floor(server_store[key].map_size_y/2)-1 && s_x == Math.floor(server_store[key].map_size_x/2)){
+        break;
+      }
+      else if(s_x == Math.floor(server_store[key].map_size_x/2)-1 && s_y <= Math.floor(server_store[key].map_size_y/2)+1 && s_y >= Math.floor(server_store[key].map_size_y/2)-1 ){
+        continue;
+      }
+      else{
+        selectable_list.push([s_x,s_y]);
+      }
+    }
   }
   
-  server_store[key].effect = effect;
   
   
-  var cx = Math.floor( Math.random() * (server_store[key].map_size_x - 3) ) + 1;
-  var cy = Math.floor( Math.random() * (server_store[key].map_size_y - 3) ) + 1;
+  var cxy = Math.floor(Math.random() * selectable_list.length);
   
-  var tx = (server_store[key].map_size_x - 1)/2;
-  var ty = (server_store[key].map_size_y - 1)/2;
+  var cx = selectable_list[cxy][0];
+  var cy = selectable_list[cxy][1];
   
-  if(cx == tx){
-    cx -= 1;
-  }
-  
-  if(cy == ty){
-    cy -= 1;
-  }
+  var tx = Math.floor((server_store[key].map_size_x - 1)/2);
+  var ty = Math.floor((server_store[key].map_size_y - 1)/2);
   
   var hx = tx + (tx - cx);
   var hy = ty + (ty - cy);
+  
+  selectable_list.splice(cxy, 1);
   
   server_store[key].cool.x = cx;
   server_store[key].cool.y = cy;
@@ -83,111 +89,128 @@ function create_map(key){
   server_store[key].map_data[cy][cx] = 3;
   server_store[key].map_data[hy][hx] = 4;
   
-  var px;
-  var py;
-  var bx;
-  var by;
-  
   
   if(server_store[key].auto_symmetry){
-    if((server_store[key].auto_point + server_store[key].auto_block)%2 == 1){
-      if(server_store[key].auto_point%2 == 1){
-        server_store[key].map_data[ty][tx] = 2;
-        server_store[key].auto_point -= 1;
+    for(var add_list=0; add_list<3; add_list++){
+      selectable_list.push([Math.floor(server_store[key].map_size_x/2)-1,Math.floor(server_store[key].map_size_y/2)-1+add_list]);
+    }
+    
+    
+    var selectable_list_temp = selectable_list;
+    selectable_list = [];
+    
+    for(var list_data=0; list_data<selectable_list_temp.length; list_data++){
+      if((selectable_list_temp[list_data][0] >= cx-1 && selectable_list_temp[list_data][0] <= cx+1 && selectable_list_temp[list_data][1] >= cy-1 && selectable_list_temp[list_data][1] <= cy+1)){
+        continue;
       }
       else{
-        server_store[key].map_data[ty][tx] = 1;
+        selectable_list.push( [selectable_list_temp[list_data][0],selectable_list_temp[list_data][1]] );
+      }
+    }
+    
+    
+    if(server_store[key].auto_point%2 == 0){
+      if(server_store[key].auto_point == 1){
+        server_store[key].auto_point += 1;
+      }
+      else{
+        server_store[key].auto_point -= 1;
+      }
+    }
+    
+    if(server_store[key].auto_block%2 == 1){
+      if(server_store[key].auto_block == 1){
+        server_store[key].auto_block += 1;
+      }
+      else{
         server_store[key].auto_block -= 1;
       }
     }
-    
-    if(server_store[key].auto_point%2 == 1){
-      while(1){
-        px = Math.floor( Math.random() * (server_store[key].map_size_x - 3) ) + 1;
-        py = Math.floor( Math.random() * (server_store[key].map_size_y - 3) ) + 1;
-        
-        if(!(px == tx) && !(py == ty)){
-          if(server_store[key].map_data[py][px] == 0){
-            if((px < cx-1 || px > cx+1 || py < cy-1 || py > cy+1) && (px < hx-1 || px > hx+1 || py < hy-1 || py > hy+1)){
-              server_store[key].map_data[py][px] == 2;
-              server_store[key].map_data[ty+(ty-py)][tx+(tx-px)] == 1;
-              server_store[key].auto_point -= 1;
-              server_store[key].auto_block -= 1;
-              break;
-            }
-          }
+    server_store[key].map_data[ty][tx] = 2;
+    server_store[key].auto_point -= 1;
+  }
+  else{
+    selectable_list = [];
+    for(var s_x = 0; s_x < server_store[key].map_size_x; s_x++){
+      for(var s_y = 0; s_y < server_store[key].map_size_y; s_y++){
+        if((s_x < cx-1 || s_x > cx+1 || s_y < cy-1 || s_y > cy+1) && (s_x < hx-1 || s_x > hx+1 || s_y < hy-1 || s_y > hy+1)){
+          selectable_list.push([s_x,s_y]);
         }
       }
     }
-    
-    for(var i=0; i < (server_store[key].auto_point)/2; i++){
-      while(1){
-        px = Math.floor( Math.random() * server_store[key].map_size_x);
-        py = Math.floor( Math.random() * server_store[key].map_size_y);
-        
-        if(!(px == tx) && !(py == ty)){
-          if(server_store[key].map_data[py][px] == 0){
-            if((px < cx-1 || px > cx+1 || py < cy-1 || py > cy+1) && (px < hx-1 || px > hx+1 || py < hy-1 || py > hy+1)){
-              server_store[key].map_data[py][px] = 2;
-              server_store[key].map_data[ty+(ty-py)][tx+(tx-px)] = 2;
-              break;
-            }
-          }
-        }
-      }
+  }
+  
+  var pxy
+  var px;
+  var py;
+  var bxy
+  var bx;
+  var by;
+  
+  if(server_store[key].auto_symmetry){
+    for(var i=0; i < server_store[key].auto_point/2; i++){
+      pxy = Math.floor(Math.random() * selectable_list.length);
+      px = selectable_list[pxy][0];
+      py = selectable_list[pxy][1];
+      
+      server_store[key].map_data[py][px] = 2;
+      server_store[key].map_data[ty+(ty-py)][tx+(tx-px)] = 2;
+      
+      selectable_list.splice(pxy, 1);
     }
-    
-    for(var i=0; i < (server_store[key].auto_block)/2; i++){
-      while(1){
-        bx = Math.floor( Math.random() * (server_store[key].map_size_x - 3) ) + 1;
-        by = Math.floor( Math.random() * (server_store[key].map_size_y - 3) ) + 1;
-        
-        if(!(bx == tx) && !(by == ty)){
-          if(server_store[key].map_data[by][bx] == 0){
-            if((bx < cx-1 || bx > cx+1 || by < cy-1 || by > cy+1) && (bx < hx-1 || bx > hx+1 || by < hy-1 || by > hy+1)){
-              server_store[key].map_data[by][bx] = 1;
-              server_store[key].map_data[ty+(ty-by)][tx+(tx-bx)] = 1;
-              break;
-            }
-          }
-        }
-      }
-    }
-
   }
   else{
     for(var i=0; i < server_store[key].auto_point; i++){
-      while(1){
-        px = Math.floor( Math.random() * server_store[key].map_size_x);
-        py = Math.floor( Math.random() * server_store[key].map_size_y);
-        
-        if(!(px == tx) && !(py == ty)){
-          if(server_store[key].map_data[py][px] == 0){
-            if((px < cx-1 || px > cx+1 || py < cy-1 || py > cy+1) && (px < hx-1 || px > hx+1 || py < hy-1 || py > hy+1)){
-              server_store[key].map_data[py][px] = 2;
-              break;
-            }
-          }
-        }
-      }
+      pxy = Math.floor(Math.random() * selectable_list.length);
+      px = selectable_list[pxy][0];
+      py = selectable_list[pxy][1];
+      
+      server_store[key].map_data[py][px] = 2;
+      
+      selectable_list.splice(pxy, 1);
     }
-    
-    for(var i=0; i < server_store[key].auto_block; i++){
-      while(1){
-        bx = Math.floor( Math.random() * (server_store[key].map_size_x - 3) ) + 1;
-        by = Math.floor( Math.random() * (server_store[key].map_size_y - 3) ) + 1;
-        
-        if(!(bx == tx) && !(by == ty)){
-          if(server_store[key].map_data[by][bx] == 0){
-            if((bx < cx-1 || bx > cx+1 || by < cy-1 || by > cy+1) && (bx < hx-1 || bx > hx+1 || by < hy-1 || by > hy+1)){
-              server_store[key].map_data[by][bx] = 1;
-              break;
-            }
-          }
-        }
-      }
-    }    
   }
+  
+  
+  var selectable_list_temp = selectable_list;
+  selectable_list = [];
+  for(var list_data=0; list_data<selectable_list_temp.length; list_data++){
+    if(selectable_list_temp[list_data][0] < 1 || selectable_list_temp[list_data][0] > server_store[key].map_size_x-2 || selectable_list_temp[list_data][1] < 1 || selectable_list_temp[list_data][1] > server_store[key].map_size_y-2){
+      continue;
+    }
+    else if((selectable_list_temp[list_data][0] == cx && (selectable_list_temp[list_data][1] == cy + 9 || selectable_list_temp[list_data][1] == cy - 9)) || (selectable_list_temp[list_data][0] == hx && (selectable_list_temp[list_data][1] == hy + 9 || selectable_list_temp[list_data][1] == hy - 9))){
+      continue;
+    }
+    else{
+      selectable_list.push( [selectable_list_temp[list_data][0] , selectable_list_temp[list_data][1]] );
+    }
+  }
+  
+  
+  if(server_store[key].auto_symmetry){
+    for(var i=0; i < server_store[key].auto_block/2; i++){
+      bxy = Math.floor(Math.random() * selectable_list.length);
+      bx = selectable_list[bxy][0];
+      by = selectable_list[bxy][1];
+      
+      server_store[key].map_data[by][bx] = 1;
+      server_store[key].map_data[ty+(ty-by)][tx+(tx-bx)] = 1;
+      
+      selectable_list.splice(bxy, 1);
+    }
+  }
+  else{
+    for(var i=0; i < server_store[key].auto_block; i++){
+      bxy = Math.floor(Math.random() * selectable_list.length);
+      bx = selectable_list[bxy][0];
+      by = selectable_list[bxy][1];
+      
+      server_store[key].map_data[by][bx] = 1;
+      
+      selectable_list.splice(bxy, 1);
+    }
+  }
+  
 }
 for(var key in server_store){
   if(!server_store[key].map_data.length){
