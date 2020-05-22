@@ -223,7 +223,8 @@ option_data_reset.addEventListener('touchend', option_reset, true);
 var tutorial_data_reset = document.getElementById('tutorial_data_reset');
 var tutorial_reset = function(){
     if(window.confirm('データをリセットします。よろしいですか')){
-        var url = location.protocol + "//" + location.hostname + ":" + location.port + "/api/tutorial";
+        var url = "./../api/tutorial";
+        //location.protocol + "//" + location.hostname + ":" + location.port + 
         fetch(url)
         .then(function (data) {
             return data.json(); 
@@ -373,7 +374,7 @@ window.addEventListener('load', function() {
 
 
 function getBgmList() {
-    var url = './../api/bgm';
+    var url = '/api/bgm';
     fetch(url)
     .then(function (data) {
         return data.json(); 
@@ -396,3 +397,15 @@ function addOption(id,bgm) {
     option.value = bgm;
     select.appendChild(option);
 }
+
+function loadAbout(){
+    var url = '/about/LICENSE';
+    fetch(url)
+    .then(function (data) {
+        return data.text(); 
+    })
+    .then(function (text) {
+        document.getElementById('license').value = text;
+    });
+}
+loadAbout();

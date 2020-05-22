@@ -33,10 +33,10 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use('/bgm',express.static(path.join(__dirname, 'load_data', 'bgm_data')));
+app.use('/about/LICENSE',express.static(path.join(__dirname + '/LICENSE')));
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
-//app.use('/programming', gameRouter);
 app.use('/menu-programming', menuProgrammingRouter);
 app.use('/programming', programmingRouter);
 app.use('/menu-tutorial', menuTutorialRouter);

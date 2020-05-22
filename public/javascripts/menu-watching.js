@@ -58,7 +58,7 @@ function createServarList(get_list){
     servar_div.appendChild(server_name);
     servar_div.appendChild(server_id);
     
-    servar_div.onclick = function() {
+    servar_div.onclick = function(e) {
       var serverId = this.classList[0];
       for(var select_id of servar_list){
         for(var select_class_list of document.getElementsByClassName(select_id)){
@@ -71,6 +71,7 @@ function createServarList(get_list){
         }
       }
       server_info(serverId,get_list);
+      e.stopPropagation();
     };
     
     one_servar_div.appendChild(servar_div);
