@@ -350,6 +350,7 @@ input[type=range]::-moz-range-thumb {
     resize: none;
     border: none;
     background: #f1f1f1;
+    text-align: center;
     -ms-overflow-style: none;
     scrollbar-width: none;
 }

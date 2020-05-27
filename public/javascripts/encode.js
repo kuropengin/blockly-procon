@@ -448,7 +448,6 @@ function readSingleFile(e) {
   if (!file) {
     return;
   }
-  console.log(e);
   var reader = new FileReader();
   reader.onload = function(e) {
     var contents = e.target.result;

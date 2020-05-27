@@ -34,6 +34,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use('/bgm',express.static(path.join(__dirname, 'load_data', 'bgm_data')));
 app.use('/about/LICENSE',express.static(path.join(__dirname + '/LICENSE')));
+app.use('/about/TOS',express.static(path.join(__dirname + '/TOS')));
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);

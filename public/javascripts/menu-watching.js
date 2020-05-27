@@ -89,8 +89,8 @@ function createServarList(get_list){
     else if(servar_list.length*80 < scrollTop){
       this.scrollTo( 0, 1 ) ;
     }
-    
   }
+  document.getElementById('watching_list').scrollTo( 0,1 ) ;
   
 }
 

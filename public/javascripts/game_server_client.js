@@ -352,6 +352,7 @@ socket.on("new_board", function (msg) {
 });
 
 socket.on("get_ready_rec", function (msg) {
+    console.log(msg.rec_data);
     if(!my_turn){
         my_turn = msg.rec_data;
     }

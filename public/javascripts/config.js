@@ -399,13 +399,22 @@ function addOption(id,bgm) {
 }
 
 function loadAbout(){
-    var url = '/about/LICENSE';
-    fetch(url)
+    var url_l = '/about/LICENSE';
+    fetch(url_l)
     .then(function (data) {
         return data.text(); 
     })
     .then(function (text) {
         document.getElementById('license').value = text;
+    });
+    
+    var url_t = '/about/TOS';
+    fetch(url_t)
+    .then(function (data) {
+        return data.text(); 
+    })
+    .then(function (text) {
+        document.getElementById('tos').value = text;
     });
 }
 loadAbout();

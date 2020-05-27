@@ -99,9 +99,8 @@ function createStageList(get_list){
     else if(satage_list.length*80 < scrollTop){
       this.scrollTo( 0, 1 ) ;
     }
-    
   }
-  
+  document.getElementById('satage_list').scrollTo( 0,1 ) ;
 }
 
 function satage_info_create(id,get_list){
