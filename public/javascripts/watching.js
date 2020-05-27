@@ -22,8 +22,13 @@ if(query_list.room_id){
         return data.json(); 
     })
     .then(function (json) {
-        socket.emit('looker_join',json.room_id);
-        document.getElementById('server_name').textContent = String(json.name);
+        if(json){
+            socket.emit('looker_join',json.room_id);
+            document.getElementById('server_name').textContent = String(json.name);
+        }
+        else{
+            document.getElementById('server_name').textContent = "存在しないサーバー";
+        }
     });
     
 }

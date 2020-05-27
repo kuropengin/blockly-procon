@@ -1050,29 +1050,30 @@ io.on('connection',function(socket){
   
   
   socket.on('looker_join', function(msg) {
-    console.log(msg);
-    var usrobj = {
-      "room": msg,
-    };
-    
-    var cool_name = "接続待機中";
-    var hot_name = "接続待機中";
-    if(server_store[msg].cool.status){
-      cool_name = server_store[msg].cool.name;
+    if(server_store[msg]){
+      var usrobj = {
+        "room": msg,
+      };
+      
+      var cool_name = "接続待機中";
+      var hot_name = "接続待機中";
+      if(server_store[msg].cool.status){
+        cool_name = server_store[msg].cool.name;
+      }
+      if(server_store[msg].hot.status){
+        hot_name = server_store[msg].hot.name;
+      }
+      
+      io.to(socket.id).emit("joined_room", {
+        "x_size":server_store[msg].map_size_x,
+        "y_size":server_store[msg].map_size_y,
+        "cool_name":cool_name,
+        "hot_name":hot_name
+      });
+      
+      looker[socket.id] = usrobj;
+      socket.join(msg);
     }
-    if(server_store[msg].hot.status){
-      hot_name = server_store[msg].hot.name;
-    }
-    
-    io.to(socket.id).emit("joined_room", {
-      "x_size":server_store[msg].map_size_x,
-      "y_size":server_store[msg].map_size_y,
-      "cool_name":cool_name,
-      "hot_name":hot_name
-    });
-    
-    looker[socket.id] = usrobj;
-    socket.join(msg);
     
   });
 
