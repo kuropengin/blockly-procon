@@ -177,12 +177,12 @@ function makeTable(msg, y, effect, tableId){
         
         for(var y of y_range){
             for(var x of x_range){
-                if(msg.effect.p == "cool" && hx){
+                if(msg.effect.p == "cool" && hx >= 0){
                     if(!(0 > (hx + x) || data[0].length-1 < (hx + x) || 0 > (hy + y) || data.length-1 < (hy + y))){
                         table.rows[hy+y].cells[hx+x].style.backgroundColor = "rgba(139, 195, 74, 0.3)";
                     }
                 }
-                else if(msg.effect.p == "hot" && cx){
+                else if(msg.effect.p == "hot" && cx >= 0){
                     if(!(0 > (cx + x) || data[0].length-1 < (cx + x) || 0 > (cy + y) || data.length-1 < (cy + y))){
                         table.rows[cy+y].cells[cx+x].style.backgroundColor = "rgba(139, 195, 74, 0.3)";
                     }

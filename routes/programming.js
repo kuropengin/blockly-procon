@@ -1079,6 +1079,7 @@ io.on('connection',function(socket){
 
   socket.on('disconnect', function() {
     if (store[socket.id]) {
+      console.log("o:"+store[socket.id]);
       if(server_store[store[socket.id].room].cool.status && server_store[store[socket.id].room].hot.status){
         if(store[socket.id].chara == "cool"){
           game_result_check(store[socket.id].room, store[socket.id].chara , "r", false, "hot");
