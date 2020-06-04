@@ -108,3 +108,5 @@ Blockly.Blocks['infinite_loop'] = {
  this.setHelpUrl("");
   }
 };
+
+Blockly.Constants.Loops.CONTROL_FLOW_IN_LOOP_CHECK_MIXIN.LOOP_TYPES.push('infinite_loop');

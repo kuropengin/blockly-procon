@@ -150,5 +150,8 @@ Blockly.Blocks['infinite_loop'] = {
     this.setColour(120);
  this.setTooltip("");
  this.setHelpUrl("");
+ this.setStyle("loop_blocks");
   }
 };
+
+Blockly.Constants.Loops.CONTROL_FLOW_IN_LOOP_CHECK_MIXIN.LOOP_TYPES.push('infinite_loop');
