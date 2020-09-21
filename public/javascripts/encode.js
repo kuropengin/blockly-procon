@@ -6,7 +6,6 @@ var runButton = document.getElementById('runButton');
 var myInterpreter = null;
 var runner;
 var map_data_hiyasinsu_kuropengin = [0,0,0,0,0,0,0,0,0];
-var temp_map_data = [0,0,0,0,0,0,0,0,0];
 
 
 class ObjInterpreter extends Interpreter {
