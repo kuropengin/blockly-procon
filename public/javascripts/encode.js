@@ -6,6 +6,7 @@ var runButton = document.getElementById('runButton');
 var myInterpreter = null;
 var runner;
 var map_data_hiyasinsu_kuropengin = [0,0,0,0,0,0,0,0,0];
+var temp_map_data = [0,0,0,0,0,0,0,0,0];
 
 
 class ObjInterpreter extends Interpreter {
@@ -120,6 +121,7 @@ function initApi(interpreter, scope) {
       look_search_data = false;
       var getDate =function(){
         if (look_search_data) {
+          map_data_hiyasinsu_kuropengin = look_search_data;
           callback(look_search_data.join(''));
         }
         else if(myInterpreter){
@@ -143,6 +145,7 @@ function initApi(interpreter, scope) {
       look_search_data = false;
       var getDate =function(){
         if (look_search_data) {
+          map_data_hiyasinsu_kuropengin = look_search_data;
           callback(look_search_data.join(''));
         }
         else if(myInterpreter){
@@ -173,6 +176,7 @@ function initApi(interpreter, scope) {
     my_turn = false;
     var getDate =function(){
       if (my_turn) {
+        map_data_hiyasinsu_kuropengin = my_turn;
         callback(my_turn.join(''));
       }
       else if(myInterpreter){
@@ -190,6 +194,7 @@ function initApi(interpreter, scope) {
       look_search_data = false;
       var getDate =function(){
         if (look_search_data) {
+          map_data_hiyasinsu_kuropengin = look_search_data;
           callback(look_search_data.join(''));
         }
         else if(myInterpreter){
@@ -211,6 +216,7 @@ function initApi(interpreter, scope) {
       look_search_data = false;
       var getDate =function(){
         if (look_search_data) {
+          map_data_hiyasinsu_kuropengin = look_search_data;
           callback(look_search_data.join(''));
         }
         else if(myInterpreter){
@@ -306,7 +312,7 @@ function resetVar(){
   }
   my_turn = false;
   servar_connect_status = false;
-  map_data_hiyasinsu_kuropengin = false;
+  map_data_hiyasinsu_kuropengin = [0,0,0,0,0,0,0,0,0];
 }
 
 var step_flag = false;
