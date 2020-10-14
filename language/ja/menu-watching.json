@@ -9,5 +9,6 @@
     "CONNECTION_ORDER": "接続順",
     "TURN_C": "(先手)",
     "TURN_H": "(後手)",
-    "WATCHING": "観戦する"
+    "MATCH": "ルーム決定",
+    "WATCHING": "観戦"
 }

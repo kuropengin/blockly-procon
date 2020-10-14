@@ -13,7 +13,8 @@ var menuProgrammingRouter = require('./routes/menu-programming');
 var programmingRouter = require('./routes/programming');
 var menuTutorialRouter = require('./routes/menu-tutorial');
 var tutorialRouter = require('./routes/tutorial');
-var menuWatchingRouter = require('./routes/menu-watching');
+var menuMatchRouter = require('./routes/menu-match');
+var matchRouter = require('./routes/match');
 var watchingRouter = require('./routes/watching');
 
 var app = express();
@@ -42,7 +43,8 @@ app.use('/menu-programming', menuProgrammingRouter);
 app.use('/programming', programmingRouter);
 app.use('/menu-tutorial', menuTutorialRouter);
 app.use('/tutorial', tutorialRouter);
-app.use('/menu-watching',menuWatchingRouter);
+app.use('/menu-match',menuMatchRouter);
+app.use('/match', matchRouter);
 app.use('/watching',watchingRouter);
 
 

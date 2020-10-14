@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Blockly CHaser</title>
+  <link rel="icon" href="/images/favicon.ico">
+  <link rel='stylesheet' href='/stylesheets/match-player.css' />
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="/javascripts/blockly_compressed.js"></script>
+  <script src="/javascripts/blocks_compressed.js"></script>
+  
+  <script src="/javascripts/javascript_compressed.js"></script>
+  
+  <script src = "/javascripts/blocks/programming_block.js" ></script> 
+  <script src = "/javascripts/generators/javascript/programming.js" ></script>
+  <script src="/javascripts/acorn_interpreter.js"></script>
+  
+  <script src="/javascripts/match-player.js"></script>
+
+  <script src="/javascripts/code-match.js"></script>
+  <script src="/javascripts/match_client.js"></script>
+
+</head>
+<body>
+  <div class="uploadButton">
+    <div class="uploadButton_text">ファイルを選択</div>
+    <input id="xml_input" type="file" onchange="uv.style.display='inline-block'; uv.value = this.value;" />
+    <input type="text" id="uv" class="uploadValue" disabled />
+  </div>
+  <div id="releaseButton" class="release_off">開放</div>
+  <div id="content_blocks" class="none_content"></div>
+
+  <script>
+    document.getElementById("xml_input").addEventListener('change', function(e) {
+      var fileData = e.target.files[0];
+      Code.stopJS();
+
+      if(!fileData.name.match('.xml')) {
+          alert('セーブデータを選択してください');
+          return;
+      }
+
+      var reader = new FileReader();
+      reader.onload = function() {
+        // Parse the XML into a tree.
+
+        var xmlText = reader.result;
+        try {
+          var xml = Blockly.Xml.textToDom(xmlText);
+          for(var xml_one of xml.getElementsByTagName("block")){
+            if(xml_one.getAttribute("type") === "server_join"){
+              if(query_list.room_id){
+                xml_one.getElementsByTagName("field")[0].textContent = query_list.room_id;
+                break;
+              }
+              
+            }
+          }
+        } catch (e) {
+          alert(e);
+          return;
+        }
+        Code.workspace.clear();
+        Blockly.Xml.domToWorkspace(xml, Code.workspace);
+
+        Code.runJS();
+      }
+      reader.readAsText(fileData);
+    });
+
+    document.getElementById("releaseButton").onclick = function(){
+      Code.stopJS();
+      var releaseButton = document.getElementById("releaseButton")
+      if(!releaseButton.classList.contains("release_on")){
+        releaseButton.classList.add("release_on");
+        if(query_list.key && query_list.chara){
+          socket.emit('release',{"key":query_list.key,"room_id":query_list.room_id,"chara":query_list.chara});
+        }
+        releaseButton.textContent = "開放中"
+      }
+    }
+
+  </script>
+  <script src="/javascripts/encode_match.js"></script>
+  <xml xmlns="https://developers.google.com/blockly/xml" id="toolbox" style="display: none">
+    <category name="%{BKY_CATVARIABLES}" colour="%{BKY_VARIABLES_HUE}" custom="VARIABLE"></category>
+    <category name="%{BKY_CATFUNCTIONS}" colour="%{BKY_PROCEDURES_HUE}" custom="PROCEDURE"></category>
+  </xml>
+</body>
+</html>

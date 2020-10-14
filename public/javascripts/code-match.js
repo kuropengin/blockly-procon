@@ -2,6 +2,8 @@ var Code = {};
 var code = null;
 
 
+
+
 Code.LANGUAGE_NAME = {
   'en': 'English',
   'ja': '日本語',
@@ -301,7 +303,7 @@ Code.init = function() {
       console.log("warning:no block tab");
     }
   };
-  window.addEventListener('resize', onresize, false);
+  //window.addEventListener('resize', onresize, false);
 
   // The toolbox XML specifies each category name using Blockly's messaging
   // format (eg. `<category name="%{BKY_CATLOGIC}">`).
@@ -362,8 +364,8 @@ Code.init = function() {
       document.getElementById('capacity').textContent = Code.workspace.remainingCapacity();
     }
     
-    Code.workspace.addChangeListener(onchange);
-    onchange();
+    //Code.workspace.addChangeListener(onchange);
+    //onchange();
   }
 
   // Add to reserved word list: Local variables in execution environment (runJS)
@@ -377,39 +379,11 @@ Code.init = function() {
     BlocklyStorage.backupOnUnload(Code.workspace);
   }
 
-  Code.tabClick(Code.selected);
-
-  Code.bindClick('trashButton',
-      function() {Code.discard(); Code.renderContent();});
-  Code.bindClick('runButton', Code.runJS);
-  
-  Code.bindClick('stopButton', Code.stopJS);
-  
-  Code.bindClick('downloadButton', Code.download);
-  
-  // Disable the link button if page isn't backed by App Engine storage.
-  var linkButton = document.getElementById('linkButton');
-  if ('BlocklyStorage' in window) {
-    BlocklyStorage['HTTPREQUEST_ERROR'] = MSG['httpRequestError'];
-    BlocklyStorage['LINK_ALERT'] = MSG['linkAlert'];
-    BlocklyStorage['HASH_ERROR'] = MSG['hashError'];
-    BlocklyStorage['XML_ERROR'] = MSG['xmlError'];
-    Code.bindClick(linkButton,
-        function() {BlocklyStorage.link(Code.workspace);});
-  } else if (linkButton) {
-    linkButton.className = 'disabled';
-  }
-
-  for (var i = 0; i < Code.TABS_.length; i++) {
-    var name = Code.TABS_[i];
-    Code.bindClick('tab_' + name,
-        function(name_) {return function() {Code.tabClick(name_);};}(name));
-  }
-  onresize();
-  Blockly.svgResize(Code.workspace);
+  //onresize();
+  //Blockly.svgResize(Code.workspace);
 
   // Lazy-load the syntax-highlighting.
-  window.setTimeout(Code.importPrettify, 1);
+  //window.setTimeout(Code.importPrettify, 1);
 };
 
 

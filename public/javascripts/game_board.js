@@ -117,7 +117,6 @@ function makeTable(msg, x, y, effect, tableId){
     
     var h = document.getElementById(tableId).clientHeight;
     var w = document.getElementById("game_area").clientWidth;
-    console.log(w);
     var _x = (h / y)*x;
     
     

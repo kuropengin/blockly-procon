@@ -74,14 +74,12 @@ socket.on("new_board", function (msg) {
 socket.on("game_result", function (msg) {
     //console.log(msg);
     if(localStorage["SOUND_STATUS"]){
-        console.log("1");
         if(localStorage["SOUND_STATUS"] == "on"){
             gameBgm.stop();
             resultSound.play();
         }
     }
     else{
-        console.log("3");
         gameBgm.stop();
         resultSound.play();
     }
@@ -102,12 +100,18 @@ socket.on("game_result", function (msg) {
     document.getElementById("game_board").appendChild(result);
 });
 
+socket.on("error", function (msg) {
+    gameBgm.stop();
+});
+
 window.addEventListener( "resize", function () {
-    if(temp_msg.effect){
-        makeTable(temp_msg,load_map_size_x,load_map_size_y, temp_msg.effect,"game_board");
-    }
-    else{
-        makeTable(temp_msg,load_map_size_x,load_map_size_y, 0,"game_board");
+    if(temp_msg){
+        if(temp_msg.effect){
+            makeTable(temp_msg,load_map_size_x,load_map_size_y, temp_msg.effect,"game_board");
+        }
+        else{
+            makeTable(temp_msg,load_map_size_x,load_map_size_y, 0,"game_board");
+        }
     }
 });
 
