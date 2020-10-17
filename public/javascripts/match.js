@@ -121,6 +121,7 @@ socket.on("new_board", function (msg) {
 });
 
 var game_result_msg = "";
+var game_result_info = "";
 
 socket.on("game_result", function (msg) {
     if(localStorage["SOUND_STATUS"]){
@@ -133,13 +134,17 @@ socket.on("game_result", function (msg) {
         gameBgm.stop();
         resultSound.play();
     }
-
     game_result_msg = msg.winer;
-    
-    game_result_display(game_result_msg);
+    game_result_info = msg.info;
+
+    game_result_display(msg.winer,msg.info);
 });
 
-function game_result_display(winer){
+socket.on("error", function (msg) {
+    gameBgm.stop();
+});
+
+function game_result_display(winer,info){
     var result = document.createElement("div"); 
     result.setAttribute("id","game_result");
     var img = document.createElement('img');
@@ -178,6 +183,23 @@ function game_result_display(winer){
 
     document.getElementById("game_board").appendChild(result);
 
+
+    var winer_info_div = document.createElement("div");
+    winer_info_div.setAttribute("id","winer_info_div");
+    
+    var twiner_info = document.createElement("div");
+    twiner_info.setAttribute("id","winer_info_title");
+    twiner_info.appendChild(document.createTextNode("リザルト情報"));
+    
+    var winer_info = document.createElement("div");
+    winer_info.setAttribute("id","winer_info");
+    winer_info.appendChild(document.createTextNode(info));
+    
+    winer_info_div.appendChild(twiner_info);
+    winer_info_div.appendChild(winer_info);
+
+    document.getElementById("game_info_div").appendChild(winer_info_div);
+
 }
 
 window.addEventListener( "resize", function () {
@@ -190,7 +212,7 @@ window.addEventListener( "resize", function () {
         }
     }
     if(game_result_msg){
-        game_result_display(game_result_msg);
+        game_result_display(game_result_msg,game_result_info);
     }
 });
 

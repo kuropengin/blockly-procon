@@ -234,6 +234,33 @@ td img{
   background: #FFF;
   border-radius: 0 0 10px 10px;
 }
+
+#winer_info_div{
+  display: block;
+  width: 100%;
+  margin: 11px 8px;
+  background: linear-gradient(90deg, rgba(14,142,255,1) 0%, rgba(255,34,34,1) 100%);
+  border-radius: 10px;
+}
+ 
+
+#winer_info_title{
+  height: 30px;
+  margin: 2px;
+  margin-bottom: 0px;
+  color: #FFF;
+  background: #5d5d5d;
+  border-radius: 10px 10px 0 0;
+}
+
+#winer_info{
+  height: 29px;
+  padding-top: 1px;
+  margin: 2px;
+  margin-top: 0;
+  background: #FFF;
+  border-radius: 0 0 10px 10px;
+}
   
 #hot_info_div{
   display: block;
