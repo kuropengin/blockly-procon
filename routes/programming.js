@@ -271,176 +271,179 @@ function cpu(room,level,chara){
 
 function game_time_out(room,winer){
   io.in(room).emit("game_result",{
-      "winer": winer
-    });
+    "winer": winer,
+    "info":"タイムアウトより"
+  });
   game_server_reset(room);
 }
 
 function game_result_check(room,chara,effect_t = "r",effect_d = false,winer = false,winer_info = false){
   
-  clearTimeout(server_store[room].timer);
-  
-  var effect_chara = {"cool":"hot","hot":"cool"};
-  
-  if(chara == "hot"){
-    server_store[room].turn -= 1;
-  }
-  
-  var effect = {
-    "t":effect_t,
-    "p":chara
-  }
-  
-  if(effect_d){
-    effect.d = effect_d;
-  }
-  
-  io.in(room).emit("updata_board",{
-    "map_data":server_store[room].map_data,
-    "cool_score":server_store[room].cool.score,
-    "hot_score":server_store[room].hot.score,
-    "turn":server_store[room].turn,
-    "effect":effect
-  });
-  
-  if(!winer){
-    if(server_store[room].turn == 0){
-      if(server_store[room].cool.score > server_store[room].hot.score){
-        winer = "cool";
-      }
-      else if(server_store[room].cool.score < server_store[room].hot.score){
-        winer = "hot";
-      }
-      else{
-        winer = "draw";
-      }
-      winer_info = "スコアより";
+  if(server_store[room].cool.status && server_store[room].hot.status){
+    
+    clearTimeout(server_store[room].timer);
+    
+    var effect_chara = {"cool":"hot","hot":"cool"};
+    
+    if(chara == "hot"){
+      server_store[room].turn -= 1;
     }
-    else{
-      
-      var rcx = server_store[room].cool.x;
-      var rcy = server_store[room].cool.y;
-      var rhx = server_store[room].hot.x;
-      var rhy = server_store[room].hot.y;
-      
-      if(server_store[room].map_data[rcy][rcx] != 34 && server_store[room].map_data[rcy][rcx] != 3 && server_store[room].map_data[rhy][rhx] != 4){
-        winer = "draw";
-        winer_info = "ブロックより";
-      }
-      else if(server_store[room].map_data[rcy][rcx] != 34 && server_store[room].map_data[rcy][rcx] != 3){
-        winer = "hot";
-        if(winer_info){
-          winer_info = "putにより";
-        }
-        else{
-          winer_info = "ブロック衝突により";
-        }
-      }
-      else if(server_store[room].map_data[rcy][rcx] != 34 && server_store[room].map_data[rhy][rhx] != 4){
-        winer = "cool";
-        if(winer_info){
-          winer_info = "putにより";
-        }
-        else{
-          winer_info = "ブロック衝突により";
-        }
-      }
-      else{
-        var c_t,c_b,c_r,c_l,h_t,h_b,h_r,h_l;
-        
-        if(rcx - 1 < 0){
-          c_l = 1;
-          c_r = server_store[room].map_data[rcy][rcx + 1];
-        }
-        else if(rcx + 1 > server_store[room].map_size_x - 1){
-          c_l = server_store[room].map_data[rcy][rcx - 1];
-          c_r = 1;
-        }
-        else{
-          c_l = server_store[room].map_data[rcy][rcx - 1];
-          c_r = server_store[room].map_data[rcy][rcx + 1];
-        }
-        
-        if(rcy - 1 < 0){
-          c_t = 1;
-          c_b = server_store[room].map_data[rcy + 1][rcx];
-        }
-        else if(rcy + 1 > server_store[room].map_size_y - 1){
-          c_t = server_store[room].map_data[rcy - 1][rcx];
-          c_b = 1;
-        }
-        else{
-          c_t = server_store[room].map_data[rcy - 1][rcx];
-          c_b = server_store[room].map_data[rcy + 1][rcx];
-        }
-        
-        
-        if(rhx - 1 < 0){
-          h_l = 1;
-          h_r = server_store[room].map_data[rhy][rhx + 1];
-        }
-        else if(rhx + 1 > server_store[room].map_size_x - 1){
-          h_l = server_store[room].map_data[rhy][rhx - 1];
-          h_r = 1;
-        }
-        else{
-          h_l = server_store[room].map_data[rhy][rhx - 1];
-          h_r = server_store[room].map_data[rhy][rhx + 1];
-        }
-        
-        if(rhy - 1 < 0){
-          h_t = 1;
-          h_b = server_store[room].map_data[rhy + 1][rhx];
-        }
-        else if(rhy + 1 > server_store[room].map_size_y - 1){
-          h_t = server_store[room].map_data[rhy - 1][rhx];
-          h_b = 1;
-        }
-        else{
-          h_t = server_store[room].map_data[rhy - 1][rhx];
-          h_b = server_store[room].map_data[rhy + 1][rhx];
-        }
-        
-        
-        if(c_t == 1 && c_b == 1  && c_r == 1 && c_l == 1){
-          winer = "hot";
-          winer_info = "ブロック閉じ込めにより";
-        }
-        
-        if(h_t == 1 && h_b == 1  && h_r == 1 && h_l == 1){
-          winer = "cool";
-          winer_info = "ブロック閉じ込めにより";
-        }
-        
-        if(c_t == 1 && c_b == 1  && c_r == 1 && c_l == 1 && h_t == 1 && h_b == 1  && h_r == 1 && h_l == 1){
-          winer = "draw";
-          winer_info = "ブロック閉じ込めにより";
-        }
-      }
+    
+    var effect = {
+      "t":effect_t,
+      "p":chara
     }
-  }
-  if(winer){
-    io.in(room).emit("game_result",{
-      "winer": winer,
-      "info":winer_info
+    
+    if(effect_d){
+      effect.d = effect_d;
+    }
+    
+    io.in(room).emit("updata_board",{
+      "map_data":server_store[room].map_data,
+      "cool_score":server_store[room].cool.score,
+      "hot_score":server_store[room].hot.score,
+      "turn":server_store[room].turn,
+      "effect":effect
     });
-    game_server_reset(room);
-  }
-  else{
-    server_store[room][effect_chara[chara]].turn = true;
     
-    if(server_store[room].timeout){
-      server_store[room].timer = setTimeout(game_time_out, 1000 * server_store[room].timeout, room, chara);
+    if(!winer){
+      if(server_store[room].turn == 0){
+        if(server_store[room].cool.score > server_store[room].hot.score){
+          winer = "cool";
+        }
+        else if(server_store[room].cool.score < server_store[room].hot.score){
+          winer = "hot";
+        }
+        else{
+          winer = "draw";
+        }
+        winer_info = "スコアより";
+      }
+      else{
+        
+        var rcx = server_store[room].cool.x;
+        var rcy = server_store[room].cool.y;
+        var rhx = server_store[room].hot.x;
+        var rhy = server_store[room].hot.y;
+        
+        if(server_store[room].map_data[rcy][rcx] != 34 && server_store[room].map_data[rcy][rcx] != 3 && server_store[room].map_data[rhy][rhx] != 4){
+          winer = "draw";
+          winer_info = "putにより";
+        }
+        else if(server_store[room].map_data[rcy][rcx] != 34 && server_store[room].map_data[rcy][rcx] != 3){
+          winer = "hot";
+          if(winer_info){
+            winer_info = "putにより";
+          }
+          else{
+            winer_info = "ブロック衝突により";
+          }
+        }
+        else if(server_store[room].map_data[rcy][rcx] != 34 && server_store[room].map_data[rhy][rhx] != 4){
+          winer = "cool";
+          if(winer_info){
+            winer_info = "putにより";
+          }
+          else{
+            winer_info = "ブロック衝突により";
+          }
+        }
+        else{
+          var c_t,c_b,c_r,c_l,h_t,h_b,h_r,h_l;
+          
+          if(rcx - 1 < 0){
+            c_l = 1;
+            c_r = server_store[room].map_data[rcy][rcx + 1];
+          }
+          else if(rcx + 1 > server_store[room].map_size_x - 1){
+            c_l = server_store[room].map_data[rcy][rcx - 1];
+            c_r = 1;
+          }
+          else{
+            c_l = server_store[room].map_data[rcy][rcx - 1];
+            c_r = server_store[room].map_data[rcy][rcx + 1];
+          }
+          
+          if(rcy - 1 < 0){
+            c_t = 1;
+            c_b = server_store[room].map_data[rcy + 1][rcx];
+          }
+          else if(rcy + 1 > server_store[room].map_size_y - 1){
+            c_t = server_store[room].map_data[rcy - 1][rcx];
+            c_b = 1;
+          }
+          else{
+            c_t = server_store[room].map_data[rcy - 1][rcx];
+            c_b = server_store[room].map_data[rcy + 1][rcx];
+          }
+          
+          
+          if(rhx - 1 < 0){
+            h_l = 1;
+            h_r = server_store[room].map_data[rhy][rhx + 1];
+          }
+          else if(rhx + 1 > server_store[room].map_size_x - 1){
+            h_l = server_store[room].map_data[rhy][rhx - 1];
+            h_r = 1;
+          }
+          else{
+            h_l = server_store[room].map_data[rhy][rhx - 1];
+            h_r = server_store[room].map_data[rhy][rhx + 1];
+          }
+          
+          if(rhy - 1 < 0){
+            h_t = 1;
+            h_b = server_store[room].map_data[rhy + 1][rhx];
+          }
+          else if(rhy + 1 > server_store[room].map_size_y - 1){
+            h_t = server_store[room].map_data[rhy - 1][rhx];
+            h_b = 1;
+          }
+          else{
+            h_t = server_store[room].map_data[rhy - 1][rhx];
+            h_b = server_store[room].map_data[rhy + 1][rhx];
+          }
+          
+          
+          if(c_t == 1 && c_b == 1  && c_r == 1 && c_l == 1){
+            winer = "hot";
+            winer_info = "ブロック閉じ込めにより";
+          }
+          
+          if(h_t == 1 && h_b == 1  && h_r == 1 && h_l == 1){
+            winer = "cool";
+            winer_info = "ブロック閉じ込めにより";
+          }
+          
+          if(c_t == 1 && c_b == 1  && c_r == 1 && c_l == 1 && h_t == 1 && h_b == 1  && h_r == 1 && h_l == 1){
+            winer = "draw";
+            winer_info = "ブロック閉じ込めにより";
+          }
+        }
+      }
+    }
+    if(winer){
+      io.in(room).emit("game_result",{
+        "winer": winer,
+        "info":winer_info
+      });
+      game_server_reset(room);
     }
     else{
-      server_store[room].timer = setTimeout(game_time_out, 10000, room, chara);
-    }
-    
-    if(server_store[room].cpu && server_store[room][server_store[room].cpu.turn].turn){
-      cpu(room,server_store[room].cpu.level,server_store[room].cpu.turn);
+      server_store[room][effect_chara[chara]].turn = true;
+      
+      if(server_store[room].timeout){
+        server_store[room].timer = setTimeout(game_time_out, 1000 * server_store[room].timeout, room, chara);
+      }
+      else{
+        server_store[room].timer = setTimeout(game_time_out, 10000, room, chara);
+      }
+      
+      if(server_store[room].cpu && server_store[room][server_store[room].cpu.turn].turn){
+        cpu(room,server_store[room].cpu.level,server_store[room].cpu.turn);
+      }
     }
   }
-  
 }
 
 function game_server_reset(room){
@@ -452,7 +455,14 @@ function game_server_reset(room){
       delete store[user_id];
     }
   }
+  
+  if(server_store[room].timer){
+    clearTimeout(server_store[room].timer);
+    delete server_store[room].timer;
+  }
   server_store[room] = JSON.parse(JSON.stringify(game_server[room]));
+
+
   if(!server_store[room].map_data.length){
     create_map(room);
   }
@@ -920,7 +930,7 @@ function put_wall(room,chara,msg,id=false){
         "rec_data":put_map_data
       });
       if(player_put_chara){
-        game_result_check(room,chara , "r", false, false,"put");
+        game_result_check(room,chara , "r", false, false,"putより");
       }
       else{
         game_result_check(room,chara);
@@ -928,7 +938,7 @@ function put_wall(room,chara,msg,id=false){
     }
     else{
       if(player_put_chara){
-        game_result_check(room,chara , "r", false, false,"put");
+        game_result_check(room,chara , "r", false, false,"putより");
       }
       else{
         game_result_check(room,chara);
@@ -1315,10 +1325,10 @@ io.on('connection',function(socket){
       console.log("o:"+store[socket.id]);
       if(server_store[store[socket.id].room].cool.status && server_store[store[socket.id].room].hot.status && !server_store[store[socket.id].room].match){
         if(store[socket.id].chara == "cool"){
-          game_result_check(store[socket.id].room, store[socket.id].chara , "r", false, "hot");
+          game_result_check(store[socket.id].room, store[socket.id].chara , "r", false, "hot","切断より");
         }
         else{
-          game_result_check(store[socket.id].room, store[socket.id].chara , "r", false, "cool");
+          game_result_check(store[socket.id].room, store[socket.id].chara , "r", false, "cool","切断より");
         }
       }
       else if(server_store[store[socket.id].room].match){
@@ -1356,10 +1366,10 @@ io.on('connection',function(socket){
     if (store[socket.id]) {
       if(server_store[store[socket.id].room].cool.status && server_store[store[socket.id].room].hot.status && !server_store[store[socket.id].room].match){
         if(store[socket.id].chara == "cool"){
-          game_result_check(store[socket.id].room, store[socket.id].chara , "r", false, "hot");
+          game_result_check(store[socket.id].room, store[socket.id].chara , "r", false, "hot","切断より");
         }
         else{
-          game_result_check(store[socket.id].room, store[socket.id].chara , "r", false, "cool");
+          game_result_check(store[socket.id].room, store[socket.id].chara , "r", false, "cool","切断より");
         }
       }
       else if(server_store[store[socket.id].room].match){
@@ -1392,7 +1402,19 @@ io.on('connection',function(socket){
       
     }
   });
+
+  socket.on('match_end', function() {
+    if(match_room_store[socket.id]){
+      delete match_room_store[socket.id];
+    }
+    if(looker[socket.id]){
+      socket.leave(looker[socket.id].room);
+      delete looker[socket.id];
+    }
+  });
+
 });
+
 
 
 module.exports = router;

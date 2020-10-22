@@ -138,6 +138,8 @@ socket.on("game_result", function (msg) {
     game_result_info = msg.info;
 
     game_result_display(msg.winer,msg.info);
+
+    socket.emit("match_end");
 });
 
 socket.on("error", function (msg) {
