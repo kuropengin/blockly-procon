@@ -1,6 +1,8 @@
 #contents_area{
-    width: 100%;
-    height: 100%;
+    width: calc(100% - 14px);
+    height: calc(100% - 65px);
+    margin: 6px;
+    background: #ffffffc4;
 }
 
 
@@ -51,10 +53,9 @@
 
 #game_area , #ready_area{
     position: relative;
-    width: calc(100% - 14px);
-    height: calc(100% - 65px);
-    margin: 6px;
-    margin-bottom: 0px;
+    width: 100%;
+    height: 100%;
+    margin: 0;
     border-radius: 12px;
     border: solid 1px #c1c1c1;
     text-align: center;

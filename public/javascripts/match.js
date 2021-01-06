@@ -7,6 +7,7 @@ var h_name = "NoName";
 var load_map_size_x;
 var load_map_size_y;
 var temp_msg;
+var key;
 
 window.onload = function () {
     //document.getElementsByTagName("body")[0].classList.add("animation_stop");
@@ -49,14 +50,14 @@ socket.on("match_init_rec", function (msg) {
     if(!msg.error){
         document.getElementById('cool_player_iframe').src = "/match/player?room_id=" + query_list.room_id + "&chara=cool&key=" + msg.key;
         document.getElementById('hot_player_iframe').src = "/match/player?room_id=" + query_list.room_id + "&chara=hot&key=" + msg.key;
-
+        key = msg.key;
         document.getElementById("game_start").onclick = function(){
             
             check_flag = false;
             clearInterval(check_timer);
             document.getElementById('ready_area').classList.add("display_off");
             document.getElementById('game_area').classList.remove("display_off");
-            socket.emit("match_start");
+            socket.emit("match_start",{"room_id":query_list.room_id,"key":key});
         }
         check_flag = true;
         check_timer = setInterval(match_start_check,500);
@@ -139,7 +140,7 @@ socket.on("game_result", function (msg) {
 
     game_result_display(msg.winer,msg.info);
 
-    socket.emit("match_end");
+    socket.emit("match_end",{"room_id":query_list.room_id,"key":key});
 });
 
 socket.on("error", function (msg) {

@@ -106,6 +106,7 @@ function initApi(interpreter, scope) {
     user.room_id = id;
     user.name = name;
     user.chara = query_list.chara;
+    user.key = query_list.key;
     socket.emit("player_join_match", user);
     
     servar_connect_status = true;
@@ -319,17 +320,21 @@ else{
   localStorage["LOWSPEED_MODE"] == "off";
 }
 
-Code.runJS = function(){
+Code.runJS = function(t_code = false){
   if (!myInterpreter) {
     
     resetStepUi(true);
     
     setTimeout(function() {
       highlightPause = false;
-      generateCodeAndLoadIntoInterpreter();
-      saveCodelocalStorage();
+      if(t_code){
+        latestCode = t_code;
+      }
+      else{
+        generateCodeAndLoadIntoInterpreter();
+        saveCodelocalStorage();
+      }
       
-      //console.log(latestCode);
       
       myInterpreter = new ObjInterpreter(latestCode, initApi);
       runner = function() {

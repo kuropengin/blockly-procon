@@ -428,18 +428,30 @@ Code.download = function(){
   else{
     var blob = new Blob([xmlText], {type: "application/octet-stream"}); 
     
-    self_prompt("ファイル名を入力してください",function(file_name){
+    self_prompt("ファイル名を入力してください",function(file_name,teacher_mode=false){
       if(file_name){
-        if(window.navigator.msSaveBlob)
-        {
+        if(teacher_mode){
+          var save_json = {};
+          var saveCode = Blockly.JavaScript.workspaceToCode(Code.workspace);
+          
+          save_json.teacher_code = btoa(unescape(encodeURIComponent(saveCode)));
+          var json_string = JSON.stringify(save_json)
+          blob = new Blob([json_string],{type:"text/plain"});
+
+          file_name = file_name + ".json";
+        }
+        else{
+          file_name = file_name + ".xml";
+        }
+        if(window.navigator.msSaveBlob){
             // IE
-            window.navigator.msSaveBlob(blob, file_name + ".xml");
-        } else {
+            window.navigator.msSaveBlob(blob, file_name);
+        }else {
             // another
             var a = document.createElement("a");
             a.href = URL.createObjectURL(blob);
             a.target = '_blank';
-            a.download = file_name + ".xml";
+            a.download = file_name;
             a.click();
         }
       }
@@ -572,7 +584,26 @@ function self_prompt(message,callback){
   }
   pcdiv.addEventListener('click', input_text_cancel, true);
   pcdiv.addEventListener('touchend', input_text_cancel, true);
+
+  var ptdiv = document.createElement("div"); 
+  ptdiv.setAttribute("id","input_text_ok");
+  var newContent = document.createTextNode("教師データ"); 
+  ptdiv.appendChild(newContent);
   
+  var input_text_teacher = function(){
+      input_text = "" + document.getElementById("input_text_form").value;
+      var c = document.getElementById("input_text_area");
+      if(c){
+          c.parentNode.removeChild(c);
+      }
+      callback(input_text,"teacher");
+  }
+  ptdiv.addEventListener('click', input_text_teacher, true);
+  ptdiv.addEventListener('touchend', input_text_teacher, true);
+  
+  if(localStorage["DEBUG_MODE"] == "on"){
+    pddiv.appendChild(ptdiv);
+  }
   pddiv.appendChild(podiv);
   pddiv.appendChild(pcdiv);
   pdiv.appendChild(pddiv);

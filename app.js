@@ -17,11 +17,13 @@ var menuMatchRouter = require('./routes/menu-match');
 var matchRouter = require('./routes/match');
 var watchingRouter = require('./routes/watching');
 
+var chaser = require('./chaser/server.js');
+
 var app = express();
 
 
 //socket.io
-app.io = programmingRouter.io;
+app.io = chaser.io;
 
 
 // view engine setup

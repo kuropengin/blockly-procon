@@ -36,36 +36,57 @@
       var fileData = e.target.files[0];
       Code.stopJS();
 
-      if(!fileData.name.match('.xml')) {
-          alert('セーブデータを選択してください');
-          return;
-      }
+      if(fileData.name.match('.xml')) {
+        var reader = new FileReader();
+        reader.onload = function() {
+          // Parse the XML into a tree.
 
-      var reader = new FileReader();
-      reader.onload = function() {
-        // Parse the XML into a tree.
-
-        var xmlText = reader.result;
-        try {
-          var xml = Blockly.Xml.textToDom(xmlText);
-          for(var xml_one of xml.getElementsByTagName("block")){
-            if(xml_one.getAttribute("type") === "server_join"){
-              if(query_list.room_id){
-                xml_one.getElementsByTagName("field")[0].textContent = query_list.room_id;
-                break;
+          var xmlText = reader.result;
+          try {
+            var xml = Blockly.Xml.textToDom(xmlText);
+            for(var xml_one of xml.getElementsByTagName("block")){
+              if(xml_one.getAttribute("type") === "server_join"){
+                if(query_list.room_id){
+                  xml_one.getElementsByTagName("field")[0].textContent = query_list.room_id;
+                  break;
+                }
+                
               }
-              
             }
+          } catch (e) {
+            alert(e);
+            return;
           }
-        } catch (e) {
-          alert(e);
-          return;
-        }
-        Code.workspace.clear();
-        Blockly.Xml.domToWorkspace(xml, Code.workspace);
+          Code.workspace.clear();
+          Blockly.Xml.domToWorkspace(xml, Code.workspace);
 
-        Code.runJS();
+          Code.runJS();
+        }   
       }
+      else if(fileData.name.match('.json')){
+        var reader = new FileReader();
+        reader.onload = function() {
+
+          var jsonText = JSON.parse(reader.result);
+          if(!jsonText.teacher_code){
+            return;
+          }
+          try {
+            var load_code = decodeURIComponent(escape(window.atob(jsonText.teacher_code)));
+            load_code = load_code.replace(/join\(".*?",".*?"\);\n/gi,'join("' + query_list.room_id + '","CPU");\n');
+            
+            Code.runJS(load_code);
+          } catch (e) {
+            alert(e);
+            return;
+          }
+        } 
+      }
+      else{
+        alert('セーブデータを選択してください');
+        return;
+      }
+      
       reader.readAsText(fileData);
     });
 
