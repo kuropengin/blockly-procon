@@ -117,7 +117,6 @@ function makeTable(msg, x, y, effect, tableId){
     
     var h = document.getElementById(tableId).clientHeight;
     var w = document.getElementById("game_area").clientWidth;
-    console.log(w);
     var _x = (h / y)*x;
     
     
@@ -129,7 +128,10 @@ function makeTable(msg, x, y, effect, tableId){
     }
     table.style.width = _x + "px";
     
-    var cx = false,cy = false,hx = false,hy = false;
+    var cx = false;
+    var cy = false;
+    var hx = false;
+    var hy = false;
 
     for(i = 0; i < data.length; i++){
         rows.push(table.insertRow(-1));
@@ -231,12 +233,12 @@ function makeTable(msg, x, y, effect, tableId){
         
         for(var y of y_range){
             for(var x of x_range){
-                if(msg.effect.p == "cool" && hx >= 0){
+                if(msg.effect.p == "cool" && !(hx === false)){
                     if(!(0 > (hx + x) || data[0].length-1 < (hx + x) || 0 > (hy + y) || data.length-1 < (hy + y))){
                         table.rows[hy+y].cells[hx+x].style.backgroundColor = "rgba(139, 195, 74, 0.3)";
                     }
                 }
-                else if(msg.effect.p == "hot" && cx >= 0){
+                else if(msg.effect.p == "hot" && !(cx === false)){
                     if(!(0 > (cx + x) || data[0].length-1 < (cx + x) || 0 > (cy + y) || data.length-1 < (cy + y))){
                         table.rows[cy+y].cells[cx+x].style.backgroundColor = "rgba(139, 195, 74, 0.3)";
                     }
@@ -335,8 +337,16 @@ function makeTable(msg, x, y, effect, tableId){
 
 
 
-function reqFullscreen() {
+function reqFullscreen(target_id = false) {
     var target = document.getElementById("game_area");
+    if(target_id){
+        try{
+            target = document.getElementById(target_id);
+        }
+        catch(e){
+            target = document.getElementById("game_area");
+        }
+    }
 	if (target.webkitRequestFullscreen) {
 		target.webkitRequestFullscreen();
 	} else if (target.mozRequestFullScreen) {

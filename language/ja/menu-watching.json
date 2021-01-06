@@ -1,5 +1,5 @@
 {
-    "TITLE":"観戦",
+    "TITLE":"対戦",
     "CONFIG":"設定",
     "SERVER_INFO": "サーバー情報",
     "FIXITY":"固定",
@@ -9,5 +9,6 @@
     "CONNECTION_ORDER": "接続順",
     "TURN_C": "(先手)",
     "TURN_H": "(後手)",
-    "WATCHING": "観戦する"
+    "MATCH": "ルーム決定",
+    "WATCHING": "観戦"
 }

@@ -140,6 +140,11 @@ function server_info(id,get_list){
   if(c){
       c.parentNode.removeChild(c);
   }
+
+  c = document.getElementById("server_watch_div");
+  if(c){
+      c.parentNode.removeChild(c);
+  }
   
   c = document.getElementById("server_info_name");
   if(c){
@@ -207,17 +212,24 @@ function server_info(id,get_list){
   
   var server_join_link = document.createElement('a');
   server_join_link.classList.add("server_join_link");
-  server_join_link.href = "/watching?room_id=" + id;
-  	//server_join_link.target = "_blank";
-  	server_join_link.innerText = lng_list["WATCHING"];
-  	
-  	server_join_div.appendChild(server_join_link);
+  server_join_link.href = "/match?room_id=" + id;
+  server_join_link.innerText = lng_list["MATCH"];	
+  server_join_div.appendChild(server_join_link);
+
+  var server_watch_div = document.createElement('div');
+  server_watch_div.setAttribute("id","server_watch_div");
+  
+  var server_watch_link = document.createElement('a');
+  server_watch_link.classList.add("server_join_link");
+  server_watch_link.href = "/watching?room_id=" + id;
+  server_watch_link.innerText = lng_list["WATCHING"];	
+  server_watch_div.appendChild(server_watch_link);
   	
   
   document.getElementById("watching_info").appendChild(table);
   document.getElementById("watching_info").appendChild(server_info_div);
   document.getElementById("watching_info").appendChild(server_join_div);
-  
+  document.getElementById("watching_info").appendChild(server_watch_div);
   document.getElementById("menu_area").appendChild(server_info_name);
   document.getElementById("menu_area").classList.add("select_back");
 }

@@ -71,43 +71,79 @@ socket.on("new_board", function (msg) {
     }
 });
 
+var game_result_msg = "";
+var game_result_info = "";
+
 socket.on("game_result", function (msg) {
     //console.log(msg);
     if(localStorage["SOUND_STATUS"]){
-        console.log("1");
         if(localStorage["SOUND_STATUS"] == "on"){
             gameBgm.stop();
             resultSound.play();
         }
     }
     else{
-        console.log("3");
         gameBgm.stop();
         resultSound.play();
     }
+    game_result_msg = msg.winer;
+    game_result_info = msg.info;
+
+    game_result_display(msg.winer,msg.info);
     
+});
+
+socket.on("error", function (msg) {
+    gameBgm.stop();
+});
+
+function game_result_display(winer,info){
     var result = document.createElement("div"); 
     result.setAttribute("id","game_result");
     var img = document.createElement('img');
-    if(msg.winer == "cool"){
+    if(winer == "cool"){
         img.src = '/images/coolwin.png';
     }
-    else if(msg.winer == "hot"){
+    else if(winer == "hot"){
         img.src = '/images/hotwin.png';
     }
     else{
         img.src = '/images/draw.png';
     }
     result.appendChild(img);
+
     document.getElementById("game_board").appendChild(result);
-});
+
+
+    var winer_info_div = document.createElement("div");
+    winer_info_div.setAttribute("id","winer_info_div");
+    
+    var twiner_info = document.createElement("div");
+    twiner_info.setAttribute("id","winer_info_title");
+    twiner_info.appendChild(document.createTextNode("リザルト情報"));
+    
+    var winer_info = document.createElement("div");
+    winer_info.setAttribute("id","winer_info");
+    winer_info.appendChild(document.createTextNode(info));
+    
+    winer_info_div.appendChild(twiner_info);
+    winer_info_div.appendChild(winer_info);
+
+    document.getElementById("game_info_div").appendChild(winer_info_div);
+
+}
 
 window.addEventListener( "resize", function () {
-    if(temp_msg.effect){
-        makeTable(temp_msg,load_map_size_x,load_map_size_y, temp_msg.effect,"game_board");
+    if(temp_msg){
+        if(temp_msg.effect){
+            makeTable(temp_msg,load_map_size_x,load_map_size_y, temp_msg.effect,"game_board");
+        }
+        else{
+            makeTable(temp_msg,load_map_size_x,load_map_size_y, 0,"game_board");
+        }
     }
-    else{
-        makeTable(temp_msg,load_map_size_x,load_map_size_y, 0,"game_board");
+    if(game_result_msg){
+        game_result_display(game_result_msg,game_result_info);
     }
 });
 

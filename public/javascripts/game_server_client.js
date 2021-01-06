@@ -418,6 +418,7 @@ socket.on("game_result", function (msg) {
 
 socket.on("error", function (msg) {
     Code.stopJS();
+    gameBgm.stop();
     window.alert(msg);
 });
 

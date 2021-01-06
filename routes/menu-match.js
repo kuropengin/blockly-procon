@@ -15,21 +15,21 @@ router.get('/', function(req, res, next) {
     try{
         if(req.cookies.lng){
             if(req.cookies.lng == "ja"){
-                res.render('menu-watching', { title: 'ルーム選択', LNG: LNG_JA, C_LNG: CONFIG_LNG_JA});
+                res.render('menu-match', { title: 'ルーム選択', LNG: LNG_JA, C_LNG: CONFIG_LNG_JA});
             }
             else if(req.cookies.lng == "ja-k"){
-                res.render('menu-watching', { title: 'ルームせんたく',LNG: LNG_JAK, C_LNG: CONFIG_LNG_JAK});
+                res.render('menu-match', { title: 'ルームせんたく',LNG: LNG_JAK, C_LNG: CONFIG_LNG_JAK});
             }
             else{
-                res.render('menu-watching', { title: 'ルーム選択',LNG: LNG_JA, C_LNG: CONFIG_LNG_JA});
+                res.render('menu-match', { title: 'ルーム選択',LNG: LNG_JA, C_LNG: CONFIG_LNG_JA});
             }
         }
         else{
-            res.render('menu-watching', { title: 'ルーム選択',LNG: LNG_JA, C_LNG: CONFIG_LNG_JA});
+            res.render('menu-match', { title: 'ルーム選択',LNG: LNG_JA, C_LNG: CONFIG_LNG_JA});
         }
     }
     catch(e){
-       res.render('menu-watching', { title: 'ルーム選択',LNG: LNG_JA, C_LNG: CONFIG_LNG_JA}); 
+       res.render('menu-match', { title: 'ルーム選択',LNG: LNG_JA, C_LNG: CONFIG_LNG_JA}); 
     }
 });
 

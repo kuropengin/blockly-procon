@@ -319,6 +319,7 @@ Code.init = function() {
 
   // Construct the toolbox XML, replacing translated variable names.
   var toolboxText = document.getElementById('toolbox').outerHTML;
+
   toolboxText = toolboxText.replace(/(^|[^%]){(\w+)}/g,
       function(m, p1, p2) {return p1 + MSG[p2];});
   var toolboxXml = Blockly.Xml.textToDom(toolboxText);
