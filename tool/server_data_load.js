@@ -2,18 +2,26 @@ const fs = require('fs');
 const path = require('path');
 const logger = require('../bin/logger.js');
 
-const game_server_list = fs.readdirSync(path.join(__dirname, '..',  "load_data", "game_server_data"));
+const config_load = require('../tool/config_data_load');
+
+var mode_path = config_load.electron_conf_load();
+
+const game_server_list = fs.readdirSync(path.join(__dirname, mode_path, '..',  "load_data", "game_server_data"));
 var game_server = {};
+var join_list = [];
 
 const init = async function(){
   for(var gs of game_server_list){
     try{
-        var temp_game_server = JSON.parse(fs.readFileSync(path.join(__dirname, '..',  'load_data','game_server_data',gs), 'utf8'));
+        var temp_game_server = JSON.parse(fs.readFileSync(path.join(__dirname, mode_path, '..',  'load_data','game_server_data',gs), 'utf8'));
         if(temp_game_server.room_id){
             game_server[temp_game_server.room_id] = temp_game_server;
+            join_list.push([temp_game_server.name,temp_game_server.room_id]);
+            /*
             if("auto_block" in game_server[temp_game_server.room_id]){
               await create_map(temp_game_server.room_id);
             }
+            */
         }
         else{
             logger.error('The format of the game server data is incorrect. Data to be loaded "' + gs + '"');
@@ -196,11 +204,13 @@ const create_map = function(key){
   }
 };
 
-const load = async function(room=false){
+const load = function(room=false){
     if(room){
+        /*
         if("auto_block" in game_server[temp_game_server.room_id]){
           await create_map(temp_game_server.room_id);
         }
+        */
         return game_server[room];
     }
     else{
@@ -208,9 +218,14 @@ const load = async function(room=false){
     }
 };
 
+const list_load = function(){
+  return join_list;
+};
+
 init();
 
 exports.load = load;
+exports.list_load = list_load;
 exports.create_map = create_map;
 
 

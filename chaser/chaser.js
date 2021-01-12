@@ -4,7 +4,7 @@
 const socket_io = require('socket.io'); 
 const io = socket_io();
 
-const server_data = require('../tool/chaser_data_load');
+const server_data = require('../tool/server_data_load');
 
 //var init
 var store = {};

@@ -17,6 +17,11 @@ var menuMatchRouter = require('./routes/menu-match');
 var matchRouter = require('./routes/match');
 var watchingRouter = require('./routes/watching');
 
+var server_data = require('./tool/server_data_load');
+var tutorial_data = require('./tool/tutorial_data_load');
+var bgm_data = require('./tool/bgm_data_load');
+var config_load = require('./tool/config_data_load');
+
 var chaser = require('./chaser/server.js');
 
 var app = express();
@@ -35,9 +40,12 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
-app.use('/bgm',express.static(path.join(__dirname, 'load_data', 'bgm_data')));
-app.use('/about/LICENSE',express.static(path.join(__dirname + '/LICENSE')));
-app.use('/about/TOS',express.static(path.join(__dirname + '/TOS')));
+
+var mode_path = config_load.electron_conf_load();
+
+app.use('/bgm',express.static(path.join(__dirname, mode_path, 'load_data', 'bgm_data')));
+app.use('/about/LICENSE',express.static(path.join(__dirname, mode_path, 'LICENSE')));
+app.use('/about/TOS',express.static(path.join(__dirname, mode_path, '/TOS')));
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
@@ -54,43 +62,13 @@ app.use('/watching',watchingRouter);
 //API
 
 //init load
-const bgm_list = fs.readdirSync(path.join(__dirname, "load_data", "bgm_data"));
+const bgm_list = bgm_data.load();
 
-const game_server_list = fs.readdirSync(path.join(__dirname,  "load_data", "game_server_data"));
-let game_server = {};
-let join_list = [];
-for(let gs of game_server_list){
-    try{
-        var temp_game_server = JSON.parse(fs.readFileSync(path.join(__dirname,  'load_data','game_server_data',gs), 'utf8'));
-        if(temp_game_server.room_id){
-            game_server[temp_game_server.room_id] = temp_game_server;
-            join_list.push([temp_game_server.name,temp_game_server.room_id]);
-        }
-        else{
-            logger.error('The format of the game server data is incorrect. Data to be loaded "' + gs + '"');
-        }
-    }
-    catch(e){
-        logger.error('Failed to read the game server data. Data to be loaded "' + gs + '"');
-    }
-}
+const game_server = JSON.parse(JSON.stringify(server_data.load()));
+const join_list = server_data.list_load();
+const stage_data = JSON.parse(JSON.stringify(tutorial_data.load()));
 
-const stage_data_list = fs.readdirSync(path.join(__dirname, "load_data", "tutorial_stage_data"));
-let stage_data = {};
-for(let sd of stage_data_list){
-    try{
-        var temp_stage_data = JSON.parse(fs.readFileSync(path.join(".","load_data","tutorial_stage_data",sd), 'utf8'));
-        if(temp_stage_data.stage_id){
-          stage_data[temp_stage_data.stage_id] = temp_stage_data;
-        }
-        else{
-            logger.error('The format of the tutorial data is incorrect. Data to be loaded "' + sd + '"');
-        }
-    }
-    catch(e){
-        logger.error('Failed to read the tutorial data. Data to be loaded "' + sd + '"');
-    }
-}
+
 
 app.get('/api/bgm', (req, res) => {
   res.json(bgm_list);
