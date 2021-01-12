@@ -2,12 +2,13 @@ const fs = require('fs');
 const path = require('path');
 const logger = require('../bin/logger.js');
 
-const stage_data_list = fs.readdirSync(path.join(__dirname, '..',  "load_data", "tutorial_stage_data"));
-const workspace_list = fs.readdirSync(path.join(__dirname, '..',  "load_data", "workspace_xml_data"));
-
 const config_load = require('../tool/config_data_load');
 
 var mode_path = config_load.electron_conf_load();
+
+const stage_data_list = fs.readdirSync(path.join(__dirname, mode_path, '..',  "load_data", "tutorial_stage_data"));
+const workspace_list = fs.readdirSync(path.join(__dirname, mode_path, '..',  "load_data", "workspace_xml_data"));
+
 
 let stage_data = {};
 for(let sd of stage_data_list){

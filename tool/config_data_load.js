@@ -9,7 +9,7 @@ const electron_conf_load = function(room=false){
         return "../../";
     }
     else{
-        return ".";
+        return "./";
     }
 };
 
