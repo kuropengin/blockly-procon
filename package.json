@@ -3,7 +3,8 @@
   "version": "1.1.2",
   "private": true,
   "scripts": {
-    "start": "node ./bin/www"
+    "start": "node ./bin/www",
+    "dist-win": "node ./bin/mode-change.js true && electron-builder --win && node ./bin/mode-change.js false"
   },
   "dependencies": {
     "cookie-parser": "~1.4.4",
@@ -14,5 +15,63 @@
     "log4js": "^6.2.1",
     "morgan": "~1.9.1",
     "socket.io": "^2.4.1"
+  },
+  "main": "electron.js",
+  "build": {
+    "appId": "Blockly.CHaser",
+    "win": {
+      "icon": "./icon.png",
+      "target": {
+        "target": "zip",
+        "arch": [
+          "x64"
+        ]
+      }
+    },
+    "files": [
+      "./bin/*",
+      "./chaser/*",
+      "./config/*",
+      "./language/**/*",
+      "./node_modules/**/*",
+      "./public/**/*",
+      "./routes/*",
+      "./views/**/*",
+      "./tool/*",
+      "./app.js",
+      "./electron.js",
+      "./package.json"
+    ],
+    "extraResources": [
+      {
+        "from": "./load_data",
+        "to": "../load_data",
+        "filter": [
+          "**/*"
+        ]
+      },
+      {
+        "from": "./TOS",
+        "to": "../TOS"
+      },
+      {
+        "from": "./LICENSE",
+        "to": "../LICENSE"
+      },
+      {
+        "from": "./bin/log",
+        "to": "../log",
+        "filter": [
+          "*"
+        ]
+      }
+    ],
+    "directories": {
+      "buildResources": "assets"
+    }
+  },
+  "devDependencies": {
+    "electron": "^13.1.5",
+    "electron-builder": "^22.11.7"
   }
 }
