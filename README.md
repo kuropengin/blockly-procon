@@ -30,11 +30,10 @@ U15長野プロコンサーバーは[U-15長野プログラミングコンテス
 ## 動作環境
 ### 動作確認済み環境
 - Linux / macOS / Windows
-- Node.js 10.x,12.x
+- Node.js 10.x,12.x,14.x
 
 ### 推奨環境
 - 《Dockerfile掲載予定》
-- 《＊windows用exeファイル掲載予定》
 
 ## セットアップ
 - Step.0:Node.js,npm インストール
@@ -42,17 +41,31 @@ U15長野プロコンサーバーは[U-15長野プログラミングコンテス
 ```bash
 git clone https://github.com/kuropengin/blockly-procon.git 
 ```
-- Step.2:ダウンロードしたフォルダに移動後、手動で起動
+
+- Step.2:ダウンロードしたフォルダに移動後、パッケージをインストール
+```bash
+cd ./blockly-procon
+npm install
+```
+
+- Step.3:起動
 ```bash
 npm start
 ```
 
-
 ## 動作確認
 - ブラウザから `http://<IPaddress>:<Port(default:3000)>/` にアクセス
 
-## 利用方法
-- 《＊利用方法ドキュメント掲載予定》
+## exe化方法
+- Step.0:windowsアプリケーションをビルド可能な環境であることを確認
+(Linux環境でビルドを行う場合はwineのインストールが必要)
+
+- Step.1:スクリプトの実行
+```bash
+npm run dist-win
+```
+
+- Step.2:フォルダー『dist』内にzip化されたexeファイルが生成される
 
 ## 実装予定
 
