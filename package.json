@@ -14,7 +14,7 @@
     "http-errors": "~1.6.3",
     "log4js": "^6.2.1",
     "morgan": "~1.9.1",
-    "socket.io": "^2.4.1"
+    "socket.io": "^2.5.0"
   },
   "main": "electron.js",
   "build": {
